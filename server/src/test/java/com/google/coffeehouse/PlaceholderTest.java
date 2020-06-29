@@ -12,17 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.step73.servlets;
+package com.google.coffeehouse;
 
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
-/** Placeholder Servlet */
-@WebServlet("/placeholder")
-public class PlaceholderServlet extends HttpServlet {
-
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) {}
+/** */
+@RunWith(JUnit4.class)
+public final class PlaceholderTest {
+  // TODO: replace with real test
+  @Test
+  public void equality() {
+    Assert.assertEquals(1, 1);
+  }
 }
