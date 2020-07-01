@@ -72,15 +72,15 @@ public class CreatePersonServlet extends HttpServlet {
       return;
     }
 
-    Person.Builder personInProgress = Person.newBuilder(email, nickname);
+    Person.Builder personBuilder = Person.newBuilder(email, nickname);
     if (pronouns != null) {
-      personInProgress.setPronouns(pronouns);
+      personBuilder.setPronouns(pronouns);
     }
     // check for dependency injection on ID generator
     if (idGen != null) {
-      personInProgress.setIdGenerator(idGen);
+      personBuilder.setIdGenerator(idGen);
     }
-    Person newPerson = personInProgress.build();
+    Person newPerson = personBuilder.build();
     newPerson.save();
 
     Gson gson = new Gson();

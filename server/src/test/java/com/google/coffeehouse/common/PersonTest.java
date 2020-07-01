@@ -35,7 +35,7 @@ public final class PersonTest {
   private static final String PRONOUNS = "she/her";
   private static final String ALT_PRONOUNS = "New Pronouns";
   private static final String IDENTIFICATION_STRING = "predetermined-identification-string";
-  private Person.Builder personInProgress = Person.newBuilder(EMAIL, NICKNAME);
+  private Person.Builder personBuilder = Person.newBuilder(EMAIL, NICKNAME);
   
   @Mock private IdentifierGenerator idGen;
 
@@ -47,52 +47,52 @@ public final class PersonTest {
 
   @Test
   public void getExistingNickname() {
-    Person p = personInProgress.build();
+    Person p = personBuilder.build();
     Assert.assertEquals(NICKNAME, p.getNickname());
   }
 
   @Test
   public void getExistingEmail() {
-    Person p = personInProgress.build();
+    Person p = personBuilder.build();
     Assert.assertEquals(EMAIL, p.getEmail());
   }
 
   @Test
   public void getExistingUserId() {
-    Person p = personInProgress.setIdGenerator(idGen).build();
+    Person p = personBuilder.setIdGenerator(idGen).build();
     Assert.assertEquals(IDENTIFICATION_STRING, p.getUserId());
   }
 
   @Test
   public void getExistingPronouns() {
-    Person p = personInProgress.setPronouns(PRONOUNS).build();
+    Person p = personBuilder.setPronouns(PRONOUNS).build();
     Assert.assertTrue(p.getPronouns().isPresent());
     Assert.assertEquals(PRONOUNS, p.getPronouns().get());
   }
 
   @Test
   public void getNoPronouns() {
-    Person p = personInProgress.build();
+    Person p = personBuilder.build();
     Assert.assertFalse(p.getPronouns().isPresent());
   }
 
   @Test
   public void setNewNickname() {
-    Person p = personInProgress.build();
+    Person p = personBuilder.build();
     p.setNickname(ALT_NICKNAME);
     Assert.assertEquals(ALT_NICKNAME, p.getNickname());
   }
 
   @Test
   public void setNewEmail() {
-    Person p = personInProgress.build();
+    Person p = personBuilder.build();
     p.setEmail(ALT_EMAIL);
     Assert.assertEquals(ALT_EMAIL, p.getEmail());
   }
 
   @Test
   public void setNewPronouns() {
-    Person p = personInProgress.build();
+    Person p = personBuilder.build();
     p.setPronouns(ALT_PRONOUNS);
     Assert.assertTrue(p.getPronouns().isPresent());
     Assert.assertEquals(ALT_PRONOUNS, p.getPronouns().get());
