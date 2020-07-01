@@ -22,9 +22,10 @@ public interface Saveable {
   /**
    * The save method will save the object in the database.
    * 
-   * <p>The object can not be in an invalid state when saving, otherwise retrieval of the 
-   * object will retrieve an invalid object. Any changes made to the object will not persist
-   * unless the object saves itself after modification.
+   * <p>The object can not be in an invalid state when saving. If an object is saved in an
+   * invalid state, problems with recreating the object from the saved data in the database
+   * may result. Any changes made to the object will not persist unless the object saves 
+   * itself after modification.
    */
   public void save();
 }
