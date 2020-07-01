@@ -28,13 +28,13 @@ import org.mockito.Mockito;
  */
 @RunWith(JUnit4.class)
 public final class PersonTest {
-  private final String NICKNAME = "Arthi";
-  private final String ALT_NICKNAME = "New Name";
-  private final String EMAIL = "test@fake.fake";
-  private final String ALT_EMAIL = "New Email";
-  private final String PRONOUNS = "she/her";
-  private final String ALT_PRONOUNS = "New Pronouns";
-  private final String IDENTIFICATION_STRING = "predetermined-identification-string";
+  private static final String NICKNAME = "Arthi";
+  private static final String ALT_NICKNAME = "New Name";
+  private static final String EMAIL = "test@fake.fake";
+  private static final String ALT_EMAIL = "New Email";
+  private static final String PRONOUNS = "she/her";
+  private static final String ALT_PRONOUNS = "New Pronouns";
+  private static final String IDENTIFICATION_STRING = "predetermined-identification-string";
   private Person.Builder personInProgress = Person.newBuilder(EMAIL, NICKNAME);
   
   @Mock private IdentifierGenerator idGen;

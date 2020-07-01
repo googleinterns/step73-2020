@@ -32,10 +32,10 @@ import org.mockito.Mockito;
  * Unit tests for {@link CreatePersonServlet}.
  */
 public class CreatePersonServletTest {
-  private final String NICKNAME = "Tim";
-  private final String EMAIL = "test@fake.fake";
-  private final String PRONOUNS = "he/him";
-  private final String IDENTIFICATION_STRING = "predetermined-identification-string";
+  private static final String NICKNAME = "Tim";
+  private static final String EMAIL = "test@fake.fake";
+  private static final String PRONOUNS = "he/him";
+  private static final String IDENTIFICATION_STRING = "predetermined-identification-string";
 
   private CreatePersonServlet CreatePersonServlet;
 	private final LocalServiceTestHelper helper = new LocalServiceTestHelper();
