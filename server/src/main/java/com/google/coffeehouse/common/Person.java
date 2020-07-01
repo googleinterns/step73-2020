@@ -66,12 +66,7 @@ public class Person implements Saveable {
     this.nickname = nickname;
   }
 
-  /**
-   * Starts the building process of a new Person object.
-   * @param email the email for the new Person object
-   * @param nickname the nickname for the new Person object
-   * @return the builder that was instantiated by this method
-   */
+  /** Starts the building process of a new Person object. */
   public static Builder newBuilder(String email, String nickname) {
     return new Builder(email, nickname);
   }
