@@ -85,6 +85,12 @@ export default function AppBarDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
+  const pagesList = [
+    {text: "Your Clubs", url: "/YourClubs", icon: <LibraryBooksIcon />},
+    {text: "Explore", url: "/Explore", icon: <ExploreIcon />},
+    {text: "Profile", url: "/Profile", icon: <AccountCircleIcon />}
+  ];
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -139,24 +145,14 @@ export default function AppBarDrawer() {
           </IconButton>
         </div>
         <List>
-          <Link to="/YourClubs" className={classes.link}>
-            <ListItem button key="Your Clubs">
-              <ListItemIcon><LibraryBooksIcon /></ListItemIcon>
-              <ListItemText primary="Your Clubs" />
-            </ListItem>
-          </Link>
-          <Link to="/Explore" className={classes.link}>
-            <ListItem button key="Explore">
-              <ListItemIcon><ExploreIcon /></ListItemIcon>
-              <ListItemText primary="Explore" />
-            </ListItem>
-          </Link>
-          <Link to="/Profile" className={classes.link}>
-            <ListItem button key="Profile">
-              <ListItemIcon><FaceIcon /></ListItemIcon>
-              <ListItemText primary="Profile" />
-            </ListItem>
-          </Link>
+          {pagesList.map((item, index) => (
+            <Link to={item.url} className={classes.link}>
+              <ListItem button key={item.text}>
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItem>
+            </Link>
+          ))}
         </List>
         <Divider />
       </Drawer>
