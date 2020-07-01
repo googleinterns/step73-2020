@@ -1,6 +1,5 @@
 // React Framework imports
 import * as React from "react";
-import { hot } from "react-hot-loader";
 import { Link } from "react-router-dom"
 import clsx from 'clsx';
 
@@ -37,17 +36,17 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     appBar: {
       transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
+        easing: theme.transitions.easing.sharp,
       }),
     },
     appBarShift: {
-      width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
       transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.easeOut,
         duration: theme.transitions.duration.enteringScreen,
+        easing: theme.transitions.easing.easeOut,
       }),
+      width: `calc(100% - ${drawerWidth}px)`,
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -56,23 +55,23 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'none',
     },
     drawer: {
-      width: drawerWidth,
       flexShrink: 0,
+      width: drawerWidth,
     },
     drawerPaper: {
       width: drawerWidth,
     },
     drawerHeader: {
-      display: 'flex',
       alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'flex-end',
       padding: theme.spacing(0, 1),
       // necessary for content to be below app bar
-      ...theme.mixins.toolbar,
-      justifyContent: 'flex-end',
+      ...theme.mixins.toolbar
     },
     link: {
-      textDecoration: 'none', 
-      color: theme.palette.text.primary
+      color: theme.palette.text.primary,
+      textDecoration: 'none'
     },
     accountIcon: {
       marginLeft: "auto"

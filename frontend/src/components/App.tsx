@@ -16,8 +16,6 @@ import { Login } from "./pages/login/Login";
 import { Profile } from "./pages/profile/Profile";
 import { YourClubs } from "./pages/your_clubs/YourClubs";
 
-const drawerWidth = 240;
-
 class App extends React.Component<{}, undefined> {
 
   public render() {
