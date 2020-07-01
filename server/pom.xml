@@ -35,6 +35,7 @@
       <groupId>com.google.appengine</groupId>
       <artifactId>appengine-api-1.0-sdk</artifactId>
       <version>1.7.4</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
