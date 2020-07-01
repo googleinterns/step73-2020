@@ -74,6 +74,8 @@ public class CreatePersonServlet extends HttpServlet {
       return;
     }
 
+    // TODO: check that no other person exists with this email before creating @linamontes10
+
     Person.Builder personBuilder = Person.newBuilder(email, nickname);
     if (pronouns != null) {
       personBuilder.setPronouns(pronouns);
