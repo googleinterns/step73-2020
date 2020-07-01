@@ -67,7 +67,7 @@ public class Person implements Saveable {
   }
 
   /**
-   * Starts the building process of a new Person object
+   * Starts the building process of a new Person object.
    * @param email the email for the new Person object
    * @param nickname the nickname for the new Person object
    * @return the builder that was instantiated by this method
