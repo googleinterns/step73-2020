@@ -38,7 +38,7 @@ public class CreatePersonServletTest {
   private static final String IDENTIFICATION_STRING = "predetermined-identification-string";
 
   private CreatePersonServlet CreatePersonServlet;
-	private final LocalServiceTestHelper helper = new LocalServiceTestHelper();
+  private final LocalServiceTestHelper helper = new LocalServiceTestHelper();
   private StringWriter stringWriter = new StringWriter();
 
   @Mock private HttpServletRequest request;
@@ -71,7 +71,7 @@ public class CreatePersonServletTest {
     CreatePersonServlet.doPost(request, response);
     String result = stringWriter.toString();
 
-    // use multiple contains because order of json should not be relied upon per GSON documentation
+    // Use multiple contains because order of JSON should not be relied upon per GSON documentation
     Assert.assertTrue(
         result.contains("\"email\":\"" + EMAIL + "\"")
         && result.contains("\"nickname\":\"" + NICKNAME + "\"")
@@ -88,14 +88,14 @@ public class CreatePersonServletTest {
     CreatePersonServlet.doPost(request, response);
     String result = stringWriter.toString();
 
-    // use multiple contains because order of json should not be relied upon per GSON documentation
+    // Use multiple contains because order of JSON should not be relied upon per GSON documentation
     Assert.assertTrue(
         result.contains("\"email\":\"" + EMAIL + "\"")
         && result.contains("\"nickname\":\"" + NICKNAME + "\"")
         && result.contains("\"userId\":\"" + IDENTIFICATION_STRING + "\"")
     );
 
-    // pronouns were not specified, so they should not be in JSON representation
+    // Pronouns were not specified, so they should not be in JSON representation
     Assert.assertFalse(result.contains("pronouns"));
   }
 

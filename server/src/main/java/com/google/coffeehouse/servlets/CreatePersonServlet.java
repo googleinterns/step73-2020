@@ -78,7 +78,7 @@ public class CreatePersonServlet extends HttpServlet {
     if (pronouns != null) {
       personBuilder.setPronouns(pronouns);
     }
-    // check for dependency injection on ID generator
+    // Check for dependency injection on ID generator
     if (idGen != null) {
       personBuilder.setIdGenerator(idGen);
     }
