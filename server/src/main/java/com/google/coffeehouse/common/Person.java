@@ -19,7 +19,7 @@ import com.google.coffeehouse.util.UuidWrapper;
 import java.util.Optional; 
 
 /**
- * Person is the class than encapsulates the information associated with a user who has an account.
+ * Person encapsulates the information associated with a user who has an account.
  * 
  * <p>It implementes the {@link Saveable} interface because it will be able to save itself
  * in the database.
