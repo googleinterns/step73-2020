@@ -58,7 +58,7 @@ public class CreatePersonServlet extends HttpServlet {
    * Creates a {@link Person} object, saves it in the database and returns it in JSON format.
    * @param request the post request that must have {@code email} and {@code nickname} defined
    *     as parameters or the respone will send a "bad request error"
-   * @param reponse the response from this method, will contain the created object in JSON format
+   * @param response the response from this method, will contain the created object in JSON format
    * @throws IOException if an input or output error is detected when the servlet handles the request
    */
   @Override
