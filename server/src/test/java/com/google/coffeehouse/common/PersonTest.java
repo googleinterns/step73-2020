@@ -35,7 +35,7 @@ public final class PersonTest {
   private static final String PRONOUNS = "she/her";
   private static final String ALT_PRONOUNS = "New Pronouns";
   private static final String IDENTIFICATION_STRING = "predetermined-identification-string";
-  private Person.Builder personBuilder = Person.newBuilder(EMAIL, NICKNAME);
+  private Person.Builder personBuilder;
   
   @Mock private IdentifierGenerator idGen;
 
@@ -43,6 +43,8 @@ public final class PersonTest {
   public void beforeTest() {
     idGen = Mockito.mock(IdentifierGenerator.class);
     Mockito.when(idGen.generateId()).thenReturn(IDENTIFICATION_STRING);
+
+    personBuilder = Person.newBuilder(EMAIL, NICKNAME);
   }
 
   @Test
