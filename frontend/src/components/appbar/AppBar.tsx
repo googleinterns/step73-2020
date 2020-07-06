@@ -84,7 +84,8 @@ export default function AppBarComp(props: AppBarProps) {
             aria-label="Show drawer with navigation links"
             onClick={props.handleDrawerOpen}
             edge="start"
-            className={clsx(classes.menuButton, props.navigationDrawerOpen && classes.hide)}
+            className={clsx(classes.menuButton, 
+                            props.navigationDrawerOpen && classes.hide)}
           >
             <MenuIcon />
           </IconButton>
