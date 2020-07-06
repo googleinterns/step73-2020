@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface AppBarProps {
   navigationDrawerOpen: boolean;  // whether or not Drawer comp is displayed
-  handleDrawerOpen(): void;  // sets open to true
+  handleDrawerOpen(): void;
 }
 
 export default function AppBarComp(props: AppBarProps) {

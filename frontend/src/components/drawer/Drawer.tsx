@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface DrawerProps {
   navigationDrawerOpen: boolean;  // whether or not Drawer comp is displayed
-  handleDrawerClose(): void;  // sets open to true
+  handleDrawerClose(): void;
 }
 
 export default function DrawerComp(props: DrawerProps) {
