@@ -15,7 +15,7 @@ import { YourClubs } from "./pages/your_clubs/YourClubs";
 interface AppProps {}
 
 interface AppState {
-  open: boolean;
+  /** @state determines if drawer is shown or not*/ open: boolean;
 }
 
 class App extends React.Component<AppProps, AppState> {

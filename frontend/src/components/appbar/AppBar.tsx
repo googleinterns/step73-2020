@@ -81,7 +81,7 @@ export default function AppBarComp(props) {
         <Toolbar>
           <IconButton
             color="inherit"
-            aria-label="open drawer"
+            aria-label="Show drawer with navigation links"
             onClick={props.handleDrawerOpen}
             edge="start"
             className={clsx(classes.menuButton, props.open && classes.hide)}
@@ -92,7 +92,7 @@ export default function AppBarComp(props) {
             CoffeeHouse
           </Typography>
           <IconButton
-            aria-label="profile avatar"
+            aria-label="User's profile avatar"
             color="inherit"
             className={classes.accountIcon}
           >
