@@ -35,7 +35,12 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-/** */
+
+/**
+* The StorageHandlerTest class encompasses functions to set up the spanner service
+* and database client, insert data needed to run each specific test, and then deletes
+* the data in tearDown().
+*/
 @RunWith(JUnit4.class)
 public class StorageHandlerTest {
 

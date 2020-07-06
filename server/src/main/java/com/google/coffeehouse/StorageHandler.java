@@ -18,11 +18,17 @@ import com.google.cloud.spanner.DatabaseClient;
 import com.google.cloud.spanner.ResultSet;
 import com.google.cloud.spanner.Statement;
 
+/**
+* The StorageHandler class holds the query functions to get information from the database.
+*
+* @author  Lina Montes
+* @since   2020-07-06 
+*/
 public class StorageHandler {
 
   /**
-  * Prints a string containing information about a person queried from the database. 
-  * This method prints out a user's ID, email, nickname, and pronouns.
+  * Returns a string containing information about a person queried from the database.
+  * This method formats a string with a user's ID, email, nickname, and pronouns.
   * If the user has no pronouns (NULL), or the pronouns are empty, then "No pronouns"
   * is printed out instead.
   *
@@ -63,10 +69,11 @@ public class StorageHandler {
   }
 
   /**
-  * Prints a string containing information about a club queried from the database. 
-  * This method prints out a club's ID, book ID, description, name, and ownerID.
-  * @param  dbClient  the database client 
+  * Returns a string containing information about a club queried from the database.
+  * This method formats a string with a club's ID, book ID, description, name, and ownerID.
+  * @param  dbClient  the database client
   * @param  clubId    the club ID string used to query and get a club's information
+  * @return clubInfo  the formatted string containing the club information
   */
   public static String getClubQuery(DatabaseClient dbClient, String clubId) {
     String clubInfo = "";
@@ -97,10 +104,11 @@ public class StorageHandler {
   }
 
   /**
-  * Prints a string containing information about a book queried from the database. 
-  * This method prints out a book's ID, author, ISBN, and title.
-  * @param  dbClient  the database client 
-  * @param  clubId    the book ID string used to query and get a book's information
+  * Returns a string containing information about a book queried from the database.
+  * This method formats a string with a book's ID, author, ISBN, and title.
+  * @param  dbClient  the database client
+  * @param  bookId    the book ID string used to query and get a book's information
+  * @return bookInfo  the formatted string containing the book information
   */
   public static void getBookQuery(DatabaseClient dbClient, String bookId) {
     String clubInfo = "";

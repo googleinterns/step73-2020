@@ -21,6 +21,13 @@ import com.google.cloud.spanner.Spanner;
 import com.google.cloud.spanner.SpannerOptions;
 import com.google.cloud.spanner.Statement;
 
+/**
+* The StorageHandlerSetup class creates and sets up the Spanner service and database
+* client needed in order to run queries in the database.
+*
+* @author  Lina Montes
+* @since   2020-07-06 
+*/
 public class StorageHandlerSetup {
 
   private static final String INSTANCE_ID = "coffeehouse-instance";
@@ -41,8 +48,9 @@ public class StorageHandlerSetup {
 
   /**
   * Returns a database client that is used to query information.
-  * This method creates a databse client
-  * @return spanner
+  * This method creates a database client, which is then returned for the purposes
+  * of querying the database given the functions in StorageHandler.java
+  * @return dbClient
   */
   public DatabaseClient createDbClient(Spanner spanner) {
     SpannerOptions options = spanner.getOptions();
