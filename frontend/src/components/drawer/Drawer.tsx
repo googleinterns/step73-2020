@@ -9,16 +9,16 @@ import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import ExploreIcon from '@material-ui/icons/Explore';
 import FaceIcon from '@material-ui/icons/Face';
-import IconButton from '@material-ui/core/IconButton';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import { makeStyles } from '@material-ui/core/styles';
-import { Theme} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import { useTheme } from '@material-ui/core/styles';
+import IconButton from "@material-ui/core/IconButton";
+import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import { makeStyles } from "@material-ui/core/styles";
+import { Theme} from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import { useTheme } from "@material-ui/core/styles";
 
 const drawerWidth = LayoutConstants.DRAWER_WIDTH;
 

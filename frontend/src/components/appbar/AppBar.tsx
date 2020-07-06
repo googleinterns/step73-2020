@@ -1,16 +1,16 @@
 import * as LayoutConstants from "../layout/layout_constants"
 import * as React from "react";
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import AppBar from '@material-ui/core/AppBar';
-import clsx from 'clsx';
-import { createStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import { makeStyles } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
-import { Theme } from '@material-ui/core/styles';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import { useTheme } from '@material-ui/core/styles';
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import AppBar from "@material-ui/core/AppBar";
+import clsx from "clsx";
+import { createStyles } from "@material-ui/core/styles";
+import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/core/styles";
+import MenuIcon from "@material-ui/icons/Menu";
+import { Theme } from "@material-ui/core/styles";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import { useTheme } from "@material-ui/core/styles";
 
 const drawerWidth = LayoutConstants.DRAWER_WIDTH;
 
