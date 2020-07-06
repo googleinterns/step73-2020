@@ -48,11 +48,11 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: -drawerWidth,
     },
     contentShift: {
+      marginLeft: 0,
       transition: theme.transitions.create('margin', {
         easing: theme.transitions.easing.easeOut,
         duration: theme.transitions.duration.enteringScreen,
       }),
-      marginLeft: 0,
     },
     accountIcon: {
       marginLeft: "auto"
