@@ -71,7 +71,7 @@ export default function DrawerComp(props) {
         className={classes.drawer}
         variant="persistent"
         anchor="left"
-        open={props.open}
+        open={props.navigationDrawerOpen}
         classes={{
           paper: classes.drawerPaper,
         }}

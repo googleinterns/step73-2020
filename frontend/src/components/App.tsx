@@ -16,7 +16,8 @@ import { YourClubs } from "./pages/your_clubs/YourClubs";
 interface AppProps {}
 
 interface AppState {
-  /** @state determines if drawer is shown or not*/ open: boolean;
+  /** @state determines if drawer is shown or not*/ 
+  navigationDrawerOpen: boolean;
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -25,18 +26,18 @@ class App extends React.Component<AppProps, AppState> {
     super(props);
     
     this.state = {
-      open: false
+      navigationDrawerOpen: false
     };
   }
 
   // Handles opening drawer in AppBar and Drawer components
   handleDrawerOpen = () => {
-    this.setState({open: true});
+    this.setState({navigationDrawerOpen: true});
   };
 
   // Handles closing drawer in AppBar and Drawer components
   handleDrawerClose = () => {
-    this.setState({open: false});
+    this.setState({navigationDrawerOpen: false});
   };
   
   public render() {
@@ -44,11 +45,11 @@ class App extends React.Component<AppProps, AppState> {
       <BrowserRouter>
         <CssBaseline />
         <AppBar 
-          open={this.state.open}
+          navigationDrawerOpen={this.state.navigationDrawerOpen}
           handleDrawerOpen={this.handleDrawerOpen}
         />
         <Drawer 
-          open={this.state.open}
+          navigationDrawerOpen={this.state.navigationDrawerOpen}
           handleDrawerClose={this.handleDrawerClose}
         />
         <main>
