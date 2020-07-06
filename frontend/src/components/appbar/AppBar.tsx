@@ -1,3 +1,4 @@
+import * as LayoutConstants from "../layout/layout_constants"
 import * as React from "react";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AppBar from '@material-ui/core/AppBar';
@@ -11,7 +12,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { useTheme } from '@material-ui/core/styles';
 
-const drawerWidth = 240;
+const drawerWidth = LayoutConstants.DRAWER_WIDTH;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

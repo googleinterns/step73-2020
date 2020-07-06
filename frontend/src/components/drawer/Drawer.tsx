@@ -1,3 +1,4 @@
+import * as LayoutConstants from "../layout/layout_constants"
 import * as React from "react";
 import { Link } from "react-router-dom"
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -19,7 +20,7 @@ import { Theme} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { useTheme } from '@material-ui/core/styles';
 
-const drawerWidth = 240;
+const drawerWidth = LayoutConstants.DRAWER_WIDTH;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

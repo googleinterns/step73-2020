@@ -1,4 +1,4 @@
-import * as PageConstants from "./pages/PageConstants";
+import * as PageConstants from "./pages/page_constants";
 import * as React from "react";
 import AppBar from "./appbar/AppBar";
 import { BrowserRouter } from "react-router-dom";
