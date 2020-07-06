@@ -46,11 +46,9 @@ class App extends React.Component<AppProps, AppState> {
         <AppBar 
           open={this.state.open}
           handleDrawerOpen={this.handleDrawerOpen}
-          handleDrawerClose={this.handleDrawerClose}
         />
         <Drawer 
           open={this.state.open}
-          handleDrawerOpen={this.handleDrawerOpen}
           handleDrawerClose={this.handleDrawerClose}
         />
         <main>

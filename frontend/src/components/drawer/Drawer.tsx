@@ -52,7 +52,6 @@ const useStyles = makeStyles((theme: Theme) =>
 /**
  * Creates the Drawer component which is displayed when open is true
  * @prop.open: boolean represents whether or not Drawer comp is displayed
- * @prop.handleDrawerOpen(): void sets open to true
  * @prop.handleDrawerClose(): void sets open to false
  */
 export default function DrawerComp(props) {
