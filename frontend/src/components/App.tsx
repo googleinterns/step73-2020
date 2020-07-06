@@ -1,3 +1,4 @@
+import * as PageConstants from "./pages/PageConstants";
 import * as React from "react";
 import AppBar from "./appbar/AppBar";
 import { BrowserRouter } from "react-router-dom";
@@ -54,10 +55,10 @@ class App extends React.Component<AppProps, AppState> {
         />
         <main>
           <Switch>
-            <Route exact path="/Login" component={Login} />
-            <Route exact path="/YourClubs" component={YourClubs} />
-            <Route exact path="/Explore" component={Explore} />
-            <Route exact path="/Profile" component={Profile} />
+            <Route exact path={PageConstants.URL_EXPLORE} component={Explore} />
+            <Route exact path={PageConstants.URL_LOGIN} component={Login} />
+            <Route exact path={PageConstants.URL_PROFILE} component={Profile} />
+            <Route exact path={PageConstants.URL_YOUR_CLUBS} component={YourClubs} />
           </Switch>
         </main>
       </BrowserRouter>
