@@ -1,18 +1,15 @@
-// React Framework imports
 import * as React from "react";
-import clsx from 'clsx';
-
-// Material-UI Functionality imports
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AppBar from '@material-ui/core/AppBar';
+import clsx from 'clsx';
+import { createStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
-import { createStyles, makeStyles, 
-         useTheme, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
+import MenuIcon from '@material-ui/icons/Menu';
+import { Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-
-// Material-UI Icon imports
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import MenuIcon from '@material-ui/icons/Menu';
+import { useTheme } from '@material-ui/core/styles';
 
 const drawerWidth = 240;
 

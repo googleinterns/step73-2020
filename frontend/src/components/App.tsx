@@ -1,20 +1,15 @@
-// React Framework imports
 import * as React from "react";
-import { hot } from "react-hot-loader";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import clsx from 'clsx';
-
-// Material-UI Imports
-import CssBaseline from '@material-ui/core/CssBaseline';
-
-// Component Imports
 import AppBar from "./appbar/AppBar";
+import { BrowserRouter } from "react-router-dom";
+import clsx from 'clsx';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from "./drawer/Drawer";
-
-// Page Imports
 import { Explore } from "./pages/explore/Explore";
+import { hot } from "react-hot-loader";
 import { Login } from "./pages/login/Login"; 
 import { Profile } from "./pages/profile/Profile";
+import { Route } from "react-router-dom";
+import { Switch } from "react-router-dom";
 import { YourClubs } from "./pages/your_clubs/YourClubs";
 
 interface AppProps {}

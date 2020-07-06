@@ -1,26 +1,23 @@
-// React Framework imports
 import * as React from "react";
 import { Link } from "react-router-dom"
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import clsx from 'clsx';
-
-// Material-UI Functionality imports
+import { createStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
+import ExploreIcon from '@material-ui/icons/Explore';
+import FaceIcon from '@material-ui/icons/Face';
 import IconButton from '@material-ui/core/IconButton';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { createStyles, makeStyles, 
-         useTheme, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
+import { Theme} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
-// Material-UI Icon imports
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ExploreIcon from '@material-ui/icons/Explore';
-import FaceIcon from '@material-ui/icons/Face';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import { useTheme } from '@material-ui/core/styles';
 
 const drawerWidth = 240;
 
