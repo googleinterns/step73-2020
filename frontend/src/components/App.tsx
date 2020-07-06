@@ -5,10 +5,12 @@ import { BrowserRouter, Route, Switch, Link} from "react-router-dom";
 import clsx from 'clsx';
 
 // Material-UI Imports
+import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
 
 // Component Imports
 import AppBar from "./appbar/AppBar";
+import Drawer from "./drawer/Drawer";
 
 // Page Imports
 import { Explore } from "./pages/explore/Explore";
@@ -16,12 +18,47 @@ import { Login } from "./pages/login/Login";
 import { Profile } from "./pages/profile/Profile";
 import { YourClubs } from "./pages/your_clubs/YourClubs";
 
-class App extends React.Component<{}, undefined> {
+interface AppProps {
+  history?: any;
+  location?: any;
+}
+
+interface AppState {
+  open: boolean;
+}
+
+class App extends React.Component<AppProps, AppState> {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      open: false
+    };
+  }
+
+  handleDrawerOpen = () => {
+    this.setState({open: true});
+  };
+
+  handleDrawerClose = () => {
+    this.setState({open: false});
+  };
 
   public render() {
     return (
       <BrowserRouter>
-        <AppBar />
+        <CssBaseline />
+        <AppBar 
+          open={this.state.open}
+          handleDrawerOpen={this.handleDrawerOpen.bind(this)}
+          handleDrawerClose={this.handleDrawerClose.bind(this)}
+        />
+        <Drawer 
+          open={this.state.open}
+          handleDrawerOpen={this.handleDrawerOpen.bind(this)}
+          handleDrawerClose={this.handleDrawerClose.bind(this)}
+        />
         <main>
           <Switch>
             <Route exact path="/Login" component={Login} />

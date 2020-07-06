@@ -39,14 +39,6 @@ const useStyles = makeStyles((theme: Theme) =>
         easing: theme.transitions.easing.sharp,
       }),
     },
-    appBarShift: {
-      marginLeft: drawerWidth,
-      transition: theme.transitions.create(['margin', 'width'], {
-        duration: theme.transitions.duration.enteringScreen,
-        easing: theme.transitions.easing.easeOut,
-      }),
-      width: `calc(100% - ${drawerWidth}px)`,
-    },
     menuButton: {
       marginRight: theme.spacing(2),
     },
@@ -68,22 +60,6 @@ const useStyles = makeStyles((theme: Theme) =>
       // necessary for content to be below app bar
       ...theme.mixins.toolbar
     },
-    content: {
-      flexGrow: 1,
-      padding: theme.spacing(3),
-      transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      marginLeft: -drawerWidth,
-    },
-    contentShift: {
-      transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      marginLeft: 0,
-    },
     link: {
       color: theme.palette.text.primary,
       textDecoration: 'none'
@@ -94,40 +70,44 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function AppBarComp(props) {
+export default function DrawerComp(props) {
   const classes = useStyles();
   const theme = useTheme();
 
+  const pagesList = [
+    {text: "Your Clubs", url: "/YourClubs", icon: <LibraryBooksIcon />},
+    {text: "Explore", url: "/Explore", icon: <ExploreIcon />},
+    {text: "Profile", url: "/Profile", icon: <AccountCircleIcon />}
+  ];
+
   return (
-    <div className={classes.root}>
-      <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: props.open,
-        })}
+    <div>
+      <Drawer
+        className={classes.drawer}
+        variant="persistent"
+        anchor="left"
+        open={props.open}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
       >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={props.handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, props.open && classes.hide)}
-          >
-            <MenuIcon />
+        <div className={classes.drawerHeader}>
+          <IconButton onClick={props.handleDrawerClose}>
+            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
-          <Typography variant="h6" noWrap>
-            CoffeeHouse
-          </Typography>
-          <IconButton
-            aria-label="profile avatar"
-            color="inherit"
-            className={classes.accountIcon}
-          >
-            <AccountCircleIcon fontSize="large"/>
-          </IconButton>
-        </Toolbar>
-      </AppBar>
+        </div>
+        <List>
+          {pagesList.map((item, index) => (
+            <Link to={item.url} className={classes.link} key={item.url}>
+              <ListItem button key={item.text}>
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItem>
+            </Link>
+          ))}
+        </List>
+        <Divider />
+      </Drawer>
     </div>
-  );
+  )
 }
