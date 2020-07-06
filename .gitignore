@@ -1,2 +1,8 @@
 target/
 .idea
+
+target/
+node_modules/
+
+target/
+package-lock.json
