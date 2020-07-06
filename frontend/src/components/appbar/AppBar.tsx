@@ -63,9 +63,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 /**
  * Creates the AppBar component to be displayed
- * @prop {boolean=} open represents whether or not Drawer comp is displayed
- * @prop {handleDrawerOpen(): void} handleDrawerOpen sets open to true
- * @prop {handleDrawerClose(): void} handleDrawerClose sets open to false
+ * @prop.open: boolean represents whether or not Drawer comp is displayed
+ * @prop.handleDrawerOpen(): void sets open to true
+ * @prop.handleDrawerClose(): void sets open to false
  */
 export default function AppBarComp(props) {
   const classes = useStyles();
