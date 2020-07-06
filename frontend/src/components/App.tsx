@@ -42,7 +42,7 @@ class App extends React.Component<AppProps, AppState> {
   handleDrawerClose = () => {
     this.setState({open: false});
   };
-
+  
   public render() {
     return (
       <BrowserRouter>
