@@ -40,7 +40,7 @@ public final class PersonTest {
   @Mock private IdentifierGenerator idGen;
 
   @Before
-  public void beforeTest() {
+  public void setUp() {
     idGen = Mockito.mock(IdentifierGenerator.class);
     Mockito.when(idGen.generateId()).thenReturn(IDENTIFICATION_STRING);
 
