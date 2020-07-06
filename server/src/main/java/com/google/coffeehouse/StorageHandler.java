@@ -110,10 +110,10 @@ public class StorageHandler {
   * @param  bookId    the book ID string used to query and get a book's information
   * @return bookInfo  the formatted string containing the book information
   */
-  public static void getBookQuery(DatabaseClient dbClient, String bookId) {
-    String clubInfo = "";
+  public static String getBookQuery(DatabaseClient dbClient, String bookId) {
+    String bookInfo = "";
     String author = "";
-    Integer ISBN = "";
+    long isbn = 0;
     String title = "";
     Statement statement = 
         Statement.newBuilder(
@@ -126,13 +126,13 @@ public class StorageHandler {
     try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
       while (resultSet.next()) {
         author = resultSet.getString("author");
-        isbn = resultSet.getInteger("isbn");
+        isbn = resultSet.getLong("isbn");
         title = resultSet.getString("title");
       }
       bookInfo = String.format(
                         "Book ID: %s || Author: %s || ISBN: %d || Title: %s\n",
-                        bookId, author, ISBN, title);
+                        bookId, author, isbn, title);
     }
-    return clubInfo;
+    return bookInfo;
   }
 }

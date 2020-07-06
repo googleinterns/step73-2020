@@ -38,8 +38,7 @@ import org.junit.runners.JUnit4;
 
 /**
 * The StorageHandlerTest class encompasses functions to set up the spanner service
-* and database client, insert data needed to run each specific test, and then deletes
-* the data in tearDown().
+* and database client, insert data for each specific test, and then deletes the data in tearDown().
 */
 @RunWith(JUnit4.class)
 public class StorageHandlerTest {
@@ -50,19 +49,16 @@ public class StorageHandlerTest {
 
   @Before
   public void setUp() {
+    // Create spanner service and database client
     SpannerOptions options = SpannerOptions.newBuilder().build();
     Spanner spanner = options.getService();
     DatabaseId db = DatabaseId.of(options.getProjectId(), INSTANCE_ID, DATABASE_ID);
     dbClient = spanner.getDatabaseClient(db);
-    System.out.println("Setting up!");
-  }
 
-  @After
-  public void tearDown() {
+    // Delete all the data while keeping the existing database
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(Mutation.delete("Persons", KeySet.all()));
     dbClient.write(mutations);
-    System.out.println("Deleting data and tearing down!");
   }
 
   public void insertPersonWithPronouns() {
@@ -117,7 +113,6 @@ public class StorageHandlerTest {
     String actual = StorageHandler.getPersonQuery(dbClient, "pronouns");
     String expected = "User ID: pronouns || Email: pronouns@test.com || Nickname: Pro-Test || Pronouns: she/he/they\n";
     Assert.assertEquals(expected, actual);
-    tearDown();
   }
 
   @Test
@@ -126,7 +121,6 @@ public class StorageHandlerTest {
     String actual = StorageHandler.getPersonQuery(dbClient, "nullPronouns");
     String expected = "User ID: nullPronouns || Email: null@test.com || Nickname: Null-Test || No pronouns\n";
     Assert.assertEquals(expected, actual);
-    tearDown();
   }
 
   @Test
@@ -135,6 +129,5 @@ public class StorageHandlerTest {
     String actual = StorageHandler.getPersonQuery(dbClient, "emptyPronouns");
     String expected = "User ID: emptyPronouns || Email: empty@test.com || Nickname: Empty-Test || No pronouns\n";
     Assert.assertEquals(expected, actual);
-    tearDown();
   }
 }
