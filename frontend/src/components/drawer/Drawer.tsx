@@ -24,7 +24,6 @@ import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 
 const drawerWidth = 240;
 
-// Styles AppBar transition, page content in relation to AppBar
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -56,6 +55,7 @@ export default function DrawerComp(props) {
   const classes = useStyles();
   const theme = useTheme();
 
+  // Associates each URL with a text representation and icon
   const pagesList = [
     {text: "Your Clubs", url: "/YourClubs", icon: <LibraryBooksIcon />},
     {text: "Explore", url: "/Explore", icon: <ExploreIcon />},

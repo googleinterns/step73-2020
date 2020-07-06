@@ -16,7 +16,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 const drawerWidth = 240;
 
-// Styles AppBar transition, page content in relation to AppBar
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {

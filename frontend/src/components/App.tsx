@@ -30,16 +30,18 @@ class App extends React.Component<AppProps, AppState> {
 
   constructor(props) {
     super(props);
-
+    
     this.state = {
       open: false
     };
   }
 
+  // Handles opening drawer in AppBar and Drawer components
   handleDrawerOpen = () => {
     this.setState({open: true});
   };
 
+  // Handles closing drawer in AppBar and Drawer components
   handleDrawerClose = () => {
     this.setState({open: false});
   };
