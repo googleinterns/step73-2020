@@ -45,13 +45,13 @@ class App extends React.Component<AppProps, AppState> {
         <CssBaseline />
         <AppBar 
           open={this.state.open}
-          handleDrawerOpen={this.handleDrawerOpen.bind(this)}
-          handleDrawerClose={this.handleDrawerClose.bind(this)}
+          handleDrawerOpen={this.handleDrawerOpen}
+          handleDrawerClose={this.handleDrawerClose}
         />
         <Drawer 
           open={this.state.open}
-          handleDrawerOpen={this.handleDrawerOpen.bind(this)}
-          handleDrawerClose={this.handleDrawerClose.bind(this)}
+          handleDrawerOpen={this.handleDrawerOpen}
+          handleDrawerClose={this.handleDrawerClose}
         />
         <main>
           <Switch>
