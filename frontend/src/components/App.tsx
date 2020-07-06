@@ -1,12 +1,11 @@
 // React Framework imports
 import * as React from "react";
 import { hot } from "react-hot-loader";
-import { BrowserRouter, Route, Switch, Link} from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import clsx from 'clsx';
 
 // Material-UI Imports
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
 
 // Component Imports
 import AppBar from "./appbar/AppBar";

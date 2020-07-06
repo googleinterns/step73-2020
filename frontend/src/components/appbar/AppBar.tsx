@@ -1,28 +1,17 @@
 // React Framework imports
 import * as React from "react";
-import { Link } from "react-router-dom"
 import clsx from 'clsx';
 
 // Material-UI Functionality imports
 import AppBar from '@material-ui/core/AppBar';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles, 
+         useTheme, Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
 // Material-UI Icon imports
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ExploreIcon from '@material-ui/icons/Explore';
-import FaceIcon from '@material-ui/icons/Face';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import MenuIcon from '@material-ui/icons/Menu';
 
 const drawerWidth = 240;
@@ -53,21 +42,6 @@ const useStyles = makeStyles((theme: Theme) =>
     hide: {
       display: 'none',
     },
-    drawer: {
-      flexShrink: 0,
-      width: drawerWidth,
-    },
-    drawerPaper: {
-      width: drawerWidth,
-    },
-    drawerHeader: {
-      alignItems: 'center',
-      display: 'flex',
-      justifyContent: 'flex-end',
-      padding: theme.spacing(0, 1),
-      // necessary for content to be below app bar
-      ...theme.mixins.toolbar
-    },
     content: {
       flexGrow: 1,
       padding: theme.spacing(3),
@@ -83,10 +57,6 @@ const useStyles = makeStyles((theme: Theme) =>
         duration: theme.transitions.duration.enteringScreen,
       }),
       marginLeft: 0,
-    },
-    link: {
-      color: theme.palette.text.primary,
-      textDecoration: 'none'
     },
     accountIcon: {
       marginLeft: "auto"

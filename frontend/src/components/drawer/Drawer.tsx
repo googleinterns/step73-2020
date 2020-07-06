@@ -4,7 +4,6 @@ import { Link } from "react-router-dom"
 import clsx from 'clsx';
 
 // Material-UI Functionality imports
-import AppBar from '@material-ui/core/AppBar';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
@@ -12,18 +11,16 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
-import Toolbar from '@material-ui/core/Toolbar';
+import { createStyles, makeStyles, 
+         useTheme, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 // Material-UI Icon imports
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExploreIcon from '@material-ui/icons/Explore';
 import FaceIcon from '@material-ui/icons/Face';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import MenuIcon from '@material-ui/icons/Menu';
 
 const drawerWidth = 240;
 
@@ -32,18 +29,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
-    },
-    appBar: {
-      transition: theme.transitions.create(['margin', 'width'], {
-        duration: theme.transitions.duration.leavingScreen,
-        easing: theme.transitions.easing.sharp,
-      }),
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    hide: {
-      display: 'none',
     },
     drawer: {
       flexShrink: 0,
@@ -64,9 +49,6 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.primary,
       textDecoration: 'none'
     },
-    accountIcon: {
-      marginLeft: "auto"
-    }
   }),
 );
 
@@ -77,7 +59,7 @@ export default function DrawerComp(props) {
   const pagesList = [
     {text: "Your Clubs", url: "/YourClubs", icon: <LibraryBooksIcon />},
     {text: "Explore", url: "/Explore", icon: <ExploreIcon />},
-    {text: "Profile", url: "/Profile", icon: <AccountCircleIcon />}
+    {text: "Profile", url: "/Profile", icon: <FaceIcon />}
   ];
 
   return (
