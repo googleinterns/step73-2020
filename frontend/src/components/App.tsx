@@ -8,9 +8,10 @@ import Drawer from "./drawer/Drawer";
 import { Explore } from "./pages/explore/Explore";
 import { hot } from "react-hot-loader";
 import { Login } from "./pages/login/Login"; 
-import { Profile } from "./pages/profile/Profile";
+import Profile from "./pages/profile/Profile"
 import { Route } from "react-router-dom";
 import { Switch } from "react-router-dom";
+import { withStyles } from "@material-ui/core/styles";
 import { YourClubs } from "./pages/your_clubs/YourClubs";
 
 interface AppProps {}
@@ -21,13 +22,13 @@ interface AppState {
 }
 
 class App extends React.Component<AppProps, AppState> {
-
+  
   constructor(props) {
     super(props);
     
     this.state = {
       navigationDrawerOpen: false
-    };
+    };  
   }
 
   // Handles opening drawer in AppBar and Drawer components
@@ -39,7 +40,7 @@ class App extends React.Component<AppProps, AppState> {
   handleDrawerClose = () => {
     this.setState({navigationDrawerOpen: false});
   };
-  
+
   public render() {
     return (
       <BrowserRouter>
