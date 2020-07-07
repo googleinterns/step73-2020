@@ -32,34 +32,38 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function Profile() {
-  const [email, setEmail] = React.useState('Email');
-  const [nickname, setNickname] = React.useState('Name');
-  const [pronouns, setPronouns] = React.useState('Pronouns');
+  const [userEmail, setEmail] = React.useState('Email');
+  const [userNickname, setNickname] = React.useState('Name');
+  const [userPronouns, setPronouns] = React.useState('Pronouns');
 
   const classes = useStyles();
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
-    console.log(email);
+    console.log(userEmail);
   };
 
   const handleNicknameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(event.target.value);
-    console.log(nickname);
+    console.log(userNickname);
   };
 
   const handlePronounsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPronouns(event.target.value);
-    console.log(pronouns)
+    console.log(userPronouns)
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const Person = {};
-    console.log(nickname);
-    console.log(pronouns);
-    console.log(email);
+    const person = {
+      nickname: userNickname, 
+      pronouns: userPronouns, 
+      email: userEmail,
+    };
+
+    const personJson = JSON.stringify(person);
+    console.log(personJson);
   };
 
   return (
