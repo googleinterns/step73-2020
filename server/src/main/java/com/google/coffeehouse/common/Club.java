@@ -29,6 +29,10 @@ import java.util.Map;
 public class Club implements Saveable {
   public static final String NO_VALID_NAME_BOOK_FROM_MAP = 
       "No valid \"name\" or \"currentBook\" key defined.";
+  public static final String NAME_FIELD_NAME = "name";
+  public static final String CURRENTBOOK_FIELD_NAME = "currentBook";
+  public static final String CONTENTWARNINGS_FIELD_NAME = "contentWarnings";
+  public static final String DESCRIPTION_FIELD_NAME = "description";
   private String name;
   private Book currentBook;
   private String clubId;
@@ -65,8 +69,8 @@ public class Club implements Saveable {
    *     {@code "currentBook"} key is defined
    */
   public static Club fromMap(Map clubInfo, IdentifierGenerator idGen) {
-    String name = (String) clubInfo.getOrDefault("name", null);
-    Map bookInfo = (Map) clubInfo.getOrDefault("currentBook", null);
+    String name = (String) clubInfo.getOrDefault(NAME_FIELD_NAME, null);
+    Map bookInfo = (Map) clubInfo.getOrDefault(CURRENTBOOK_FIELD_NAME, null);
     if (name == null || bookInfo == null) {
       throw new IllegalArgumentException(NO_VALID_NAME_BOOK_FROM_MAP);
     }
@@ -74,8 +78,8 @@ public class Club implements Saveable {
     Book currentBook = Book.fromMap(bookInfo, idGen);
     Club.Builder clubBuilder = 
         Club.newBuilder(name, currentBook)
-            .setContentWarnings((List) clubInfo.getOrDefault("contentWarnings", new ArrayList<>()))
-            .setDescription((String) clubInfo.getOrDefault("description", ""));
+            .setContentWarnings((List) clubInfo.getOrDefault(CONTENTWARNINGS_FIELD_NAME, new ArrayList<>()))
+            .setDescription((String) clubInfo.getOrDefault(DESCRIPTION_FIELD_NAME, ""));
     if (idGen != null) {
       clubBuilder.setIdGenerator(idGen);
     }

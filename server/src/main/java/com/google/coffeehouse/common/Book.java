@@ -27,6 +27,9 @@ import java.util.Optional;
  */
 public class Book implements Saveable {
   public static final String NO_VALID_TITLE_FROM_MAP = "No valid \"title\" key defined.";
+  public static final String TITLE_FIELD_NAME = "title";
+  public static final String AUTHOR_FIELD_NAME = "author";
+  public static final String ISBN_FIELD_NAME = "isbn";
   private String title;
   private String author;
   private String isbn;
@@ -57,14 +60,14 @@ public class Book implements Saveable {
    * @throws IllegalArgumentException if no valid {@code "title"} key is defined
    */
   public static Book fromMap(Map bookInfo, IdentifierGenerator idGen) {
-    String title = (String) bookInfo.getOrDefault("title", null);
+    String title = (String) bookInfo.getOrDefault(TITLE_FIELD_NAME, null);
     if (title == null) {
       throw new IllegalArgumentException(NO_VALID_TITLE_FROM_MAP);
     }
 
     Book.Builder bookBuilder = Book.newBuilder(title)
-                                   .setAuthor((String) bookInfo.getOrDefault("author", null))
-                                   .setIsbn((String) bookInfo.getOrDefault("isbn", null));
+                                   .setAuthor((String) bookInfo.getOrDefault(AUTHOR_FIELD_NAME, null))
+                                   .setIsbn((String) bookInfo.getOrDefault(ISBN_FIELD_NAME, null));
     if (idGen != null) {
       bookBuilder.setIdGenerator(idGen);
     }
