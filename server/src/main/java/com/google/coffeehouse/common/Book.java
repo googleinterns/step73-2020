@@ -65,9 +65,13 @@ public class Book implements Saveable {
       throw new IllegalArgumentException(NO_VALID_TITLE_FROM_MAP);
     }
 
-    Book.Builder bookBuilder = Book.newBuilder(title)
-                                   .setAuthor((String) bookInfo.getOrDefault(AUTHOR_FIELD_NAME, null))
-                                   .setIsbn((String) bookInfo.getOrDefault(ISBN_FIELD_NAME, null));
+    Book.Builder bookBuilder = Book.newBuilder(title);
+    if (bookInfo.containsKey(AUTHOR_FIELD_NAME)) {
+      bookBuilder.setAuthor((String) bookInfo.get(AUTHOR_FIELD_NAME));
+    }
+    if (bookInfo.containsKey(ISBN_FIELD_NAME)) {
+      bookBuilder.setIsbn((String) bookInfo.get(ISBN_FIELD_NAME));
+    }
     if (idGen != null) {
       bookBuilder.setIdGenerator(idGen);
     }

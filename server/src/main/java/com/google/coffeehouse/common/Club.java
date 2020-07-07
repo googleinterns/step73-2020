@@ -76,10 +76,14 @@ public class Club implements Saveable {
     }
 
     Book currentBook = Book.fromMap(bookInfo, idGen);
-    Club.Builder clubBuilder = 
-        Club.newBuilder(name, currentBook)
-            .setContentWarnings((List) clubInfo.getOrDefault(CONTENTWARNINGS_FIELD_NAME, new ArrayList<>()))
-            .setDescription((String) clubInfo.getOrDefault(DESCRIPTION_FIELD_NAME, ""));
+    
+    Club.Builder clubBuilder = Club.newBuilder(name, currentBook);
+    if (clubInfo.containsKey(CONTENTWARNINGS_FIELD_NAME)) {
+      clubBuilder.setContentWarnings((List) clubInfo.get(CONTENTWARNINGS_FIELD_NAME));
+    }
+    if (clubInfo.containsKey(DESCRIPTION_FIELD_NAME)) {
+      clubBuilder.setDescription((String) clubInfo.get(DESCRIPTION_FIELD_NAME));
+    }
     if (idGen != null) {
       clubBuilder.setIdGenerator(idGen);
     }
@@ -142,7 +146,7 @@ public class Club implements Saveable {
     private Book currentBook;
     private String description = "";
     private IdentifierGenerator idGenerator = new UuidWrapper();
-    private List<String> contentWarnings = null;
+    private List<String> contentWarnings = new ArrayList<>();;
     private static final String DEFAULT_DESCRIPTION = "A book club about %s.";
 
     public Builder(String name, Book currentBook) {
