@@ -14,6 +14,10 @@
 
 package com.google.coffeehouse.servlets;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.coffeehouse.util.IdentifierGenerator;
 import java.io.BufferedReader;
@@ -28,7 +32,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 /**
  * Unit tests for {@link CreateClubServlet}.
@@ -81,13 +84,13 @@ public class CreateClubServletTest {
   public void setUp() throws IOException {
     helper.setUp();
 
-    IdentifierGenerator idGen = Mockito.mock(IdentifierGenerator.class);
-    Mockito.when(idGen.generateId()).thenReturn(IDENTIFICATION_STRING);
+    IdentifierGenerator idGen = mock(IdentifierGenerator.class);
+    when(idGen.generateId()).thenReturn(IDENTIFICATION_STRING);
     CreateClubServlet = new CreateClubServlet(idGen);
 
-    request = Mockito.mock(HttpServletRequest.class);
-    response = Mockito.mock(HttpServletResponse.class);
-    Mockito.when(response.getWriter()).thenReturn(new PrintWriter(stringWriter));
+    request = mock(HttpServletRequest.class);
+    response = mock(HttpServletResponse.class);
+    when(response.getWriter()).thenReturn(new PrintWriter(stringWriter));
   }
 
   @After
@@ -97,7 +100,7 @@ public class CreateClubServletTest {
 
   @Test
   public void minimumValidInput() throws IOException {
-    Mockito.when(request.getReader()).thenReturn(
+    when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(MINIMUM_JSON)));
 
     CreateClubServlet.doPost(request, response);
@@ -122,7 +125,7 @@ public class CreateClubServletTest {
 
   @Test
   public void maximumValidInput() throws IOException {
-    Mockito.when(request.getReader()).thenReturn(
+    when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(MAXIMUM_JSON)));
 
     CreateClubServlet.doPost(request, response);
@@ -144,31 +147,31 @@ public class CreateClubServletTest {
 
   @Test
   public void noNameSpecified() throws IOException {
-    Mockito.when(request.getReader()).thenReturn(
+    when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(NO_NAME_JSON)));
     CreateClubServlet.doPost(request, response);
 
-    Mockito.verify(response).sendError(
+    verify(response).sendError(
         HttpServletResponse.SC_BAD_REQUEST, CreateClubServlet.BODY_ERROR);
   }
 
   @Test
   public void noBookSpecified() throws IOException {
-    Mockito.when(request.getReader()).thenReturn(
+    when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(NO_BOOK_JSON)));
     CreateClubServlet.doPost(request, response);
 
-    Mockito.verify(response).sendError(
+    verify(response).sendError(
         HttpServletResponse.SC_BAD_REQUEST, CreateClubServlet.BODY_ERROR);
   }
 
   @Test
   public void badInput() throws IOException {
-    Mockito.when(request.getReader()).thenReturn(
+    when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(SYNTACTICALLY_INCORRECT_JSON)));
     CreateClubServlet.doPost(request, response);
 
-    Mockito.verify(response).sendError(
+    verify(response).sendError(
         HttpServletResponse.SC_BAD_REQUEST, CreateClubServlet.BODY_ERROR);
   }
 }

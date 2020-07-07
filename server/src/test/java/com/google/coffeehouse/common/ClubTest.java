@@ -14,6 +14,10 @@
 
 package com.google.coffeehouse.common;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+
 import com.google.coffeehouse.util.IdentifierGenerator;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +31,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 /**
  * Unit tests for {@link Club}.
@@ -55,10 +58,10 @@ public final class ClubTest {
 
     clubInfo = new HashMap();
     bookInfo = new HashMap<String, String>();
-    bookInfo.put("title", BOOK_TITLE);
+    bookInfo.put(Book.TITLE_FIELD_NAME, BOOK_TITLE);
     
-    idGen = Mockito.mock(IdentifierGenerator.class);
-    Mockito.when(idGen.generateId()).thenReturn(IDENTIFICATION_STRING);
+    idGen = mock(IdentifierGenerator.class);
+    when(idGen.generateId()).thenReturn(IDENTIFICATION_STRING);
 
     testBook = Book.newBuilder(BOOK_TITLE).build();
     altTestBook = Book.newBuilder(ALT_BOOK_TITLE).build();
@@ -118,7 +121,7 @@ public final class ClubTest {
   
   @Test 
   public void fromInvalidMap() {
-    clubInfo.put("contentWarnings", testContentWarnings);
+    clubInfo.put(Club.CONTENTWARNINGS_FIELD_NAME, testContentWarnings);
     Assert.assertThrows(IllegalArgumentException.class, new ThrowingRunnable() {
         @Override
         public void run() throws Throwable {
@@ -129,8 +132,8 @@ public final class ClubTest {
 
   @Test 
   public void fromMinimumValidMap() {
-    clubInfo.put("name", NAME);
-    clubInfo.put("currentBook", bookInfo);
+    clubInfo.put(Club.NAME_FIELD_NAME, NAME);
+    clubInfo.put(Club.CURRENTBOOK_FIELD_NAME, bookInfo);
     Club c = Club.fromMap(clubInfo);
     Assert.assertEquals(NAME, c.getName());
     Assert.assertEquals(new ArrayList<>(), c.getContentWarnings());
@@ -139,10 +142,10 @@ public final class ClubTest {
 
   @Test 
   public void fromMaximumValidMap() {
-    clubInfo.put("name", NAME);
-    clubInfo.put("contentWarnings", testContentWarnings);
-    clubInfo.put("description", DESCRIPTION);
-    clubInfo.put("currentBook", bookInfo);
+    clubInfo.put(Club.NAME_FIELD_NAME, NAME);
+    clubInfo.put(Club.CONTENTWARNINGS_FIELD_NAME, testContentWarnings);
+    clubInfo.put(Club.CURRENTBOOK_FIELD_NAME, bookInfo);
+    clubInfo.put(Club.DESCRIPTION_FIELD_NAME, DESCRIPTION);
 
     Club c = Club.fromMap(clubInfo, idGen);
     Assert.assertEquals(NAME, c.getName());

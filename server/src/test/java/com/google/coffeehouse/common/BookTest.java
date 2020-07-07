@@ -14,6 +14,9 @@
 
 package com.google.coffeehouse.common;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.google.coffeehouse.util.IdentifierGenerator;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +27,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 /**
  * Unit tests for {@link Book}.
@@ -47,8 +49,8 @@ public final class BookTest {
   public void setUp() {
     bookInfo = new HashMap<String, String>();
 
-    idGen = Mockito.mock(IdentifierGenerator.class);
-    Mockito.when(idGen.generateId()).thenReturn(IDENTIFICATION_STRING);
+    idGen = mock(IdentifierGenerator.class);
+    when(idGen.generateId()).thenReturn(IDENTIFICATION_STRING);
 
     bookBuilder = Book.newBuilder(TITLE);
   }
@@ -116,7 +118,7 @@ public final class BookTest {
 
   @Test 
   public void fromInvalidMap() {
-    bookInfo.put("isbn", ISBN);
+    bookInfo.put(Book.ISBN_FIELD_NAME, ISBN);
     Assert.assertThrows(IllegalArgumentException.class, new ThrowingRunnable() {
         @Override
         public void run() throws Throwable {
@@ -127,7 +129,7 @@ public final class BookTest {
 
   @Test 
   public void fromMinimumValidMap() {
-    bookInfo.put("title", TITLE);
+    bookInfo.put(Book.TITLE_FIELD_NAME, TITLE);
     Book b = Book.fromMap(bookInfo);
     Assert.assertEquals(TITLE, b.getTitle());
     Assert.assertFalse(b.getIsbn().isPresent());
@@ -136,9 +138,9 @@ public final class BookTest {
 
   @Test 
   public void fromMaximumValidMap() {
-    bookInfo.put("title", TITLE);
-    bookInfo.put("isbn", ISBN);
-    bookInfo.put("author", AUTHOR);
+    bookInfo.put(Book.TITLE_FIELD_NAME, TITLE);
+    bookInfo.put(Book.ISBN_FIELD_NAME, ISBN);
+    bookInfo.put(Book.AUTHOR_FIELD_NAME, AUTHOR);
     Book b = Book.fromMap(bookInfo, idGen);
     Assert.assertEquals(TITLE, b.getTitle());
     Assert.assertTrue(b.getIsbn().isPresent());
