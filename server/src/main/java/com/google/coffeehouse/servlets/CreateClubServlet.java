@@ -38,6 +38,10 @@ public class CreateClubServlet extends HttpServlet {
    * post request cannot be used to construct a {@link Club} for any reason.
    */
   public static final String BODY_ERROR = "- unable to parse body.";
+
+  /** The logged error string when an error parsing the body of the post request is encoutered */
+  public static final String LOG_BODY_ERROR_MESSAGE = 
+      "Body unable to be parsed in CreateClubServlet: ";
   private IdentifierGenerator idGen = null;
 
   /** 
@@ -76,6 +80,7 @@ public class CreateClubServlet extends HttpServlet {
       Map clubInfo = gson.fromJson(requestBody, Map.class);
       newClub = Club.fromMap(clubInfo, idGen);
     } catch (Exception e) {
+      System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, BODY_ERROR);
       return;
     }

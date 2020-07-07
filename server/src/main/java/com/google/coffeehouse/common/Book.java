@@ -26,10 +26,14 @@ import java.util.Optional;
  * in the database.
  */
 public class Book implements Saveable {
-  public static final String NO_VALID_TITLE_FROM_MAP = "No valid \"title\" key defined.";
-  public static final String TITLE_FIELD_NAME = "title";
+  /** The names of each possible field in the map in fromMap */
   public static final String AUTHOR_FIELD_NAME = "author";
   public static final String ISBN_FIELD_NAME = "isbn";
+  public static final String TITLE_FIELD_NAME = "title";
+
+  /** The message on the IllegalArgumentException when there is no "title" key */
+  public static final String NO_VALID_TITLE_FROM_MAP = 
+      "No valid \"" + TITLE_FIELD_NAME + "\" key defined.";
   private String title;
   private String author;
   private String isbn;

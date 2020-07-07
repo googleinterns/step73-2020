@@ -27,12 +27,16 @@ import java.util.Map;
  * in the database.
  */
 public class Club implements Saveable {
-  public static final String NO_VALID_NAME_BOOK_FROM_MAP = 
-      "No valid \"name\" or \"currentBook\" key defined.";
+  /** The names of each possible field in the map in fromMap */
   public static final String NAME_FIELD_NAME = "name";
   public static final String CURRENTBOOK_FIELD_NAME = "currentBook";
   public static final String CONTENTWARNINGS_FIELD_NAME = "contentWarnings";
   public static final String DESCRIPTION_FIELD_NAME = "description";
+
+  /** The message on the IllegalArgumentException when there is no valid name or book key */
+  public static final String NO_VALID_NAME_BOOK_FROM_MAP = 
+      "No valid \"" + NAME_FIELD_NAME + "\" or \"" + CURRENTBOOK_FIELD_NAME + "\" key defined.";
+
   private String name;
   private Book currentBook;
   private String clubId;
