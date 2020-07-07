@@ -12,19 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.coffeehouse;
+package com.google.coffeehouse.common;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+/**
+ * This interface is to be implemented by all objects that can be saved in the database.
+ */
+public interface Saveable {
 
-/** */
-@RunWith(JUnit4.class)
-public final class PlaceholderTest {
-  // TODO: replace with real test
-  @Test
-  public void equality() {
-    Assert.assertEquals(1, 1);
-  }
+  /**
+   * The save method will save the object in the database.
+   * 
+   * <p>The object can not be in an invalid state when saving. If an object is saved in an
+   * invalid state, problems with recreating the object from the saved data in the database
+   * may result. Any changes made to the object will not persist unless the object saves 
+   * itself after modification.
+   */
+  public void save();
 }

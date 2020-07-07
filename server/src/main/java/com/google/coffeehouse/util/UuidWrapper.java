@@ -12,17 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.coffeehouse.servlets;
+package com.google.coffeehouse.util;
 
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.UUID;
 
-/** Placeholder Servlet */
-@WebServlet("/placeholder")
-public class PlaceholderServlet extends HttpServlet {
+/** A facade wrapper class for {@code java.util.UUID}. */
+public class UuidWrapper implements IdentifierGenerator {
 
+  /** Returns a random universally unique identifier as a string */
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) {}
+  public String generateId() {
+    return UUID.randomUUID().toString();
+  }
 }
