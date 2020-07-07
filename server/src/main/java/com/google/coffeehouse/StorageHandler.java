@@ -53,13 +53,10 @@ public class StorageHandler {
       while (resultSet.next()) {
         email = resultSet.getString("email");
         nickname = resultSet.getString("nickname");
-        pronouns = "No pronouns";
-        try {
-          if (!resultSet.getString("pronouns").isEmpty()) {
-            pronouns = "Pronouns: " + resultSet.getString("pronouns");
-          }
-        } catch (Exception e) {
-          continue;
+        if (resultSet.isNull("pronouns") || resultSet.getString("pronouns").isEmpty()) {
+          pronouns = "No pronouns";
+        } else {
+          pronouns = "Pronouns: " + resultSet.getString("pronouns");
         }
       }
       personInfo = String.format("User ID: %s || Email: %s || Nickname: %s || %s\n",
