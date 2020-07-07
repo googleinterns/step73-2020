@@ -16,7 +16,6 @@ package com.google.coffeehouse.common;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
 
 import com.google.coffeehouse.util.IdentifierGenerator;
 import java.util.ArrayList;
