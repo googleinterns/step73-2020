@@ -19,12 +19,17 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.coffeehouse.common.Club;
 import com.google.coffeehouse.util.IdentifierGenerator;
+import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.After;
@@ -76,6 +81,7 @@ public class CreateClubServletTest {
   private CreateClubServlet CreateClubServlet;
   private final LocalServiceTestHelper helper = new LocalServiceTestHelper();
   private StringWriter stringWriter = new StringWriter();
+  private List<String> testContentWarnings = Arrays.asList("1", "2");
 
   @Mock private HttpServletRequest request;
   @Mock private HttpServletResponse response;
@@ -106,21 +112,16 @@ public class CreateClubServletTest {
     CreateClubServlet.doPost(request, response);
     String result = stringWriter.toString();
 
-    // Use multiple contains because order of JSON should not be relied upon per GSON documentation
-    Assert.assertTrue(
-        result.contains("\"name\":\"" + NAME + "\"")
-        && result.contains("\"clubId\":\"" + IDENTIFICATION_STRING + "\"")
-        && result.contains("\"currentBook\":{")
-        && result.contains("\"title\":\"" + BOOK_TITLE + "\"")
-        && result.contains("\"bookId\":\"" + IDENTIFICATION_STRING + "\"")
-        && result.contains("\"contentWarnings\":[]")
-    );
+    Gson gson = new Gson();
+    Club c = gson.fromJson(result, Club.class);
 
-    // No book author or ISBN was specified, so they should not be in the output
-    Assert.assertFalse(
-        result.contains("\"author\":\"" + BOOK_AUTHOR + "\"")
-        || result.contains("\"isbn\":\"" + BOOK_ISBN + "\"")
-    );
+    Assert.assertEquals(NAME, c.getName());
+    Assert.assertEquals(IDENTIFICATION_STRING, c.getClubId());
+    Assert.assertEquals(new ArrayList<String>(), c.getContentWarnings());
+    Assert.assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
+    Assert.assertEquals(IDENTIFICATION_STRING, c.getCurrentBook().getBookId());
+    Assert.assertFalse(c.getCurrentBook().getAuthor().isPresent());
+    Assert.assertFalse(c.getCurrentBook().getIsbn().isPresent());
   }
 
   @Test
@@ -131,18 +132,19 @@ public class CreateClubServletTest {
     CreateClubServlet.doPost(request, response);
     String result = stringWriter.toString();
 
-    // Use multiple contains because order of JSON should not be relied upon per GSON documentation
-    Assert.assertTrue(
-        result.contains("\"name\":\"" + NAME + "\"")
-        && result.contains("\"description\":\"" + DESCRIPTION + "\"")
-        && result.contains("\"clubId\":\"" + IDENTIFICATION_STRING + "\"")
-        && result.contains("\"currentBook\":{")
-        && result.contains("\"title\":\"" + BOOK_TITLE + "\"")
-        && result.contains("\"author\":\"" + BOOK_AUTHOR + "\"")
-        && result.contains("\"isbn\":\"" + BOOK_ISBN + "\"")
-        && result.contains("\"bookId\":\"" + IDENTIFICATION_STRING + "\"")
-        && result.contains("\"contentWarnings\":[\"1\",\"2\"]")
-    );
+    Gson gson = new Gson();
+    Club c = gson.fromJson(result, Club.class);
+
+    Assert.assertEquals(NAME, c.getName());
+    Assert.assertEquals(IDENTIFICATION_STRING, c.getClubId());
+    Assert.assertEquals(testContentWarnings, c.getContentWarnings());
+    Assert.assertEquals(DESCRIPTION, c.getDescription());
+    Assert.assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
+    Assert.assertEquals(IDENTIFICATION_STRING, c.getCurrentBook().getBookId());
+    Assert.assertTrue(c.getCurrentBook().getAuthor().isPresent());
+    Assert.assertEquals(BOOK_AUTHOR, c.getCurrentBook().getAuthor().get());
+    Assert.assertTrue(c.getCurrentBook().getIsbn().isPresent());
+    Assert.assertEquals(BOOK_ISBN, c.getCurrentBook().getIsbn().get());
   }
 
   @Test
