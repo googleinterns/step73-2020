@@ -27,6 +27,8 @@ import java.util.Map;
  * in the database.
  */
 public class Club implements Saveable {
+  public static final String NO_VALID_NAME_BOOK_FROM_MAP = 
+      "No valid \"name\" or \"currentBook\" key defined.";
   private String name;
   private Book currentBook;
   private String clubId;
@@ -66,7 +68,7 @@ public class Club implements Saveable {
     String name = (String) clubInfo.getOrDefault("name", null);
     Map bookInfo = (Map) clubInfo.getOrDefault("currentBook", null);
     if (name == null || bookInfo == null) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException(NO_VALID_NAME_BOOK_FROM_MAP);
     }
 
     Book currentBook = Book.fromMap(bookInfo, idGen);

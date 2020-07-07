@@ -26,6 +26,7 @@ import java.util.Optional;
  * in the database.
  */
 public class Book implements Saveable {
+  public static final String NO_VALID_TITLE_FROM_MAP = "No valid \"title\" key defined.";
   private String title;
   private String author;
   private String isbn;
@@ -58,7 +59,7 @@ public class Book implements Saveable {
   public static Book fromMap(Map bookInfo, IdentifierGenerator idGen) {
     String title = (String) bookInfo.getOrDefault("title", null);
     if (title == null) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException(NO_VALID_TITLE_FROM_MAP);
     }
 
     Book.Builder bookBuilder = Book.newBuilder(title)
