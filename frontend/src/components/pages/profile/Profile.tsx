@@ -40,17 +40,14 @@ export default function Profile() {
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
-    console.log(userEmail);
   };
 
   const handleNicknameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(event.target.value);
-    console.log(userNickname);
   };
 
   const handlePronounsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPronouns(event.target.value);
-    console.log(userPronouns)
   };
 
   const handleSubmit = (event) => {
