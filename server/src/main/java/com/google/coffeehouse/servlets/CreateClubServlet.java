@@ -82,6 +82,8 @@ public class CreateClubServlet extends HttpServlet {
 
     newClub.save();
 
+    // TODO: Once membership table is implemented, create a membership for the person who made Club
+
     response.setContentType("application/json;");
     response.getWriter().println(gson.toJson(newClub));
   }
