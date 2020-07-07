@@ -44,7 +44,7 @@ public final class BookTest {
   @Mock private IdentifierGenerator idGen;
 
   @Before
-  public void beforeTest() {
+  public void setUp() {
     bookInfo = new HashMap<String, String>();
 
     idGen = Mockito.mock(IdentifierGenerator.class);

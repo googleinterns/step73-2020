@@ -50,7 +50,7 @@ public final class ClubTest {
   @Mock private IdentifierGenerator idGen;
 
   @Before
-  public void beforeTest() {
+  public void setUp() {
     testContentWarnings = new ArrayList<>(Arrays.asList("1", "2"));
 
     clubInfo = new HashMap();

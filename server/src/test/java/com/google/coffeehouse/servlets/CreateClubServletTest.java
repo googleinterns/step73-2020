@@ -78,7 +78,7 @@ public class CreateClubServletTest {
   @Mock private HttpServletResponse response;
 
   @Before
-  public void beforeTest() throws IOException {
+  public void setUp() throws IOException {
     helper.setUp();
 
     IdentifierGenerator idGen = Mockito.mock(IdentifierGenerator.class);
@@ -91,7 +91,7 @@ public class CreateClubServletTest {
   }
 
   @After
-  public void afterTest() {
+  public void tearDown() {
     helper.tearDown();
   }
 
