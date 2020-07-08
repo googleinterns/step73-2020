@@ -22,7 +22,7 @@ import java.util.Optional;
 /**
  * Person encapsulates the information associated with a user who has an account.
  * 
- * <p>It implementes the {@link Saveable} interface because it will be able to save itself
+ * <p>It implements the {@link Saveable} interface because it will be able to save itself
  * in the database.
  */
 public class Person implements Saveable {
