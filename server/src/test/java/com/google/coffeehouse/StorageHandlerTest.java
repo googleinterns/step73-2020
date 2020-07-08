@@ -14,7 +14,7 @@
 
 package com.google.coffeehouse;
 
-import static com.google.cloud.spanner.TransactionRunner.TransactionCallable;
+import static org.junit.Assert.*;
 
 import com.google.cloud.spanner.Database;
 import com.google.cloud.spanner.DatabaseClient;
@@ -28,14 +28,13 @@ import com.google.cloud.spanner.Statement;
 import com.google.cloud.spanner.TransactionContext;
 import com.google.cloud.spanner.Value;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 /**
 * The StorageHandlerTest class encompasses functions to set up the spanner service
@@ -147,69 +146,69 @@ public class StorageHandlerTest {
   }
 
   @Test
-  public void testGetPersonThatDoesNotExistInDb() throws Exception {
+  public void getPersonQuery_doesNotExistInDb() throws Exception {
     String actual = StorageHandler.getPersonQuery(dbClient, "personThatDoesNotExist");
     String expected = StorageHandler.PERSON_DOES_NOT_EXIST;
-    Assert.assertEquals(expected, actual);
+    assertEquals(expected, actual);
   }
 
   @Test
-  public void testGetPersonWithPronounsQuery() throws Exception {
+  public void getPersonQuery_existsWithNoPronouns() throws Exception {
     insertPersonWithPronouns();
     String actual = StorageHandler.getPersonQuery(dbClient, "hasPronouns");
     String expected = "User ID: hasPronouns || Email: pronouns@test.com || Nickname: Pro-Test || Pronouns: she/he/they\n";
-    Assert.assertEquals(expected, actual);
+    assertEquals(expected, actual);
   }
 
   @Test
-  public void testGetPersonWithNullPronounsQuery() throws Exception {
+  public void getPersonQuery_existsWithNullPronouns() throws Exception {
     insertPersonWithNullPronouns();
     String actual = StorageHandler.getPersonQuery(dbClient, "nullPronouns");
     String expected = String.format("User ID: nullPronouns || Email: null@test.com || "
                                       + "Nickname: Null-Test || %s\n", StorageHandler.NO_PRONOUNS);
-    Assert.assertEquals(expected, actual);
+    assertEquals(expected, actual);
   }
 
   @Test
-  public void testGetPersonWithEmptyPronounsQuery() throws Exception {
+  public void getPersonQuery_existsWithEmptyPronouns() throws Exception {
     insertPersonWithEmptyPronouns();
     String actual = StorageHandler.getPersonQuery(dbClient, "emptyPronouns");
     String expected = String.format("User ID: emptyPronouns || Email: empty@test.com || "
                                       + "Nickname: Empty-Test || No pronouns\n",
                                       StorageHandler.NO_PRONOUNS);
-    Assert.assertEquals(expected, actual);
+    assertEquals(expected, actual);
   }
 
   @Test
-  public void testGetClubThatDoesNotExistInDb() throws Exception {
+  public void getClubQuery_doesNotExistInDb() throws Exception {
     String actual = StorageHandler.getClubQuery(dbClient, "clubThatDoesNotExist");
     String expected = StorageHandler.CLUB_DOES_NOT_EXIST;
-    Assert.assertEquals(expected, actual);
+    assertEquals(expected, actual);
   }
 
   @Test
-  public void testGetClubQuery() throws Exception {
+  public void getClubQuery_existsInDb() throws Exception {
     insertClub();
     String actual = StorageHandler.getClubQuery(dbClient, "bellhooksbooks");
     String expected = "Club ID: bellhooksbooks || Book ID: bellhooksallaboutlove || "
                         + "Description: All of bell hooks' books about revolutionary Black feminism. || "
                         + "Name: bell hooks lovers || Owner ID: bellhookstopfan\n";
-    Assert.assertEquals(expected, actual);
+    assertEquals(expected, actual);
   }
 
   @Test
-  public void testGetBookThatDoesNotExistInDb() throws Exception {
+  public void getBookQuery_doesNotExistInDb() throws Exception {
     String actual = StorageHandler.getBookQuery(dbClient, "bookThatDoesNotExist");
     String expected = StorageHandler.BOOK_DOES_NOT_EXIST;
-    Assert.assertEquals(expected, actual);
+    assertEquals(expected, actual);
   }
 
   @Test
-  public void testGetBookQuery() throws Exception {
+  public void getBookQuery_existsInDb() throws Exception {
     insertBook();
     String actual = StorageHandler.getBookQuery(dbClient, "bellhooksallaboutlove");
     String expected = "Book ID: bellhooksallaboutlove || Author: bell hooks || "
                         + "ISBN: 9780060959470 || Title: all about love: new visions\n";
-    Assert.assertEquals(expected, actual);
+    assertEquals(expected, actual);
   }
 }
