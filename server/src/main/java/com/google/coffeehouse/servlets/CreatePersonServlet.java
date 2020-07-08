@@ -73,11 +73,9 @@ public class CreatePersonServlet extends HttpServlet {
    */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String requestBody = request.getReader().lines().collect(Collectors.joining());
-
     Person newPerson;
     try {
-      Map personInfo = gson.fromJson(requestBody, Map.class);
+      Map personInfo = gson.fromJson(request.getReader(), Map.class);
       newPerson = Person.fromMap(personInfo, idGen);
     } catch (Exception e) {
       System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());
