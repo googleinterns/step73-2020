@@ -16,15 +16,25 @@ package com.google.coffeehouse.common;
 
 import com.google.coffeehouse.util.IdentifierGenerator;
 import com.google.coffeehouse.util.UuidWrapper;
+import java.util.Map;
 import java.util.Optional; 
 
 /**
  * Person encapsulates the information associated with a user who has an account.
  * 
- * <p>It implementes the {@link Saveable} interface because it will be able to save itself
+ * <p>It implements the {@link Saveable} interface because it will be able to save itself
  * in the database.
  */
 public class Person implements Saveable {
+  /** The names of each possible field in the map in fromMap */
+  public static final String NICKNAME_FIELD_NAME = "nickname";
+  public static final String EMAIL_FIELD_NAME = "email";
+  public static final String PRONOUNS_FIELD_NAME = "pronouns";
+
+  /** The message on the IllegalArgumentException when there is no valid name or book key */
+  public static final String NO_VALID_NICKNAME_EMAIL_FROM_MAP = 
+      "No valid \"" + NICKNAME_FIELD_NAME + "\" or \"" + EMAIL_FIELD_NAME + "\" key defined.";
+  
   private String nickname;
   private String email;
   private String pronouns;
@@ -35,6 +45,41 @@ public class Person implements Saveable {
     this.email = builder.email;
     this.pronouns = builder.pronouns;
     this.userId = builder.idGenerator.generateId();
+  }
+
+  /** Overloaded static factory, calls other fromMap with null IdentifierGenerator. */
+  public static Person fromMap(Map personInfo) {
+    return Person.fromMap(personInfo, null);
+  }
+
+  /** 
+   * Creates a {@link Person} object from a Map with the relevant parameters as keys.
+   * @param personInfo the Map that contains the information used to construct the Person. At a
+   *     minimum this includes an {@code "email"} key that is mapped to a String that describes
+   *     the email of the Person to be created, as well as a {@code "nickname"} key that is mapped
+   *     to a String that describes the name of the Person to be created. A {@code "pronouns"} key
+   *     that is mapped to a String describing the pronouns of the Person can optionally be added.
+   * @param idGen the {@link IdentifierGenerator} used when constructing the Person. If
+   *     null, the default generator will be used
+   * @return the created Person
+   * @throws IllegalArgumentException if no valid {@code "email"} key or 
+   *     {@code "nickname"} key is defined
+   */
+  public static Person fromMap(Map personInfo, IdentifierGenerator idGen) {
+    String email = (String) personInfo.getOrDefault(EMAIL_FIELD_NAME, null);
+    String nickname = (String) personInfo.getOrDefault(NICKNAME_FIELD_NAME, null);
+    if (email == null || nickname == null) {
+      throw new IllegalArgumentException(NO_VALID_NICKNAME_EMAIL_FROM_MAP);
+    }
+
+    Person.Builder personBuilder = Person.newBuilder(email, nickname);
+    if (personInfo.containsKey(PRONOUNS_FIELD_NAME)) {
+      personBuilder.setPronouns((String) personInfo.get(PRONOUNS_FIELD_NAME));
+    }
+    if (idGen != null) {
+      personBuilder.setIdGenerator(idGen);
+    }
+    return personBuilder.build();
   }
 
   public String getNickname() {
