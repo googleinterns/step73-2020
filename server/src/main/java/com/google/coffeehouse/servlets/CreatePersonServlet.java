@@ -39,7 +39,7 @@ public class CreatePersonServlet extends HttpServlet {
    */
   public static final String BODY_ERROR = "- unable to parse body.";
 
-  /** The logged error string when an error parsing the body of the POST request is encoutered */
+  /** The logged error string when an error parsing the body of the POST request is encountered */
   public static final String LOG_BODY_ERROR_MESSAGE = 
       "LOGGING: Body unable to be parsed in CreatePersonServlet: ";
   private IdentifierGenerator idGen = null;
@@ -67,7 +67,7 @@ public class CreatePersonServlet extends HttpServlet {
    *     created as its body. If this is not the case the response will send a 
    *     "400 Bad Request error"
    * @param response the response from this method, will contain the created object in JSON format.
-   *     If the request object does not have a valid JSON body that describes the Club to be 
+   *     If the request object does not have a valid JSON body that describes the Person to be 
    *     created, this object will send a "400 Bad Request error"
    * @throws IOException if an input or output error is detected when the servlet handles the request
    */
