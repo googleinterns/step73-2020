@@ -43,6 +43,7 @@ public class CreatePersonServlet extends HttpServlet {
   public static final String LOG_BODY_ERROR_MESSAGE = 
       "LOGGING: Body unable to be parsed in CreatePersonServlet: ";
   private IdentifierGenerator idGen = null;
+  private static final Gson gson = new Gson();
   
   /** 
    * Overloaded constructor for dependency injection.
@@ -74,7 +75,6 @@ public class CreatePersonServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String requestBody = request.getReader().lines().collect(Collectors.joining());
 
-    Gson gson = new Gson();
     Person newPerson;
     try {
       Map personInfo = gson.fromJson(requestBody, Map.class);
