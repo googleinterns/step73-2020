@@ -19,7 +19,7 @@ import com.google.cloud.spanner.ResultSet;
 import com.google.cloud.spanner.Statement;
 
 /**
-* The StorageHandlerHelps class holds helper query functions that get the number of results
+* The StorageHandlerHelper class holds helper query functions that get the number of results
 * matching the primary keys of different Cloud Spanner tables.
 */
 public class StorageHandlerHelper {
@@ -40,7 +40,7 @@ public class StorageHandlerHelper {
               .to(userId)
               .build();
     try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
-      while(resultSet.next()) {
+      while (resultSet.next()) {
         count = resultSet.getLong("count");
       }
     }
@@ -64,7 +64,7 @@ public class StorageHandlerHelper {
               .to(clubId)
               .build();
     try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
-      while(resultSet.next()) {
+      while (resultSet.next()) {
         count = resultSet.getLong("count");
       }
     }
@@ -88,7 +88,7 @@ public class StorageHandlerHelper {
               .to(bookId)
               .build();
     try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
-      while(resultSet.next()) {
+      while (resultSet.next()) {
         count = resultSet.getLong("count");
       }
     }
