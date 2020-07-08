@@ -40,8 +40,8 @@ export class MockProfileBackendService {
     this.mockProfiles = newMockProfiles;
     this.changeListeners.forEach((listener) => listener(newMockProfiles));
   }
-
-  loadProfile(id: string): Promise<PersonProps> {
+  
+  loadPerson(id: string): Promise<PersonProps> {
     for (let i = 0; i < this.numProfiles; i++) {
       if (id === this.mockProfiles[i].userId) {
         return Promise.resolve(this.mockProfiles[i]);
@@ -50,12 +50,13 @@ export class MockProfileBackendService {
     throw new InvalidUserIdError();
   }
 
-  updateProfile(person: PersonProps): Promise<boolean> {
+  /** TODO: Make sure you're updating person, not just adding them  */
+  updatePerson(person: PersonProps): Promise<boolean> {
     this.mockProfiles = [...this.mockProfiles, person];
     return Promise.resolve(true);
   }
 
-  deleteProfile(id: string): Promise<boolean> {
+  deletePerson(id: string): Promise<boolean> {
     for (let i = 0; i < this.numProfiles; i++) {
       if (id === this.mockProfiles[i].userId) {
         return Promise.resolve(true);

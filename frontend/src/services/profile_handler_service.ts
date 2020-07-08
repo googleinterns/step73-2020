@@ -1,4 +1,4 @@
-import { PersonProps, ProfileBackendService } from "./mock_profile_backend";
+import { PersonProps, MockProfileBackendService } from "./mock_profile_backend";
 
 /** Error that occurs when Id does not exist */
 export class NonExistentProfileError extends Error {
@@ -14,43 +14,37 @@ export class FailureToUpdateProfile extends Error {
   }
 }
 
+interface ProfileHandlerServiceAPI {
+  getPerson(id: string): Promise<PersonProps>;
+  updatePerson(PersonProps): Promise<boolean>;
+  deletePerson(id: string): Promise<boolean>;
+}
+
 /**
  * Profile Handling service that manages list of user profiles using a mocked
  * backend database.
  */
-export class ProfileHandlerService {
-  private ProfilesListInternal: PersonProps[] = [];
+export class ProfileHandlerService implements ProfileHandlerServiceAPI {
 
-  constructor(private readonly backend: ProfileBackendService) {};
+  /** Backend is responsible for holding all profile information */
+  constructor(private readonly backend: MockProfileBackendService) {}; 
 
-  async getProfile(id: string) {
-    for (let i = 0; i < this.ProfilesListInternal.length; i++) {
-      if (id === this.ProfilesListInternal[i].userId) {
-        return this.ProfilesListInternal[i];
-      }
-    }
-  }
-
-  getProfiles() {
-    return [...this.ProfilesListInternal];
-  }
-
-  async loadProfile(id: string) {
+  async getPerson(id: string) {
     try {
-      const person = await this.backend.loadProfile(id);
+      const person = await this.backend.loadPerson(id);
       return person;
     } catch(err) {
       throw new NonExistentProfileError(id);
     }
   }
 
-  async updateProfile(person: PersonProps) {
-    const success = await this.backend.updateProfile(person);
+  async updatePerson(person: PersonProps) {
+    const success = await this.backend.updatePerson(person);
     return success;
   }
 
-  async deleteProfile(id: string) {
-    const success = await this.backend.deleteProfile(id);
+  async deletePerson(id: string) {
+    const success = await this.backend.deletePerson(id);
     if (!success) {
       throw new NonExistentProfileError(id);
     } else {
