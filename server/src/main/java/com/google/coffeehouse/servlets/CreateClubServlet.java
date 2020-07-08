@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** 
- * Servlet to create a {@link Club} from Http Post Request Body (in JSON format),
+ * Servlet to create a {@link Club} from Http POST Request Body (in JSON format),
  * save it in database, and return it in JSON format.
  */
 @WebServlet("/create-club")
@@ -35,11 +35,11 @@ public class CreateClubServlet extends HttpServlet {
 
   /** 
    * The error string sent by the response object in doPost when the body of the 
-   * post request cannot be used to construct a {@link Club} for any reason.
+   * POST request cannot be used to construct a {@link Club} for any reason.
    */
   public static final String BODY_ERROR = "- unable to parse body.";
 
-  /** The logged error string when an error parsing the body of the post request is encoutered */
+  /** The logged error string when an error parsing the body of the POST request is encoutered */
   public static final String LOG_BODY_ERROR_MESSAGE = 
       "LOGGING: Body unable to be parsed in CreateClubServlet: ";
   private IdentifierGenerator idGen = null;
@@ -62,7 +62,7 @@ public class CreateClubServlet extends HttpServlet {
 
   /** 
    * Creates a {@link Club} object, saves it in the database and returns it in JSON format.
-   * @param request the post request that must have a valid JSON representation of the Club to be
+   * @param request the POST request that must have a valid JSON representation of the Club to be
    *     created as its body. If this is not the case the response will send a 
    *     "400 Bad Request error"
    * @param response the response from this method, will contain the created object in JSON format.
