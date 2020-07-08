@@ -111,11 +111,8 @@ public final class PersonTest {
   @Test 
   public void fromMap_invalidInput() {
     personInfo.put(Person.NICKNAME_FIELD_NAME, NICKNAME);
-    Assert.assertThrows(IllegalArgumentException.class, new ThrowingRunnable() {
-        @Override
-        public void run() throws Throwable {
-          Person.fromMap(personInfo);
-        }
+    Assert.assertThrows(IllegalArgumentException.class, () -> {
+      Person.fromMap(personInfo);
     });
   }
 
