@@ -26,6 +26,7 @@ import com.google.cloud.spanner.Spanner;
 import com.google.cloud.spanner.SpannerOptions;
 import com.google.cloud.spanner.Statement;
 import com.google.cloud.spanner.TransactionContext;
+import com.google.cloud.spanner.Value;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -58,6 +59,8 @@ public class StorageHandlerTest {
     // Delete all the data while keeping the existing database
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(Mutation.delete("Persons", KeySet.all()));
+    mutations.add(Mutation.delete("Books", KeySet.all()));
+    mutations.add(Mutation.delete("Clubs", KeySet.all()));
     dbClient.write(mutations);
   }
 
@@ -66,7 +69,7 @@ public class StorageHandlerTest {
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Persons")
         .set("userId")
-        .to("pronouns")
+        .to("hasPronouns")
         .set("email")
         .to("pronouns@test.com")
         .set("nickname")
@@ -107,11 +110,54 @@ public class StorageHandlerTest {
     dbClient.write(mutations);
   }
 
+  public void insertClub() {
+    List<Mutation> mutations = new ArrayList<>();
+    mutations.add(
+      Mutation.newInsertOrUpdateBuilder("Clubs")
+        .set("clubId")
+        .to("bellhooksbooks")
+        .set("bookId")
+        .to("bellhooksallaboutlove")
+        .set("description")
+        .to("All of bell hooks' books about revolutionary Black feminism.")
+        .set("name")
+        .to("bell hooks lovers")
+        .set("ownerId")
+        .to("bellhookstopfan")
+        .set("timestamp")
+        .to(Value.COMMIT_TIMESTAMP)
+        .build());
+    dbClient.write(mutations);
+  }
+
+  public void insertBook() {
+    List<Mutation> mutations = new ArrayList<>();
+    mutations.add(
+      Mutation.newInsertOrUpdateBuilder("Books")
+        .set("bookId")
+        .to("bellhooksallaboutlove")
+        .set("author")
+        .to("bell hooks")
+        .set("isbn")
+        .to("9780060959470")
+        .set("title")
+        .to("all about love: new visions")
+        .build());
+    dbClient.write(mutations);
+  }
+
+  @Test
+  public void testGetPersonThatDoesNotExistInDb() throws Exception {
+    String actual = StorageHandler.getPersonQuery(dbClient, "personThatDoesNotExist");
+    String expected = StorageHandler.PERSON_DOES_NOT_EXIST;
+    Assert.assertEquals(expected, actual);
+  }
+
   @Test
   public void testGetPersonWithPronounsQuery() throws Exception {
     insertPersonWithPronouns();
-    String actual = StorageHandler.getPersonQuery(dbClient, "pronouns");
-    String expected = "User ID: pronouns || Email: pronouns@test.com || Nickname: Pro-Test || Pronouns: she/he/they\n";
+    String actual = StorageHandler.getPersonQuery(dbClient, "hasPronouns");
+    String expected = "User ID: hasPronouns || Email: pronouns@test.com || Nickname: Pro-Test || Pronouns: she/he/they\n";
     Assert.assertEquals(expected, actual);
   }
 
@@ -119,7 +165,8 @@ public class StorageHandlerTest {
   public void testGetPersonWithNullPronounsQuery() throws Exception {
     insertPersonWithNullPronouns();
     String actual = StorageHandler.getPersonQuery(dbClient, "nullPronouns");
-    String expected = "User ID: nullPronouns || Email: null@test.com || Nickname: Null-Test || No pronouns\n";
+    String expected = String.format("User ID: nullPronouns || Email: null@test.com || "
+                                      + "Nickname: Null-Test || %s\n", StorageHandler.NO_PRONOUNS);
     Assert.assertEquals(expected, actual);
   }
 
@@ -127,7 +174,42 @@ public class StorageHandlerTest {
   public void testGetPersonWithEmptyPronounsQuery() throws Exception {
     insertPersonWithEmptyPronouns();
     String actual = StorageHandler.getPersonQuery(dbClient, "emptyPronouns");
-    String expected = "User ID: emptyPronouns || Email: empty@test.com || Nickname: Empty-Test || No pronouns\n";
+    String expected = String.format("User ID: emptyPronouns || Email: empty@test.com || "
+                                      + "Nickname: Empty-Test || No pronouns\n",
+                                      StorageHandler.NO_PRONOUNS);
+    Assert.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testGetClubThatDoesNotExistInDb() throws Exception {
+    String actual = StorageHandler.getClubQuery(dbClient, "clubThatDoesNotExist");
+    String expected = StorageHandler.CLUB_DOES_NOT_EXIST;
+    Assert.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testGetClubQuery() throws Exception {
+    insertClub();
+    String actual = StorageHandler.getClubQuery(dbClient, "bellhooksbooks");
+    String expected = "Club ID: bellhooksbooks || Book ID: bellhooksallaboutlove || "
+                        + "Description: All of bell hooks' books about revolutionary Black feminism. || "
+                        + "Name: bell hooks lovers || Owner ID: bellhookstopfan\n";
+    Assert.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testGetBookThatDoesNotExistInDb() throws Exception {
+    String actual = StorageHandler.getBookQuery(dbClient, "bookThatDoesNotExist");
+    String expected = StorageHandler.BOOK_DOES_NOT_EXIST;
+    Assert.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testGetBookQuery() throws Exception {
+    insertBook();
+    String actual = StorageHandler.getBookQuery(dbClient, "bellhooksallaboutlove");
+    String expected = "Book ID: bellhooksallaboutlove || Author: bell hooks || "
+                        + "ISBN: 9780060959470 || Title: all about love: new visions\n";
     Assert.assertEquals(expected, actual);
   }
 }

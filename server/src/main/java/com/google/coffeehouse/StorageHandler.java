@@ -20,12 +20,17 @@ import com.google.cloud.spanner.Statement;
 
 /**
 * The StorageHandler class holds the query functions to get information from the database.
-*
-* @author  Lina Montes
-* @since   2020-07-06 
 */
 public class StorageHandler {
+  public static final String NO_PRONOUNS = "No pronouns";
+  public static final String PERSON_DOES_NOT_EXIST = "This person does not exist in the database.";
+  public static final String ERROR_MORE_THAN_ONE_PERSON = "ERROR: More than one person per user ID.";
 
+  public static final String CLUB_DOES_NOT_EXIST = "This club does not exist in the database.";
+  public static final String ERROR_MORE_THAN_ONE_CLUB = "ERROR: More than one club per club ID.";
+
+  public static final String BOOK_DOES_NOT_EXIST = "This book does not exist in the database.";
+  public static final String ERROR_MORE_THAN_ONE_BOOK = "ERROR: More than one book per book ID.";
   /**
   * Returns a string containing information about a person queried from the database.
   * This method formats a string with a user's ID, email, nickname, and pronouns.
@@ -41,6 +46,7 @@ public class StorageHandler {
     String email = "";
     String nickname = "";
     String pronouns = "";
+    long resultCount = StorageHandlerHelper.getPersonCountQuery(dbClient, userId);
     Statement statement = 
         Statement.newBuilder(
                 "SELECT userId, email, nickname, pronouns "
@@ -49,18 +55,24 @@ public class StorageHandler {
               .bind("userId")
               .to(userId)
               .build();
-    try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
-      while (resultSet.next()) {
-        email = resultSet.getString("email");
-        nickname = resultSet.getString("nickname");
-        if (resultSet.isNull("pronouns") || resultSet.getString("pronouns").isEmpty()) {
-          pronouns = "No pronouns";
-        } else {
-          pronouns = "Pronouns: " + resultSet.getString("pronouns");
+    if (resultCount == 1) {
+      try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
+        while (resultSet.next()) {
+          email = resultSet.getString("email");
+          nickname = resultSet.getString("nickname");
+          if (resultSet.isNull("pronouns") || resultSet.getString("pronouns").isEmpty()) {
+            pronouns = NO_PRONOUNS;
+          } else {
+            pronouns = "Pronouns: " + resultSet.getString("pronouns");
+          }
         }
+        personInfo = String.format("User ID: %s || Email: %s || Nickname: %s || %s\n",
+                                      userId, email, nickname, pronouns);
       }
-      personInfo = String.format("User ID: %s || Email: %s || Nickname: %s || %s\n",
-                                  userId, email, nickname, pronouns);
+    } else if (resultCount > 1) {
+      personInfo = ERROR_MORE_THAN_ONE_PERSON;
+    } else {
+      personInfo = PERSON_DOES_NOT_EXIST;
     }
     return personInfo;
   }
@@ -78,6 +90,7 @@ public class StorageHandler {
     String description = "";
     String ownerId = "";
     String name = "";
+    long resultCount = StorageHandlerHelper.getClubCountQuery(dbClient, clubId);
     Statement statement = 
         Statement.newBuilder(
                 "SELECT clubId, bookId, description, name, ownerId "
@@ -86,16 +99,22 @@ public class StorageHandler {
             .bind("clubId")
             .to(clubId)
             .build();
-    try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
-      while (resultSet.next()) {
-        bookId = resultSet.getString("bookId");
-        description = resultSet.getString("description");
-        ownerId = resultSet.getString("ownerId");
-        name = resultSet.getString("name");
+    if (resultCount == 1) {
+      try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
+        while (resultSet.next()) {
+          bookId = resultSet.getString("bookId");
+          description = resultSet.getString("description");
+          ownerId = resultSet.getString("ownerId");
+          name = resultSet.getString("name");
+        }
+        clubInfo = String.format(
+                          "Club ID: %s || Book ID: %s || Description: %s || Name: %s || Owner ID: %s\n",
+                          clubId, bookId, description, name, ownerId);
       }
-      clubInfo = String.format(
-                        "Club ID: %s || Book ID: %s || Description: %s || Name: %s || Owner ID: %s\n",
-                        clubId, bookId, description, name, ownerId);
+    } else if (resultCount > 1) {
+      clubInfo = ERROR_MORE_THAN_ONE_CLUB;
+    } else {
+      clubInfo = CLUB_DOES_NOT_EXIST;
     }
     return clubInfo;
   }
@@ -112,6 +131,7 @@ public class StorageHandler {
     String author = "";
     long isbn = 0;
     String title = "";
+    long resultCount = StorageHandlerHelper.getBookCountQuery(dbClient, bookId);
     Statement statement = 
         Statement.newBuilder(
                 "SELECT bookId, author, isbn, title "
@@ -120,15 +140,21 @@ public class StorageHandler {
             .bind("bookId")
             .to(bookId)
             .build();
-    try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
-      while (resultSet.next()) {
-        author = resultSet.getString("author");
-        isbn = resultSet.getLong("isbn");
-        title = resultSet.getString("title");
+    if (resultCount == 1) {
+      try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
+        while (resultSet.next()) {
+          author = resultSet.getString("author");
+          isbn = resultSet.getLong("isbn");
+          title = resultSet.getString("title");
+        }
+        bookInfo = String.format(
+                          "Book ID: %s || Author: %s || ISBN: %d || Title: %s\n",
+                          bookId, author, isbn, title);
       }
-      bookInfo = String.format(
-                        "Book ID: %s || Author: %s || ISBN: %d || Title: %s\n",
-                        bookId, author, isbn, title);
+    } else if (resultCount > 1) {
+      bookInfo = ERROR_MORE_THAN_ONE_BOOK;
+    } else {
+      bookInfo = BOOK_DOES_NOT_EXIST;
     }
     return bookInfo;
   }

@@ -24,9 +24,6 @@ import com.google.cloud.spanner.Statement;
 /**
 * The StorageHandlerSetup class creates and sets up the Spanner service and database
 * client needed in order to run queries in the database.
-*
-* @author  Lina Montes
-* @since   2020-07-06 
 */
 public class StorageHandlerSetup {
 
