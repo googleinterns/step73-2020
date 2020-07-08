@@ -8,9 +8,14 @@ import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import { makeStyles } from "@material-ui/core/styles";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
-import { PersonProps } from "../../services/profile_handler_service";
+import { PersonProps } from "../../../services/mock_profile_backend";
+import { ProfileHandlerService } from "../../../services/profile_handler_service";
+import { ProfileBackendService } from "../../../services/mock_profile_backend";
 import { Theme } from "@material-ui/core/styles";
 import TextField from '@material-ui/core/TextField';
+
+const NUM_PROFILES = 10;
+const USER_ID = "user_0";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,17 +37,39 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function Profile() {
+interface ProfileProps {
+  profileHandlerService: ProfileHandlerService;
+}
 
+interface ProfileState {
+  personProps: PersonProps;
+}
+
+export default function Profile(props: ProfileProps, state: ProfileState) {
+
+  const profileHandlerService = new ProfileHandlerService(new ProfileBackendService(NUM_PROFILES));
   const classes = useStyles();
 
-  const [person] = React.useState<PersonProps|undefined>(undefined);
+  const [person, setPerson] = React.useState<PersonProps|undefined>(undefined);
+
   const [userEmail, setUserEmail] = React.useState<string>(undefined);
   const [userName, setUserName] = React.useState<string>(undefined);
   const [userPronouns, setUserPronouns] = React.useState<string>(undefined);
+  const [profileId, setProfileId] = React.useState<string>(undefined);
 
   /** @TODO: Load state in from backend */
-  // fetch('/getPerson', {method: 'GET'})
+  (async() => {
+    const personPromise = await profileHandlerService.getProfile(USER_ID);
+    setPerson(personPromise);
+  })();
+  
+  /*
+  try {
+    setPerson(ProfileProps.ProfileHandlerService.getProfile(USER_ID));
+  } catch(err) {
+    ProfileHandlerService.NonExistentProfileError(USER_ID);
+  }
+  */
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUserEmail(event.target.value);
@@ -59,9 +86,13 @@ export default function Profile() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const personObj = person;
-    const personJson = JSON.stringify(person);
-    console.log(personJson);
+    const personObj = {
+      email: userName, 
+      nickname: userName, 
+      pronouns: userPronouns, 
+      userId: profileId,
+    };
+    const personJson = JSON.stringify(personObj);
 
     const requestParams = {
       method: 'POST', 
@@ -69,9 +100,9 @@ export default function Profile() {
       body: personJson,
     }
 
-  /** @TODO: fetch personJson to the backend */
-  // fetch('/updatePerson', {method: 'POST'})
-  console.log(personJson);
+    /** @TODO: fetch personJson to the backend */
+    // fetch('/updatePerson', {method: 'POST'})
+    console.log(personJson);
   };
 
   return (

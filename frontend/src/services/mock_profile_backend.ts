@@ -1,4 +1,4 @@
-import { pickRandom, EMAILS, NICKNAMES, PRONOUNS } from "../util/random_data";
+import { pickRandom, EMAILS, NICKNAMES, PRONOUNS } from "../utils/random_data";
 
 export interface PersonProps {
   email: string;
@@ -7,15 +7,16 @@ export interface PersonProps {
   userId: string;
 }
 
-/** Error thrown when an invalid user ID is queried */
+/** Error thrown when an invalid user ID is queried. */
 export class InvalidUserIdError extends Error {}
 
 /**
  * Mimics the functionality of a Java Servlet that fetches user information 
  * from a database based on a specified ID. 
  */
-export class ProfileBackendService {
-  private readonly mockProfiles: PersonProps[] = [];
+export class MockProfileBackendService {
+  private mockProfiles: PersonProps[] = [];
+  private readonly changeListeners: Array<(val: PersonProps[]) => void> = [];
   private numProfiles = 0;
 
   constructor(profileCount: number) {
@@ -30,18 +31,33 @@ export class ProfileBackendService {
     this.numProfiles = profileCount;
   }
 
+  /** Adds a function that will be called whenever mockProfiles changes. */
+  listen(listener: (val: PersonProps[]) => void): void {
+    this.changeListeners.push(listener);
+  }
+
+  private update(newMockProfiles: PersonProps[]): void {
+    this.mockProfiles = newMockProfiles;
+    this.changeListeners.forEach((listener) => listener(newMockProfiles));
+  }
+
   loadProfile(id: string): Promise<PersonProps> {
     for (let i = 0; i < this.numProfiles; i++) {
-      if (id === this.mockProfiles.get(i).userId) {
-        return Promise.resolve(this.mockProfiles.get(i));
+      if (id === this.mockProfiles[i].userId) {
+        return Promise.resolve(this.mockProfiles[i]);
       }
     }
     throw new InvalidUserIdError();
   }
 
-  delete(id: string): Promise<boolean> {
+  updateProfile(person: PersonProps): Promise<boolean> {
+    this.mockProfiles = [...this.mockProfiles, person];
+    return Promise.resolve(true);
+  }
+
+  deleteProfile(id: string): Promise<boolean> {
     for (let i = 0; i < this.numProfiles; i++) {
-      if (id === this.mockProfiles.get(i).userId) {
+      if (id === this.mockProfiles[i].userId) {
         return Promise.resolve(true);
       }
     }
