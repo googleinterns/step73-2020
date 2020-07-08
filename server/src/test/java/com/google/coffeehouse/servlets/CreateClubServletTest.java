@@ -14,6 +14,7 @@
 
 package com.google.coffeehouse.servlets;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
@@ -33,7 +34,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -115,13 +115,13 @@ public class CreateClubServletTest {
     Gson gson = new Gson();
     Club c = gson.fromJson(result, Club.class);
 
-    Assert.assertEquals(NAME, c.getName());
-    Assert.assertEquals(IDENTIFICATION_STRING, c.getClubId());
-    Assert.assertEquals(new ArrayList<String>(), c.getContentWarnings());
-    Assert.assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
-    Assert.assertEquals(IDENTIFICATION_STRING, c.getCurrentBook().getBookId());
-    Assert.assertFalse(c.getCurrentBook().getAuthor().isPresent());
-    Assert.assertFalse(c.getCurrentBook().getIsbn().isPresent());
+    assertEquals(NAME, c.getName());
+    assertEquals(IDENTIFICATION_STRING, c.getClubId());
+    assertEquals(new ArrayList<String>(), c.getContentWarnings());
+    assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
+    assertEquals(IDENTIFICATION_STRING, c.getCurrentBook().getBookId());
+    assertFalse(c.getCurrentBook().getAuthor().isPresent());
+    assertFalse(c.getCurrentBook().getIsbn().isPresent());
   }
 
   @Test
@@ -135,16 +135,16 @@ public class CreateClubServletTest {
     Gson gson = new Gson();
     Club c = gson.fromJson(result, Club.class);
 
-    Assert.assertEquals(NAME, c.getName());
-    Assert.assertEquals(IDENTIFICATION_STRING, c.getClubId());
-    Assert.assertEquals(testContentWarnings, c.getContentWarnings());
-    Assert.assertEquals(DESCRIPTION, c.getDescription());
-    Assert.assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
-    Assert.assertEquals(IDENTIFICATION_STRING, c.getCurrentBook().getBookId());
-    Assert.assertTrue(c.getCurrentBook().getAuthor().isPresent());
-    Assert.assertEquals(BOOK_AUTHOR, c.getCurrentBook().getAuthor().get());
-    Assert.assertTrue(c.getCurrentBook().getIsbn().isPresent());
-    Assert.assertEquals(BOOK_ISBN, c.getCurrentBook().getIsbn().get());
+    assertEquals(NAME, c.getName());
+    assertEquals(IDENTIFICATION_STRING, c.getClubId());
+    assertEquals(testContentWarnings, c.getContentWarnings());
+    assertEquals(DESCRIPTION, c.getDescription());
+    assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
+    assertEquals(IDENTIFICATION_STRING, c.getCurrentBook().getBookId());
+    assertTrue(c.getCurrentBook().getAuthor().isPresent());
+    assertEquals(BOOK_AUTHOR, c.getCurrentBook().getAuthor().get());
+    assertTrue(c.getCurrentBook().getIsbn().isPresent());
+    assertEquals(BOOK_ISBN, c.getCurrentBook().getIsbn().get());
   }
 
   @Test

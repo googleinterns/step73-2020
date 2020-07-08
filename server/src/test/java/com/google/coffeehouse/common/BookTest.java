@@ -14,15 +14,14 @@
 
 package com.google.coffeehouse.common;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.google.coffeehouse.util.IdentifierGenerator;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.function.ThrowingRunnable;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.junit.Test;
@@ -58,72 +57,69 @@ public final class BookTest {
   @Test
   public void getTitle_exists() {
     Book b = bookBuilder.build();
-    Assert.assertEquals(TITLE, b.getTitle());
+    assertEquals(TITLE, b.getTitle());
   }
 
   @Test
   public void getBookId_exists() {
     Book b = bookBuilder.setIdGenerator(idGen).build();
-    Assert.assertEquals(IDENTIFICATION_STRING, b.getBookId());
+    assertEquals(IDENTIFICATION_STRING, b.getBookId());
   }
 
   @Test
   public void getAuthor_exists() {
     Book b = bookBuilder.setAuthor(AUTHOR).build();
-    Assert.assertTrue(b.getAuthor().isPresent());
-    Assert.assertEquals(AUTHOR, b.getAuthor().get());
+    assertTrue(b.getAuthor().isPresent());
+    assertEquals(AUTHOR, b.getAuthor().get());
   }
 
   @Test
   public void getIsbn_exists() {
     Book b = bookBuilder.setIsbn(ISBN).build();
-    Assert.assertTrue(b.getIsbn().isPresent());
-    Assert.assertEquals(ISBN, b.getIsbn().get());
+    assertTrue(b.getIsbn().isPresent());
+    assertEquals(ISBN, b.getIsbn().get());
   }
 
   @Test
   public void getAuthor_notExist() {
     Book b = bookBuilder.build();
-    Assert.assertFalse(b.getAuthor().isPresent());
+    assertFalse(b.getAuthor().isPresent());
   }
 
   @Test
   public void getIsbn_notExist() {
     Book b = bookBuilder.build();
-    Assert.assertFalse(b.getIsbn().isPresent());
+    assertFalse(b.getIsbn().isPresent());
   }
 
   @Test
   public void setTitle() {
     Book b = bookBuilder.build();
     b.setTitle(ALT_TITLE);
-    Assert.assertEquals(ALT_TITLE, b.getTitle());
+    assertEquals(ALT_TITLE, b.getTitle());
   }
 
   @Test
   public void setAuthor() {
     Book b = bookBuilder.build();
     b.setAuthor(ALT_AUTHOR);
-    Assert.assertTrue(b.getAuthor().isPresent());
-    Assert.assertEquals(ALT_AUTHOR, b.getAuthor().get());
+    assertTrue(b.getAuthor().isPresent());
+    assertEquals(ALT_AUTHOR, b.getAuthor().get());
   }
 
   @Test
   public void setIsbn() {
     Book b = bookBuilder.build();
     b.setIsbn(ALT_ISBN);
-    Assert.assertTrue(b.getIsbn().isPresent());
-    Assert.assertEquals(ALT_ISBN, b.getIsbn().get());
+    assertTrue(b.getIsbn().isPresent());
+    assertEquals(ALT_ISBN, b.getIsbn().get());
   }
 
   @Test 
   public void fromMap_invalidInput() {
     bookInfo.put(Book.ISBN_FIELD_NAME, ISBN);
-    Assert.assertThrows(IllegalArgumentException.class, new ThrowingRunnable() {
-        @Override
-        public void run() throws Throwable {
-          Book.fromMap(bookInfo);
-        }
+    assertThrows(IllegalArgumentException.class, () -> {
+        Book.fromMap(bookInfo);
     });
   }
 
@@ -131,9 +127,9 @@ public final class BookTest {
   public void fromMap_minimumValidMap() {
     bookInfo.put(Book.TITLE_FIELD_NAME, TITLE);
     Book b = Book.fromMap(bookInfo);
-    Assert.assertEquals(TITLE, b.getTitle());
-    Assert.assertFalse(b.getIsbn().isPresent());
-    Assert.assertFalse(b.getAuthor().isPresent());
+    assertEquals(TITLE, b.getTitle());
+    assertFalse(b.getIsbn().isPresent());
+    assertFalse(b.getAuthor().isPresent());
   }
 
   @Test 
@@ -142,12 +138,12 @@ public final class BookTest {
     bookInfo.put(Book.ISBN_FIELD_NAME, ISBN);
     bookInfo.put(Book.AUTHOR_FIELD_NAME, AUTHOR);
     Book b = Book.fromMap(bookInfo, idGen);
-    Assert.assertEquals(TITLE, b.getTitle());
-    Assert.assertTrue(b.getIsbn().isPresent());
-    Assert.assertEquals(ISBN, b.getIsbn().get());
-    Assert.assertTrue(b.getAuthor().isPresent());
-    Assert.assertEquals(AUTHOR, b.getAuthor().get());
-    Assert.assertEquals(IDENTIFICATION_STRING, b.getBookId());
+    assertEquals(TITLE, b.getTitle());
+    assertTrue(b.getIsbn().isPresent());
+    assertEquals(ISBN, b.getIsbn().get());
+    assertTrue(b.getAuthor().isPresent());
+    assertEquals(AUTHOR, b.getAuthor().get());
+    assertEquals(IDENTIFICATION_STRING, b.getBookId());
   }
 
   // TODO: test saving @linamontes10

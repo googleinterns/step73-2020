@@ -14,6 +14,7 @@
 
 package com.google.coffeehouse.common;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -23,9 +24,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.function.ThrowingRunnable;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.junit.Test;
@@ -70,62 +69,59 @@ public final class ClubTest {
   @Test
   public void getName_exists() {
     Club c = clubBuilder.build();
-    Assert.assertEquals(NAME, c.getName());
+    assertEquals(NAME, c.getName());
   }
 
   @Test
   public void getDescription_exists() {
     Club c = clubBuilder.setDescription(DESCRIPTION).build();
-    Assert.assertEquals(DESCRIPTION, c.getDescription());
+    assertEquals(DESCRIPTION, c.getDescription());
   }
 
   @Test
   public void getCurrentBook_exists() {
     Club c = clubBuilder.build();
-    Assert.assertEquals(testBook, c.getCurrentBook());
+    assertEquals(testBook, c.getCurrentBook());
   }
 
   @Test
   public void getClubId_exists() {
     Club c = clubBuilder.setIdGenerator(idGen).build();
-    Assert.assertEquals(IDENTIFICATION_STRING, c.getClubId());
+    assertEquals(IDENTIFICATION_STRING, c.getClubId());
   }
 
   @Test
   public void getContentWarnings_exists() {
     Club c = clubBuilder.setContentWarnings(testContentWarnings).build();
-    Assert.assertEquals(testContentWarnings, c.getContentWarnings());
+    assertEquals(testContentWarnings, c.getContentWarnings());
   }
   
   @Test
   public void setContentWarnings() {
     Club c = clubBuilder.setContentWarnings(testContentWarnings).build();
     c.setContentWarnings(new ArrayList<>());
-    Assert.assertEquals(new ArrayList<>(), c.getContentWarnings());
+    assertEquals(new ArrayList<>(), c.getContentWarnings());
   }
 
   @Test
   public void setDescription() {
     Club c = clubBuilder.build();
     c.setDescription(ALT_DESCRIPTION);
-    Assert.assertEquals(ALT_DESCRIPTION, c.getDescription());
+    assertEquals(ALT_DESCRIPTION, c.getDescription());
   }
 
   @Test
   public void setBook() {
     Club c = clubBuilder.build();
     c.setBook(altTestBook);
-    Assert.assertEquals(altTestBook, c.getCurrentBook());
+    assertEquals(altTestBook, c.getCurrentBook());
   }
   
   @Test 
   public void fromMap_invalidInput() {
     clubInfo.put(Club.CONTENTWARNINGS_FIELD_NAME, testContentWarnings);
-    Assert.assertThrows(IllegalArgumentException.class, new ThrowingRunnable() {
-        @Override
-        public void run() throws Throwable {
-          Club.fromMap(clubInfo);
-        }
+    assertThrows(IllegalArgumentException.class, () -> {
+        Club.fromMap(clubInfo);
     });
   }
 
@@ -134,9 +130,9 @@ public final class ClubTest {
     clubInfo.put(Club.NAME_FIELD_NAME, NAME);
     clubInfo.put(Club.CURRENTBOOK_FIELD_NAME, bookInfo);
     Club c = Club.fromMap(clubInfo);
-    Assert.assertEquals(NAME, c.getName());
-    Assert.assertEquals(new ArrayList<>(), c.getContentWarnings());
-    Assert.assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
+    assertEquals(NAME, c.getName());
+    assertEquals(new ArrayList<>(), c.getContentWarnings());
+    assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
   }
 
   @Test 
@@ -147,11 +143,11 @@ public final class ClubTest {
     clubInfo.put(Club.DESCRIPTION_FIELD_NAME, DESCRIPTION);
 
     Club c = Club.fromMap(clubInfo, idGen);
-    Assert.assertEquals(NAME, c.getName());
-    Assert.assertEquals(testContentWarnings, c.getContentWarnings());
-    Assert.assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
-    Assert.assertEquals(DESCRIPTION, c.getDescription());
-    Assert.assertEquals(IDENTIFICATION_STRING, c.getClubId());
+    assertEquals(NAME, c.getName());
+    assertEquals(testContentWarnings, c.getContentWarnings());
+    assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
+    assertEquals(DESCRIPTION, c.getDescription());
+    assertEquals(IDENTIFICATION_STRING, c.getClubId());
   }
 
   // TODO: test saving @linamontes10
