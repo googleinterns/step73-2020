@@ -8,6 +8,7 @@ import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import { makeStyles } from "@material-ui/core/styles";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
+import { PersonProps } from "../../services/profile_handler_service";
 import { Theme } from "@material-ui/core/styles";
 import TextField from '@material-ui/core/TextField';
 
@@ -32,35 +33,45 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function Profile() {
-  const [userEmail, setEmail] = React.useState('Email');
-  const [userNickname, setNickname] = React.useState('Name');
-  const [userPronouns, setPronouns] = React.useState('Pronouns');
 
   const classes = useStyles();
 
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
+  const [person] = React.useState<PersonProps|undefined>(undefined);
+  const [userEmail, setUserEmail] = React.useState<string>(undefined);
+  const [userName, setUserName] = React.useState<string>(undefined);
+  const [userPronouns, setUserPronouns] = React.useState<string>(undefined);
 
-  const handleNicknameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNickname(event.target.value);
-  };
+  /** @TODO: Load state in from backend */
+  // fetch('/getPerson', {method: 'GET'})
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUserEmail(event.target.value);
+  }
+
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUserName(event.target.value);
+  }
 
   const handlePronounsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPronouns(event.target.value);
-  };
+    setUserPronouns(event.target.value);
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const person = {
-      nickname: userNickname, 
-      pronouns: userPronouns, 
-      email: userEmail,
-    };
-
+    const personObj = person;
     const personJson = JSON.stringify(person);
     console.log(personJson);
+
+    const requestParams = {
+      method: 'POST', 
+      headers: {'Content-Type': 'application/json'},
+      body: personJson,
+    }
+
+  /** @TODO: fetch personJson to the backend */
+  // fetch('/updatePerson', {method: 'POST'})
+  console.log(personJson);
   };
 
   return (
@@ -76,7 +87,7 @@ export default function Profile() {
             }}
             label="Nickname"
             margin="normal"
-            onChange={handleNicknameChange}
+            onChange={handleNameChange}
             placeholder="Nickname"
             style={{ margin: 8 }}
             variant="outlined"
