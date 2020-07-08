@@ -14,6 +14,7 @@
 
 package com.google.coffeehouse.servlets;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
@@ -30,7 +31,6 @@ import java.io.StringWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -103,9 +103,9 @@ public class CreatePersonServletTest {
     Gson gson = new Gson();
     Person p = gson.fromJson(result, Person.class);
 
-    Assert.assertEquals(NICKNAME, p.getNickname());
-    Assert.assertEquals(EMAIL, p.getEmail());
-    Assert.assertFalse(p.getPronouns().isPresent());
+    assertEquals(NICKNAME, p.getNickname());
+    assertEquals(EMAIL, p.getEmail());
+    assertFalse(p.getPronouns().isPresent());
   }
 
   @Test
@@ -119,10 +119,10 @@ public class CreatePersonServletTest {
     Gson gson = new Gson();
     Person p = gson.fromJson(result, Person.class);
 
-    Assert.assertEquals(NICKNAME, p.getNickname());
-    Assert.assertEquals(EMAIL, p.getEmail());
-    Assert.assertTrue(p.getPronouns().isPresent());
-    Assert.assertEquals(PRONOUNS, p.getPronouns().get());
+    assertEquals(NICKNAME, p.getNickname());
+    assertEquals(EMAIL, p.getEmail());
+    assertTrue(p.getPronouns().isPresent());
+    assertEquals(PRONOUNS, p.getPronouns().get());
   }
 
   @Test

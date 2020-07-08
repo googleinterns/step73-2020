@@ -14,13 +14,13 @@
 
 package com.google.coffeehouse.common;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.google.coffeehouse.util.IdentifierGenerator;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.function.ThrowingRunnable;
 import org.junit.runner.RunWith;
@@ -58,60 +58,60 @@ public final class PersonTest {
   @Test
   public void getNickname_exists() {
     Person p = personBuilder.build();
-    Assert.assertEquals(NICKNAME, p.getNickname());
+    assertEquals(NICKNAME, p.getNickname());
   }
 
   @Test
   public void getEmail_exists() {
     Person p = personBuilder.build();
-    Assert.assertEquals(EMAIL, p.getEmail());
+    assertEquals(EMAIL, p.getEmail());
   }
 
   @Test
   public void getUserId_exists() {
     Person p = personBuilder.setIdGenerator(idGen).build();
-    Assert.assertEquals(IDENTIFICATION_STRING, p.getUserId());
+    assertEquals(IDENTIFICATION_STRING, p.getUserId());
   }
 
   @Test
   public void getPronouns_exists() {
     Person p = personBuilder.setPronouns(PRONOUNS).build();
-    Assert.assertTrue(p.getPronouns().isPresent());
-    Assert.assertEquals(PRONOUNS, p.getPronouns().get());
+    assertTrue(p.getPronouns().isPresent());
+    assertEquals(PRONOUNS, p.getPronouns().get());
   }
 
   @Test
   public void getPronouns_notExist() {
     Person p = personBuilder.build();
-    Assert.assertFalse(p.getPronouns().isPresent());
+    assertFalse(p.getPronouns().isPresent());
   }
 
   @Test
   public void setNickname() {
     Person p = personBuilder.build();
     p.setNickname(ALT_NICKNAME);
-    Assert.assertEquals(ALT_NICKNAME, p.getNickname());
+    assertEquals(ALT_NICKNAME, p.getNickname());
   }
 
   @Test
   public void setEmail() {
     Person p = personBuilder.build();
     p.setEmail(ALT_EMAIL);
-    Assert.assertEquals(ALT_EMAIL, p.getEmail());
+    assertEquals(ALT_EMAIL, p.getEmail());
   }
 
   @Test
   public void setPronouns() {
     Person p = personBuilder.build();
     p.setPronouns(ALT_PRONOUNS);
-    Assert.assertTrue(p.getPronouns().isPresent());
-    Assert.assertEquals(ALT_PRONOUNS, p.getPronouns().get());
+    assertTrue(p.getPronouns().isPresent());
+    assertEquals(ALT_PRONOUNS, p.getPronouns().get());
   }
 
   @Test 
   public void fromMap_invalidInput() {
     personInfo.put(Person.NICKNAME_FIELD_NAME, NICKNAME);
-    Assert.assertThrows(IllegalArgumentException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       Person.fromMap(personInfo);
     });
   }
@@ -121,9 +121,9 @@ public final class PersonTest {
     personInfo.put(Person.NICKNAME_FIELD_NAME, NICKNAME);
     personInfo.put(Person.EMAIL_FIELD_NAME, EMAIL);
     Person p = Person.fromMap(personInfo);
-    Assert.assertEquals(NICKNAME, p.getNickname());
-    Assert.assertEquals(EMAIL, p.getEmail());
-    Assert.assertFalse(p.getPronouns().isPresent());
+    assertEquals(NICKNAME, p.getNickname());
+    assertEquals(EMAIL, p.getEmail());
+    assertFalse(p.getPronouns().isPresent());
   }
 
   @Test 
@@ -132,10 +132,10 @@ public final class PersonTest {
     personInfo.put(Person.EMAIL_FIELD_NAME, EMAIL);
     personInfo.put(Person.PRONOUNS_FIELD_NAME, PRONOUNS);
     Person p = Person.fromMap(personInfo);
-    Assert.assertEquals(NICKNAME, p.getNickname());
-    Assert.assertEquals(EMAIL, p.getEmail());
-    Assert.assertTrue(p.getPronouns().isPresent());
-    Assert.assertEquals(PRONOUNS, p.getPronouns().get());
+    assertEquals(NICKNAME, p.getNickname());
+    assertEquals(EMAIL, p.getEmail());
+    assertTrue(p.getPronouns().isPresent());
+    assertEquals(PRONOUNS, p.getPronouns().get());
   }
 
   // TODO: test saving @linamontes10
