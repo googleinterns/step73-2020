@@ -14,10 +14,18 @@
 
 package com.google.coffeehouse.servlets;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.coffeehouse.common.Person;
 import com.google.coffeehouse.util.IdentifierGenerator;
+import com.google.gson.Gson;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.io.StringWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +34,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 /**
  * Unit tests for {@link CreatePersonServlet}.
@@ -36,6 +43,29 @@ public class CreatePersonServletTest {
   private static final String EMAIL = "test@fake.fake";
   private static final String PRONOUNS = "he/him";
   private static final String IDENTIFICATION_STRING = "predetermined-identification-string";
+  private static final String MINIMUM_JSON = String.join("\n", 
+      "{",
+      "  \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + NICKNAME + "\",",
+      "  \"" + Person.EMAIL_FIELD_NAME + "\" : \"" + EMAIL + "\"",
+      "}");
+  private static final String MAXIMUM_JSON = String.join("\n", 
+      "{",
+      "  \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + NICKNAME + "\",",
+      "  \"" + Person.PRONOUNS_FIELD_NAME + "\" : \"" + PRONOUNS + "\",",
+      "  \"" + Person.EMAIL_FIELD_NAME + "\" : \"" + EMAIL + "\"",
+      "}");
+  private static final String NO_NICKNAME_JSON = String.join("\n", 
+      "{",
+      "  \"" + Person.PRONOUNS_FIELD_NAME + "\" : \"" + PRONOUNS + "\",",
+      "  \"" + Person.EMAIL_FIELD_NAME + "\" : \"" + EMAIL + "\"",
+      "}");
+  private static final String NO_EMAIL_JSON = String.join("\n", 
+      "{",
+      "  \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + NICKNAME + "\",",
+      "  \"" + Person.PRONOUNS_FIELD_NAME + "\" : \"" + PRONOUNS + "\"",
+      "}");
+  private static final String SYNTACTICALLY_INCORRECT_JSON = 
+      "{\"" + Person.NICKNAME_FIELD_NAME + "\"";
 
   private CreatePersonServlet CreatePersonServlet;
   private final LocalServiceTestHelper helper = new LocalServiceTestHelper();
@@ -48,13 +78,13 @@ public class CreatePersonServletTest {
   public void setUp() throws IOException {
     helper.setUp();
 
-    IdentifierGenerator idGen = Mockito.mock(IdentifierGenerator.class);
-    Mockito.when(idGen.generateId()).thenReturn(IDENTIFICATION_STRING);
+    IdentifierGenerator idGen = mock(IdentifierGenerator.class);
+    when(idGen.generateId()).thenReturn(IDENTIFICATION_STRING);
     CreatePersonServlet = new CreatePersonServlet(idGen);
 
-    request = Mockito.mock(HttpServletRequest.class);
-    response = Mockito.mock(HttpServletResponse.class);
-    Mockito.when(response.getWriter()).thenReturn(new PrintWriter(stringWriter));
+    request = mock(HttpServletRequest.class);
+    response = mock(HttpServletResponse.class);
+    when(response.getWriter()).thenReturn(new PrintWriter(stringWriter));
   }
 
   @After
@@ -63,57 +93,65 @@ public class CreatePersonServletTest {
   }
 
   @Test
-  public void allSpecified() throws IOException {
-    Mockito.when(request.getParameter("nickname")).thenReturn(NICKNAME);
-    Mockito.when(request.getParameter("email")).thenReturn(EMAIL);
-    Mockito.when(request.getParameter("pronouns")).thenReturn(PRONOUNS);
+  public void doPost_minimumValidInput() throws IOException {
+    when(request.getReader()).thenReturn(
+          new BufferedReader(new StringReader(MINIMUM_JSON)));
 
     CreatePersonServlet.doPost(request, response);
     String result = stringWriter.toString();
 
-    // Use multiple contains because order of JSON should not be relied upon per GSON documentation
-    Assert.assertTrue(
-        result.contains("\"email\":\"" + EMAIL + "\"")
-        && result.contains("\"nickname\":\"" + NICKNAME + "\"")
-        && result.contains("\"pronouns\":\"" + PRONOUNS + "\"")
-        && result.contains("\"userId\":\"" + IDENTIFICATION_STRING + "\"")
-    );
+    Gson gson = new Gson();
+    Person p = gson.fromJson(result, Person.class);
+
+    Assert.assertEquals(NICKNAME, p.getNickname());
+    Assert.assertEquals(EMAIL, p.getEmail());
+    Assert.assertFalse(p.getPronouns().isPresent());
   }
 
   @Test
-  public void noPronounsSpecified() throws IOException {
-    Mockito.when(request.getParameter("nickname")).thenReturn(NICKNAME);
-    Mockito.when(request.getParameter("email")).thenReturn(EMAIL);
+  public void doPost_maximumValidInput() throws IOException {
+    when(request.getReader()).thenReturn(
+          new BufferedReader(new StringReader(MAXIMUM_JSON)));
 
     CreatePersonServlet.doPost(request, response);
     String result = stringWriter.toString();
 
-    // Use multiple contains because order of JSON should not be relied upon per GSON documentation
-    Assert.assertTrue(
-        result.contains("\"email\":\"" + EMAIL + "\"")
-        && result.contains("\"nickname\":\"" + NICKNAME + "\"")
-        && result.contains("\"userId\":\"" + IDENTIFICATION_STRING + "\"")
-    );
+    Gson gson = new Gson();
+    Person p = gson.fromJson(result, Person.class);
 
-    // Pronouns were not specified, so they should not be in JSON representation
-    Assert.assertFalse(result.contains("pronouns"));
+    Assert.assertEquals(NICKNAME, p.getNickname());
+    Assert.assertEquals(EMAIL, p.getEmail());
+    Assert.assertTrue(p.getPronouns().isPresent());
+    Assert.assertEquals(PRONOUNS, p.getPronouns().get());
   }
 
   @Test
-  public void noEmailSpecified() throws IOException {
-    Mockito.when(request.getParameter("nickname")).thenReturn(NICKNAME);
+  public void doPost_noEmailSpecified() throws IOException {
+    when(request.getReader()).thenReturn(
+          new BufferedReader(new StringReader(NO_EMAIL_JSON)));
     CreatePersonServlet.doPost(request, response);
     
-    Mockito.verify(response).sendError(
-        HttpServletResponse.SC_BAD_REQUEST, CreatePersonServlet.EMAIL_OR_NICKNAME_ERROR);
+    verify(response).sendError(
+        HttpServletResponse.SC_BAD_REQUEST, CreatePersonServlet.BODY_ERROR);
   }
 
   @Test
-  public void noNicknameSpecified() throws IOException {
-    Mockito.when(request.getParameter("email")).thenReturn(EMAIL);
+  public void doPost_noNicknameSpecified() throws IOException {
+    when(request.getReader()).thenReturn(
+          new BufferedReader(new StringReader(NO_NICKNAME_JSON)));
     CreatePersonServlet.doPost(request, response);
     
-    Mockito.verify(response).sendError(
-        HttpServletResponse.SC_BAD_REQUEST, CreatePersonServlet.EMAIL_OR_NICKNAME_ERROR);
+    verify(response).sendError(
+        HttpServletResponse.SC_BAD_REQUEST, CreatePersonServlet.BODY_ERROR);
+  }
+
+  @Test
+  public void doPost_syntacticallyIncorrectInput() throws IOException {
+    when(request.getReader()).thenReturn(
+          new BufferedReader(new StringReader(SYNTACTICALLY_INCORRECT_JSON)));
+    CreatePersonServlet.doPost(request, response);
+    
+    verify(response).sendError(
+        HttpServletResponse.SC_BAD_REQUEST, CreatePersonServlet.BODY_ERROR);
   }
 }
