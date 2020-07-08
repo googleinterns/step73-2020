@@ -105,7 +105,7 @@ public class CreateClubServletTest {
   }
 
   @Test
-  public void minimumValidInput() throws IOException {
+  public void doPost_minimumValidInput() throws IOException {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(MINIMUM_JSON)));
 
@@ -125,7 +125,7 @@ public class CreateClubServletTest {
   }
 
   @Test
-  public void maximumValidInput() throws IOException {
+  public void doPost_maximumValidInput() throws IOException {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(MAXIMUM_JSON)));
 
@@ -148,7 +148,7 @@ public class CreateClubServletTest {
   }
 
   @Test
-  public void noNameSpecified() throws IOException {
+  public void doPost_noNameSpecified() throws IOException {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(NO_NAME_JSON)));
     CreateClubServlet.doPost(request, response);
@@ -158,7 +158,7 @@ public class CreateClubServletTest {
   }
 
   @Test
-  public void noBookSpecified() throws IOException {
+  public void doPost_noBookSpecified() throws IOException {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(NO_BOOK_JSON)));
     CreateClubServlet.doPost(request, response);
@@ -168,7 +168,7 @@ public class CreateClubServletTest {
   }
 
   @Test
-  public void badInput() throws IOException {
+  public void doPost_syntacticallyIncorrectInput() throws IOException {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(SYNTACTICALLY_INCORRECT_JSON)));
     CreateClubServlet.doPost(request, response);

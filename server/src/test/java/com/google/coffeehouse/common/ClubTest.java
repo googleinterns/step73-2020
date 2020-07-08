@@ -68,58 +68,58 @@ public final class ClubTest {
   }
 
   @Test
-  public void getExistingName() {
+  public void getName_exists() {
     Club c = clubBuilder.build();
     Assert.assertEquals(NAME, c.getName());
   }
 
   @Test
-  public void getExistingDescription() {
+  public void getDescription_exists() {
     Club c = clubBuilder.setDescription(DESCRIPTION).build();
     Assert.assertEquals(DESCRIPTION, c.getDescription());
   }
 
   @Test
-  public void getExistingCurrentBook() {
+  public void getCurrentBook_exists() {
     Club c = clubBuilder.build();
     Assert.assertEquals(testBook, c.getCurrentBook());
   }
 
   @Test
-  public void getExistingClubId() {
+  public void getClubId_exists() {
     Club c = clubBuilder.setIdGenerator(idGen).build();
     Assert.assertEquals(IDENTIFICATION_STRING, c.getClubId());
   }
 
   @Test
-  public void getExistingContentWarnings() {
+  public void getContentWarnings_exists() {
     Club c = clubBuilder.setContentWarnings(testContentWarnings).build();
     Assert.assertEquals(testContentWarnings, c.getContentWarnings());
   }
   
   @Test
-  public void setNewContentWarnings() {
+  public void setContentWarnings() {
     Club c = clubBuilder.setContentWarnings(testContentWarnings).build();
     c.setContentWarnings(new ArrayList<>());
     Assert.assertEquals(new ArrayList<>(), c.getContentWarnings());
   }
 
   @Test
-  public void setNewDescription() {
+  public void setDescription() {
     Club c = clubBuilder.build();
     c.setDescription(ALT_DESCRIPTION);
     Assert.assertEquals(ALT_DESCRIPTION, c.getDescription());
   }
 
   @Test
-  public void setNewBook() {
+  public void setBook() {
     Club c = clubBuilder.build();
     c.setBook(altTestBook);
     Assert.assertEquals(altTestBook, c.getCurrentBook());
   }
   
   @Test 
-  public void fromInvalidMap() {
+  public void fromMap_invalidInput() {
     clubInfo.put(Club.CONTENTWARNINGS_FIELD_NAME, testContentWarnings);
     Assert.assertThrows(IllegalArgumentException.class, new ThrowingRunnable() {
         @Override
@@ -130,7 +130,7 @@ public final class ClubTest {
   }
 
   @Test 
-  public void fromMinimumValidMap() {
+  public void fromMap_minimumValidInput() {
     clubInfo.put(Club.NAME_FIELD_NAME, NAME);
     clubInfo.put(Club.CURRENTBOOK_FIELD_NAME, bookInfo);
     Club c = Club.fromMap(clubInfo);
@@ -140,7 +140,7 @@ public final class ClubTest {
   }
 
   @Test 
-  public void fromMaximumValidMap() {
+  public void fromMap_maximumValidInput() {
     clubInfo.put(Club.NAME_FIELD_NAME, NAME);
     clubInfo.put(Club.CONTENTWARNINGS_FIELD_NAME, testContentWarnings);
     clubInfo.put(Club.CURRENTBOOK_FIELD_NAME, bookInfo);

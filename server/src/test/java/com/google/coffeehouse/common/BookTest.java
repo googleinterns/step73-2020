@@ -56,52 +56,52 @@ public final class BookTest {
   }
 
   @Test
-  public void getExistingTitle() {
+  public void getTitle_exists() {
     Book b = bookBuilder.build();
     Assert.assertEquals(TITLE, b.getTitle());
   }
 
   @Test
-  public void getExistingBookId() {
+  public void getBookId_exists() {
     Book b = bookBuilder.setIdGenerator(idGen).build();
     Assert.assertEquals(IDENTIFICATION_STRING, b.getBookId());
   }
 
   @Test
-  public void getExistingAuthor() {
+  public void getAuthor_exists() {
     Book b = bookBuilder.setAuthor(AUTHOR).build();
     Assert.assertTrue(b.getAuthor().isPresent());
     Assert.assertEquals(AUTHOR, b.getAuthor().get());
   }
 
   @Test
-  public void getExistingIsbn() {
+  public void getIsbn_exists() {
     Book b = bookBuilder.setIsbn(ISBN).build();
     Assert.assertTrue(b.getIsbn().isPresent());
     Assert.assertEquals(ISBN, b.getIsbn().get());
   }
 
   @Test
-  public void getNoAuthor() {
+  public void getAuthor_notExist() {
     Book b = bookBuilder.build();
     Assert.assertFalse(b.getAuthor().isPresent());
   }
 
   @Test
-  public void getNoIsbn() {
+  public void getIsbn_notExist() {
     Book b = bookBuilder.build();
     Assert.assertFalse(b.getIsbn().isPresent());
   }
 
   @Test
-  public void setNewTitle() {
+  public void setTitle() {
     Book b = bookBuilder.build();
     b.setTitle(ALT_TITLE);
     Assert.assertEquals(ALT_TITLE, b.getTitle());
   }
 
   @Test
-  public void setNewAuthor() {
+  public void setAuthor() {
     Book b = bookBuilder.build();
     b.setAuthor(ALT_AUTHOR);
     Assert.assertTrue(b.getAuthor().isPresent());
@@ -109,7 +109,7 @@ public final class BookTest {
   }
 
   @Test
-  public void setNewIsbn() {
+  public void setIsbn() {
     Book b = bookBuilder.build();
     b.setIsbn(ALT_ISBN);
     Assert.assertTrue(b.getIsbn().isPresent());
@@ -117,7 +117,7 @@ public final class BookTest {
   }
 
   @Test 
-  public void fromInvalidMap() {
+  public void fromMap_invalidInput() {
     bookInfo.put(Book.ISBN_FIELD_NAME, ISBN);
     Assert.assertThrows(IllegalArgumentException.class, new ThrowingRunnable() {
         @Override
@@ -128,7 +128,7 @@ public final class BookTest {
   }
 
   @Test 
-  public void fromMinimumValidMap() {
+  public void fromMap_minimumValidMap() {
     bookInfo.put(Book.TITLE_FIELD_NAME, TITLE);
     Book b = Book.fromMap(bookInfo);
     Assert.assertEquals(TITLE, b.getTitle());
@@ -137,7 +137,7 @@ public final class BookTest {
   }
 
   @Test 
-  public void fromMaximumValidMap() {
+  public void fromMap_maximumValidInput() {
     bookInfo.put(Book.TITLE_FIELD_NAME, TITLE);
     bookInfo.put(Book.ISBN_FIELD_NAME, ISBN);
     bookInfo.put(Book.AUTHOR_FIELD_NAME, AUTHOR);
