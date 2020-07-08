@@ -22,7 +22,7 @@ import java.util.Optional;
 /**
  * Book encapsulates the information associated with each book being used by a Club.
  * 
- * <p>Implementes the {@link Saveable} interface because it will be able to save itself
+ * <p>Implements the {@link Saveable} interface because it will be able to save itself
  * in the database.
  */
 public class Book implements Saveable {

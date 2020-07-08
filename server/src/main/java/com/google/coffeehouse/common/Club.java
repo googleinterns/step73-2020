@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * Club encapsulates the information associated with each book club.
  * 
- * <p>Implementes the {@link Saveable} interface because it will be able to save itself
+ * <p>Implements the {@link Saveable} interface because it will be able to save itself
  * in the database.
  */
 public class Club implements Saveable {
