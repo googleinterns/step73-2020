@@ -112,7 +112,7 @@ public final class PersonTest {
   public void fromMap_invalidInput() {
     personInfo.put(Person.NICKNAME_FIELD_NAME, NICKNAME);
     assertThrows(IllegalArgumentException.class, () -> {
-      Person.fromMap(personInfo);
+        Person.fromMap(personInfo);
     });
   }
 
