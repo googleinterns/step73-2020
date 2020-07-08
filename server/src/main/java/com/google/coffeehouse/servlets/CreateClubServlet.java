@@ -43,6 +43,7 @@ public class CreateClubServlet extends HttpServlet {
   public static final String LOG_BODY_ERROR_MESSAGE = 
       "LOGGING: Body unable to be parsed in CreateClubServlet: ";
   private IdentifierGenerator idGen = null;
+  private static final Gson gson = new Gson();
 
   /** 
    * Overloaded constructor for dependency injection.
@@ -72,12 +73,9 @@ public class CreateClubServlet extends HttpServlet {
    */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String requestBody = request.getReader().lines().collect(Collectors.joining());
-
-    Gson gson = new Gson();
     Club newClub;
     try {
-      Map clubInfo = gson.fromJson(requestBody, Map.class);
+      Map clubInfo = gson.fromJson(request.getReader(), Map.class);
       newClub = Club.fromMap(clubInfo, idGen);
     } catch (Exception e) {
       System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());
