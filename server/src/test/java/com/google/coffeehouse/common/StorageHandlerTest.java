@@ -145,12 +145,12 @@ public class StorageHandlerTest {
     dbClient.write(mutations);
   }
 
-  public void insertBookWithNoAuthor() {
+  public void insertBookWithNullAuthor() {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Books")
         .set("bookId")
-        .to("bookWithNoAuthor")
+        .to("bookWithNullAuthor")
         .set("isbn")
         .to("9780060959470")
         .set("title")
@@ -159,12 +159,12 @@ public class StorageHandlerTest {
     dbClient.write(mutations);
   }
 
-  public void insertBookWithNoISBN() {
+  public void insertBookWithNullISBN() {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Books")
         .set("bookId")
-        .to("bookWithNoISBN")
+        .to("bookWithNullISBN")
         .set("author")
         .to("bell hooks")
         .set("title")
@@ -173,12 +173,88 @@ public class StorageHandlerTest {
     dbClient.write(mutations);
   }
 
-  public void insertBookWithNoAuthorAndNoISBN() {
+  public void insertBookWithNullAuthorAndNullISBN() {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Books")
         .set("bookId")
-        .to("bookWithNoAuthorNoISBN")
+        .to("bookWithNullAuthorAndNullISBN")
+        .set("title")
+        .to("anonymous book about love")
+        .build());
+    dbClient.write(mutations);
+  }
+
+  public void insertBookWithEmptyAuthor() {
+    List<Mutation> mutations = new ArrayList<>();
+    mutations.add(
+      Mutation.newInsertOrUpdateBuilder("Books")
+        .set("bookId")
+        .to("bookWithEmptyAuthor")
+        .set("author")
+        .to("")
+        .set("isbn")
+        .to("9780060959470")
+        .set("title")
+        .to("all about love: new visions")
+        .build());
+    dbClient.write(mutations);
+  }
+
+  public void insertBookWithEmptyISBN() {
+    List<Mutation> mutations = new ArrayList<>();
+    mutations.add(
+      Mutation.newInsertOrUpdateBuilder("Books")
+        .set("bookId")
+        .to("bookWithEmptyISBN")
+        .set("author")
+        .to("bell hooks")
+        .set("isbn")
+        .to("")
+        .set("title")
+        .to("all about love: new visions")
+        .build());
+    dbClient.write(mutations);
+  }
+
+  public void insertBookWithEmptyAuthorAndEmptyISBN() {
+    List<Mutation> mutations = new ArrayList<>();
+    mutations.add(
+      Mutation.newInsertOrUpdateBuilder("Books")
+        .set("bookId")
+        .to("bookWithEmptyAuthorAndEmptyISBN")
+        .set("author")
+        .to("")
+        .set("isbn")
+        .to("")
+        .set("title")
+        .to("anonymous book about love")
+        .build());
+    dbClient.write(mutations);
+  }
+
+  public void insertBookWithEmptyAuthorAndNullISBN() {
+    List<Mutation> mutations = new ArrayList<>();
+    mutations.add(
+      Mutation.newInsertOrUpdateBuilder("Books")
+        .set("bookId")
+        .to("bookWithEmptyAuthorAndNullISBN")
+        .set("author")
+        .to("")
+        .set("title")
+        .to("anonymous book about love")
+        .build());
+    dbClient.write(mutations);
+  }
+
+  public void insertBookWithNullAuthorAndEmptyISBN() {
+    List<Mutation> mutations = new ArrayList<>();
+    mutations.add(
+      Mutation.newInsertOrUpdateBuilder("Books")
+        .set("bookId")
+        .to("bookWithNullAuthorAndEmptyISBN")
+        .set("isbn")
+        .to("")
         .set("title")
         .to("anonymous book about love")
         .build());
@@ -253,28 +329,73 @@ public class StorageHandlerTest {
   }
 
   @Test
-  public void getBookQuery_existsWithNoAuthor() throws Exception {
-    insertBookWithNoAuthor();
-    String actual = StorageHandler.getBookQuery(dbClient, "bookWithNoAuthor");
-    String expected = "Book ID: bookWithNoAuthor || No author || "
+  public void getBookQuery_existsWithNullAuthor() throws Exception {
+    insertBookWithNullAuthor();
+    String actual = StorageHandler.getBookQuery(dbClient, "bookWithNullAuthor");
+    String expected = "Book ID: bookWithNullAuthor || No author || "
                         + "ISBN: 9780060959470 || Title: all about love: new visions\n";
     assertEquals(expected, actual);
   }
 
   @Test
-  public void getBookQuery_existsWithNoISBN() throws Exception {
-    insertBookWithNoISBN();
-    String actual = StorageHandler.getBookQuery(dbClient, "bookWithNoISBN");
-    String expected = "Book ID: bookWithNoISBN || Author: bell hooks || "
+  public void getBookQuery_existsWithNullISBN() throws Exception {
+    insertBookWithNullISBN();
+    String actual = StorageHandler.getBookQuery(dbClient, "bookWithNullISBN");
+    String expected = "Book ID: bookWithNullISBN || Author: bell hooks || "
                         + "No ISBN || Title: all about love: new visions\n";
     assertEquals(expected, actual);
   }
 
   @Test
-  public void getBookQuery_existsWithNoAuthorAndNoISBN() throws Exception {
-    insertBookWithNoAuthorAndNoISBN();
-    String actual = StorageHandler.getBookQuery(dbClient, "bookWithNoAuthorNoISBN");
-    String expected = "Book ID: bookWithNoAuthorNoISBN || No author || "
+  public void getBookQuery_existsWithNullAuthorAndNullISBN() throws Exception {
+    insertBookWithNullAuthorAndNullISBN();
+    String actual = StorageHandler.getBookQuery(dbClient, "bookWithNullAuthorAndNullISBN");
+    String expected = "Book ID: bookWithNullAuthorAndNullISBN || No author || "
+                        + "No ISBN || Title: anonymous book about love\n";
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void getBookQuery_existsWithEmptyAuthor() throws Exception {
+    insertBookWithEmptyAuthor();
+    String actual = StorageHandler.getBookQuery(dbClient, "bookWithEmptyAuthor");
+    String expected = "Book ID: bookWithEmptyAuthor || No author || "
+                        + "ISBN: 9780060959470 || Title: all about love: new visions\n";
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void getBookQuery_existsWithEmptyISBN() throws Exception {
+    insertBookWithEmptyISBN();
+    String actual =StorageHandler.getBookQuery(dbClient, "bookWithEmptyISBN");
+    String expected = "Book ID: bookWithEmptyISBN || Author: bell hooks || "
+                        + "No ISBN || Title: all about love: new visions\n";
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void getBookQuery_existsWithEmptyAuthorAndEmptyISBN() throws Exception {
+    insertBookWithEmptyAuthorAndEmptyISBN();
+    String actual = StorageHandler.getBookQuery(dbClient, "bookWithEmptyAuthorAndEmptyISBN");
+    String expected = "Book ID: bookWithEmptyAuthorAndEmptyISBN || No author || "
+                        + "No ISBN || Title: anonymous book about love\n";
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void getBookQuery_existsWithEmptyAuthorAndNullISBN() throws Exception {
+    insertBookWithEmptyAuthorAndNullISBN();
+    String actual = StorageHandler.getBookQuery(dbClient, "bookWithEmptyAuthorAndNullISBN");
+    String expected = "Book ID: bookWithEmptyAuthorAndNullISBN || No author || "
+                        + "No ISBN || Title: anonymous book about love\n";
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void getBookQuery_existsWithNullAuthorAndEmptyISBN() throws Exception {
+    insertBookWithNullAuthorAndEmptyISBN();
+    String actual = StorageHandler.getBookQuery(dbClient, "bookWithNullAuthorAndEmptyISBN");
+    String expected = "Book ID: bookWithNullAuthorAndEmptyISBN || No author || "
                         + "No ISBN || Title: anonymous book about love\n";
     assertEquals(expected, actual);
   }
