@@ -45,8 +45,8 @@ export default function Profile() {
    * ServiceHandlers is an object containing various TS Handlers and provides
    * functionality to communicate data from the frontend to the backend
    */
-  const serviceHandlers = React.useContext(ServiceContext);
-  const profileHandlerService = serviceHandlers.profileHandlerService;
+  const contextServices = React.useContext(ServiceContext);
+  const profileHandlerService = contextServices.profileHandlerService;
   
   const [person, setPerson] = React.useState<PersonProps|undefined>(undefined);
   const [profileId, setProfileId] = React.useState<string>(undefined);
