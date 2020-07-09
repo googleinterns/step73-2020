@@ -83,7 +83,9 @@ export default function Profile(props: ProfileProps, state: ProfileState) {
     event.preventDefault();
 
     (async() => {
-      const success = await profileHandlerService.updatePerson(person);
+      const success = (person.email === "" || person.nickname === "")
+        ? false /** At least one required field is missing */
+        : await profileHandlerService.updatePerson(person);
       setSubmitSuccess(success);
     })();
   };
