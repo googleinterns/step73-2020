@@ -166,11 +166,16 @@ export default function Profile() {
   );
 }
 
+interface DisplaySubmitStatusProps {
+  success: Boolean;
+  personProps: PersonProps;
+}
+
 /**
  * Displays success or failure message to the user after they submit  
  * a profile change. 
  */
-function DisplaySubmitStatus(props) {
+function DisplaySubmitStatus(props: DisplaySubmitStatusProps) {
   const classes = useStyles();
   const success = props.success;
   const person = props.personProps;
