@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.coffeehouse;
+package com.google.coffeehouse.common;
 
 import com.google.cloud.spanner.DatabaseClient;
 import com.google.cloud.spanner.ResultSet;
@@ -29,6 +29,8 @@ public class StorageHandler {
   public static final String CLUB_DOES_NOT_EXIST = "This club does not exist in the database.";
   public static final String ERROR_MORE_THAN_ONE_CLUB = "ERROR: More than one club per club ID.";
 
+  public static final String NO_AUTHOR = "No author";
+  public static final String NO_ISBN = "No ISBN";
   public static final String BOOK_DOES_NOT_EXIST = "This book does not exist in the database.";
   public static final String ERROR_MORE_THAN_ONE_BOOK = "ERROR: More than one book per book ID.";
   /**
@@ -60,11 +62,8 @@ public class StorageHandler {
         while (resultSet.next()) {
           email = resultSet.getString("email");
           nickname = resultSet.getString("nickname");
-          if (resultSet.isNull("pronouns") || resultSet.getString("pronouns").isEmpty()) {
-            pronouns = NO_PRONOUNS;
-          } else {
-            pronouns = "Pronouns: " + resultSet.getString("pronouns");
-          }
+          pronouns = (resultSet.isNull("pronouns") || resultSet.getString("pronouns").isEmpty())
+              ? NO_PRONOUNS : "Pronouns: " + resultSet.getString("pronouns");
         }
         personInfo = String.format("User ID: %s || Email: %s || Nickname: %s || %s\n",
                                       userId, email, nickname, pronouns);
@@ -129,7 +128,7 @@ public class StorageHandler {
   public static String getBookQuery(DatabaseClient dbClient, String bookId) {
     String bookInfo = "";
     String author = "";
-    long isbn = 0;
+    String isbn = "";
     String title = "";
     long resultCount = StorageHandlerHelper.getBookCountQuery(dbClient, bookId);
     Statement statement = 
@@ -143,12 +142,14 @@ public class StorageHandler {
     if (resultCount == 1) {
       try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
         while (resultSet.next()) {
-          author = resultSet.getString("author");
-          isbn = resultSet.getLong("isbn");
           title = resultSet.getString("title");
+          author = (resultSet.isNull("author") || resultSet.getString("author").isEmpty())
+              ? NO_AUTHOR : "Author: " + resultSet.getString("author");
+          isbn = (resultSet.isNull("isbn") || resultSet.getString("isbn").isEmpty())
+              ? NO_ISBN : "ISBN: " + resultSet.getString("isbn");
         }
         bookInfo = String.format(
-                          "Book ID: %s || Author: %s || ISBN: %d || Title: %s\n",
+                          "Book ID: %s || %s || %s || Title: %s\n",
                           bookId, author, isbn, title);
       }
     } else if (resultCount > 1) {
