@@ -180,7 +180,7 @@ function DisplaySubmitStatus(props) {
             Something went wrong.
           </p>
         </div>
-      )
+      );
     }
   }
 }
