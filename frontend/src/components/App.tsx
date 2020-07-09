@@ -11,13 +11,10 @@ import { Login } from "./pages/login/Login";
 import Profile from "./pages/profile/Profile"
 import { Route } from "react-router-dom";
 import { Switch } from "react-router-dom";
-import { withStyles } from "@material-ui/core/styles";
-import { YourClubs } from "./pages/your_clubs/YourClubs";
-
 import { ServiceContext } from "./contexts/contexts";
 import { ServiceHandlers } from "./contexts/contexts";
-
-
+import { withStyles } from "@material-ui/core/styles";
+import { YourClubs } from "./pages/your_clubs/YourClubs";
 
 interface AppProps {}
 
@@ -36,12 +33,12 @@ class App extends React.Component<AppProps, AppState> {
     };  
   }
 
-  // Handles opening drawer in AppBar and Drawer components
+  // Handles opening drawer in AppBar and Drawer components 
   handleDrawerOpen = () => {
     this.setState({navigationDrawerOpen: true});
   };
 
-  // Handles closing drawer in AppBar and Drawer components
+  // Handles closing drawer in AppBar and Drawer components 
   handleDrawerClose = () => {
     this.setState({navigationDrawerOpen: false});
   };

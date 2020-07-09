@@ -11,11 +11,10 @@ import OutlinedInput from "@material-ui/core/OutlinedInput";
 import { PersonProps } from "../../../services/mock_profile_backend";
 import { ProfileHandlerService } from "../../../services/profile_handler_service";
 import { MockProfileBackendService } from "../../../services/mock_profile_backend";
-import { Theme } from "@material-ui/core/styles";
-import TextField from '@material-ui/core/TextField';
-
 import { ServiceContext } from "../../contexts/contexts";
 import { ServiceHandlers } from "../../contexts/contexts";
+import { Theme } from "@material-ui/core/styles";
+import TextField from '@material-ui/core/TextField';
 
 const USER_ID = "user_0";
 
@@ -51,18 +50,23 @@ export default function Profile(props: ProfileProps, state: ProfileState) {
 
   const classes = useStyles();
 
+  /** 
+   * ServiceHandlers is an object containing various TS Handlers and provides
+   * functionality to communicate data from the frontend to the backend
+   */
   const serviceHandlers = React.useContext(ServiceContext);
   const profileHandlerService = serviceHandlers.profileHandlerService;
   
   const [person, setPerson] = React.useState<PersonProps|undefined>(undefined);
   const [profileId, setProfileId] = React.useState<string>(undefined);
+  const [submitSuccess, setSubmitSuccess] = React.useState<Boolean|undefined>(undefined);
   
   React.useEffect(() => {
     (async() => {
       const personPromise = await profileHandlerService.getPerson(USER_ID);
       setPerson(personPromise);
     })();
-  }, [profileId]);
+  }, [profileId]); /** Re-renders Profile only when the userId changes */
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPerson({...person, email: event.target.value});
@@ -79,17 +83,10 @@ export default function Profile(props: ProfileProps, state: ProfileState) {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const personJson = JSON.stringify(person);
-
-    const requestParams = {
-      method: 'POST', 
-      headers: {'Content-Type': 'application/json'},
-      body: personJson,
-    }
-
-    /** @TODO: fetch personJson to the backend */
-    // fetch('/updatePerson', {method: 'POST'})
-    console.log(personJson);
+    (async() => {
+      const success = await profileHandlerService.updatePerson(person);
+      setSubmitSuccess(success);
+    })();
   };
 
   return (
@@ -151,7 +148,34 @@ export default function Profile(props: ProfileProps, state: ProfileState) {
             Submit
           </Button>
         </div>
+        <DisplaySubmitStatus success={submitSuccess} />
       </form>
     </div>
   );
+}
+
+function DisplaySubmitStatus(props) {
+  const success = props.success;
+
+  if (success === undefined) {
+    return (<div></div>);
+  } else {
+    if (success) {
+      return (
+        <div>
+          <p style={{ color: 'green', margin: 8 }}>
+            Profile successfully updated.
+          </p>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <p style={{ color: 'red', margin: 8 }}>
+            Something went wrong.
+          </p>
+        </div>
+      )
+    }
+  }
 }
