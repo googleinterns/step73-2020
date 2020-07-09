@@ -9,7 +9,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import { makeStyles } from "@material-ui/core/styles";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import { PersonProps } from "../../../services/mock_profile_backend";
-import { USER_ID } from "./Profile.spec";
+import { USER_ID } from "../../../utils/temporary_testing_consts";
 import { ProfileHandlerService } from "../../../services/profile_handler_service";
 import { MockProfileBackendService } from "../../../services/mock_profile_backend";
 import { ServiceContext } from "../../contexts/contexts";
