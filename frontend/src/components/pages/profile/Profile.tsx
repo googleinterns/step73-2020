@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     submissionMessage: {
       display: 'flex',
+      margin: 8 
     }
   }),
 );
@@ -97,7 +98,11 @@ export default function Profile() {
           <TextField
             error={person ? person.nickname === "" : false }
             fullWidth
-            helperText="Required field."
+            helperText = {person 
+              ? (person.nickname === "" 
+                ? "Email is a required field." 
+                : "Preferred nickname to be displayed on your public profile.")
+              : "Email is a required field."}
             id="nickname"
             InputLabelProps={{
               shrink: true,
@@ -113,6 +118,8 @@ export default function Profile() {
           />
           <TextField
             fullWidth
+            helperText="Preferred pronouns (eg. 'they/them') to be displayed 
+                        on your public profile."
             id="pronouns"
             InputLabelProps={{
               shrink: true,
@@ -128,7 +135,11 @@ export default function Profile() {
           <TextField
             error={person ? person.email === "" : false }
             fullWidth
-            helperText = "Required field."
+            helperText = {person 
+              ? (person.email === "" 
+                ? "Email is a required field." 
+                : "Preferred email that opted-in club updates will be sent to.") 
+              : "Email is a required field."}
             id="email"
             InputLabelProps={{
               shrink: true,
@@ -175,7 +186,7 @@ function DisplaySubmitStatus(props) {
       return (
         <div className={classes.submissionMessage}>
           <CheckCircleIcon />
-          <p style={{ color: 'green', margin: 8 }}>
+          <p style={{ color: 'green' }}>
             Profile successfully updated.
           </p>
           
@@ -185,7 +196,7 @@ function DisplaySubmitStatus(props) {
       return (
         <div className={classes.submissionMessage}>
           <ErrorIcon />
-          <p style={{ color: 'red', margin: 8 }}>
+          <p style={{ color: 'red' }}>
             Something went wrong.
           </p>
         </div>
