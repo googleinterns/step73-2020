@@ -33,6 +33,10 @@ export class ProfileHandlerService implements ProfileHandlerServiceInterface {
     try {
       const person = await this.backend.loadPerson(id);
       return person;
+    /** 
+     * TODO: Add different types of errors based off of what failure occurs. 
+     * eg. NOT_FOUND
+     */
     } catch(err) {
       throw new NonExistentProfileError(id);
     }
