@@ -25,7 +25,7 @@ export const NICKNAMES = [
   "Person_X",
   "Person_Y",
   "Person_Z",
-]
+];
 
 export const PRONOUNS = [
   "He/Him",
@@ -33,7 +33,7 @@ export const PRONOUNS = [
   "They/Them",
   "Xe/Xem",
   "Ze/Zem",
-]
+];
 
 export const EMAILS = [
   "Email_A",
@@ -62,7 +62,7 @@ export const EMAILS = [
   "Email_X",
   "Email_Y",
   "Email_Z",
-]
+];
 
 export function pickRandom<T>(options: T[]): T {
   return options[Math.floor(Math.random() * options.length)];
