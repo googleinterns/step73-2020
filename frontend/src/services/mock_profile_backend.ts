@@ -52,8 +52,16 @@ export class MockProfileBackendService {
 
   /** TODO: Make sure you're updating person, not just adding them  */
   updatePerson(person: PersonProps): Promise<boolean> {
-    this.mockProfiles = [...this.mockProfiles, person];
-    return Promise.resolve(true);
+    const id = person.userId;
+    for (let i = 0; i < this.numProfiles; i++) {
+      if (id === this.mockProfiles[i].userId) {
+        this.mockProfiles[i].email = person.email;
+        this.mockProfiles[i].nickname = person.nickname;
+        this.mockProfiles[i].pronouns = person.pronouns;
+        return Promise.resolve(true);
+      }
+    }
+    return Promise.resolve(false);
   }
 
   deletePerson(id: string): Promise<boolean> {
