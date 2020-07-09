@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.coffeehouse;
+package com.google.coffeehouse.common;
 
 import com.google.cloud.spanner.DatabaseClient;
 import com.google.cloud.spanner.ResultSet;
@@ -29,6 +29,8 @@ public class StorageHandler {
   public static final String CLUB_DOES_NOT_EXIST = "This club does not exist in the database.";
   public static final String ERROR_MORE_THAN_ONE_CLUB = "ERROR: More than one club per club ID.";
 
+  public static final String NO_AUTHOR = "No author";
+  public static final String NO_ISBN = "No ISBN";
   public static final String BOOK_DOES_NOT_EXIST = "This book does not exist in the database.";
   public static final String ERROR_MORE_THAN_ONE_BOOK = "ERROR: More than one book per book ID.";
   /**
@@ -129,7 +131,7 @@ public class StorageHandler {
   public static String getBookQuery(DatabaseClient dbClient, String bookId) {
     String bookInfo = "";
     String author = "";
-    long isbn = 0;
+    String isbn = "";
     String title = "";
     long resultCount = StorageHandlerHelper.getBookCountQuery(dbClient, bookId);
     Statement statement = 
@@ -143,12 +145,20 @@ public class StorageHandler {
     if (resultCount == 1) {
       try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
         while (resultSet.next()) {
-          author = resultSet.getString("author");
-          isbn = resultSet.getLong("isbn");
           title = resultSet.getString("title");
+          if (resultSet.isNull("author") || resultSet.getString("author").isEmpty()) {
+            author = NO_AUTHOR;
+          } else {
+            author = "Author: " + resultSet.getString("author");
+          }
+          if (resultSet.isNull("isbn") || resultSet.getString("isbn").isEmpty()) {
+            isbn = NO_ISBN;
+          } else {
+            isbn = "ISBN: " + resultSet.getString("isbn");
+          }
         }
         bookInfo = String.format(
-                          "Book ID: %s || Author: %s || ISBN: %d || Title: %s\n",
+                          "Book ID: %s || %s || %s || Title: %s\n",
                           bookId, author, isbn, title);
       }
     } else if (resultCount > 1) {
