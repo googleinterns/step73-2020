@@ -154,6 +154,10 @@ export default function Profile(props: ProfileProps, state: ProfileState) {
   );
 }
 
+/**
+ * Displays a success or failure message to the user after they submit a 
+ * a profile change. 
+ */
 function DisplaySubmitStatus(props) {
   const success = props.success;
 
