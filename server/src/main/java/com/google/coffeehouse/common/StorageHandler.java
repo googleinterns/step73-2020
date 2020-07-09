@@ -24,15 +24,15 @@ import com.google.cloud.spanner.Statement;
 public class StorageHandler {
   public static final String NO_PRONOUNS = "No pronouns";
   public static final String PERSON_DOES_NOT_EXIST = "This person does not exist in the database.";
-  public static final String ERROR_MORE_THAN_ONE_PERSON = "ERROR: More than one person per user ID.";
+  public static final String ERROR_MORE_THAN_ONE_PERSON = "More than one person per user ID.";
 
   public static final String CLUB_DOES_NOT_EXIST = "This club does not exist in the database.";
-  public static final String ERROR_MORE_THAN_ONE_CLUB = "ERROR: More than one club per club ID.";
+  public static final String ERROR_MORE_THAN_ONE_CLUB = "More than one club per club ID.";
 
   public static final String NO_AUTHOR = "No author";
   public static final String NO_ISBN = "No ISBN";
   public static final String BOOK_DOES_NOT_EXIST = "This book does not exist in the database.";
-  public static final String ERROR_MORE_THAN_ONE_BOOK = "ERROR: More than one book per book ID.";
+  public static final String ERROR_MORE_THAN_ONE_BOOK = "More than one book per book ID.";
   /**
   * Returns a string containing information about a person queried from the database.
   * This method formats a string with a user's ID, email, nickname, and pronouns.
@@ -43,11 +43,11 @@ public class StorageHandler {
   * @param  userId      the user ID string used to query and get a person's information
   * @return personInfo  the formatted string containing the person information
   */
-  public static String getPersonQuery(DatabaseClient dbClient, String userId) {
-    String personInfo = "";
+  public static Person getPersonQuery(DatabaseClient dbClient, String userId) {
     String email = "";
     String nickname = "";
     String pronouns = "";
+    // TODO: implement setting user ID if it already exists @linamontes10
     long resultCount = StorageHandlerHelper.getPersonCountQuery(dbClient, userId);
     Statement statement = 
         Statement.newBuilder(
@@ -62,18 +62,22 @@ public class StorageHandler {
         while (resultSet.next()) {
           email = resultSet.getString("email");
           nickname = resultSet.getString("nickname");
-          pronouns = (resultSet.isNull("pronouns") || resultSet.getString("pronouns").isEmpty())
-              ? NO_PRONOUNS : "Pronouns: " + resultSet.getString("pronouns");
+          if (!resultSet.isNull("pronouns") || !resultSet.getString("pronouns").isEmpty()) {
+            pronouns = resultSet.getString("pronouns");
+          }
         }
-        personInfo = String.format("User ID: %s || Email: %s || Nickname: %s || %s\n",
-                                      userId, email, nickname, pronouns);
+        Person.Builder personBuilder = Person.newBuilder(email, nickname);
+        if (!pronouns.isEmpty()) {
+          personBuilder.setPronouns(pronouns);
+        }
+        Person person = personBuilder.build();
       }
     } else if (resultCount > 1) {
-      personInfo = ERROR_MORE_THAN_ONE_PERSON;
+      throw new IllegalArgumentException(ERROR_MORE_THAN_ONE_PERSON);
     } else {
-      personInfo = PERSON_DOES_NOT_EXIST;
+      throw new IllegalArgumentException(PERSON_DOES_NOT_EXIST);
     }
-    return personInfo;
+    return person;
   }
 
   /**
@@ -83,8 +87,7 @@ public class StorageHandler {
   * @param  clubId    the club ID string used to query and get a club's information
   * @return clubInfo  the formatted string containing the club information
   */
-  public static String getClubQuery(DatabaseClient dbClient, String clubId) {
-    String clubInfo = "";
+  public static Club getClubQuery(DatabaseClient dbClient, String clubId) {
     String bookId = "";
     String description = "";
     String ownerId = "";
@@ -102,20 +105,19 @@ public class StorageHandler {
       try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
         while (resultSet.next()) {
           bookId = resultSet.getString("bookId");
+          name = resultSet.getString("name");
           description = resultSet.getString("description");
           ownerId = resultSet.getString("ownerId");
-          name = resultSet.getString("name");
         }
-        clubInfo = String.format(
-                          "Club ID: %s || Book ID: %s || Description: %s || Name: %s || Owner ID: %s\n",
-                          clubId, bookId, description, name, ownerId);
+        Club.Builder clubBuilder = Club.newBuilder(name, bookId);
+        Club club = clubBuilder.build();
       }
     } else if (resultCount > 1) {
-      clubInfo = ERROR_MORE_THAN_ONE_CLUB;
+      throw new IllegalArgumentException(ERROR_MORE_THAN_ONE_CLUB);
     } else {
-      clubInfo = CLUB_DOES_NOT_EXIST;
+      throw new IllegalArgumentException(clubInfo = CLUB_DOES_NOT_EXIST);
     }
-    return clubInfo;
+    return club;
   }
 
   /**
@@ -125,8 +127,7 @@ public class StorageHandler {
   * @param  bookId    the book ID string used to query and get a book's information
   * @return bookInfo  the formatted string containing the book information
   */
-  public static String getBookQuery(DatabaseClient dbClient, String bookId) {
-    String bookInfo = "";
+  public static Book getBookQuery(DatabaseClient dbClient, String bookId) {
     String author = "";
     String isbn = "";
     String title = "";
@@ -143,20 +144,27 @@ public class StorageHandler {
       try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
         while (resultSet.next()) {
           title = resultSet.getString("title");
-          author = (resultSet.isNull("author") || resultSet.getString("author").isEmpty())
-              ? NO_AUTHOR : "Author: " + resultSet.getString("author");
-          isbn = (resultSet.isNull("isbn") || resultSet.getString("isbn").isEmpty())
-              ? NO_ISBN : "ISBN: " + resultSet.getString("isbn");
+          if (!resultSet.isNull("author") || !resultSet.getString("author").isEmpty()) {
+            author = resultSet.getString("author");
+          }
+          if (!resultSet.isNull("isbn") || !resultSet.getString("isbn").isEmpty()) {
+            isbn = resultSet.getString("isbn");
+          }
         }
-        bookInfo = String.format(
-                          "Book ID: %s || %s || %s || Title: %s\n",
-                          bookId, author, isbn, title);
+        Book.Builder bookBuilder = Book.newBuilder(email, nickname);
+        if (!author.isEmpty()) {
+          bookBuilder.setAuthor(author);
+        }
+        if (!isbn.isEmpty()) {
+          bookBuilder.setAuthor(isbn);
+        }
+        Book book = bookBuilder.build();
       }
     } else if (resultCount > 1) {
-      bookInfo = ERROR_MORE_THAN_ONE_BOOK;
+      throw new IllegalArgumentException(ERROR_MORE_THAN_ONE_BOOK);
     } else {
-      bookInfo = BOOK_DOES_NOT_EXIST;
+      throw new IllegalArgumentException(BOOK_DOES_NOT_EXIST);
     }
-    return bookInfo;
+    return book;
   }
 }
