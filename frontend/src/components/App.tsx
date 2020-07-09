@@ -8,7 +8,7 @@ import Drawer from "./drawer/Drawer";
 import { Explore } from "./pages/explore/Explore";
 import { hot } from "react-hot-loader";
 import { Login } from "./pages/login/Login"; 
-import Profile from "./pages/profile/Profile"
+import Profile from "./pages/profile/Profile";
 import { Route } from "react-router-dom";
 import { Switch } from "react-router-dom";
 import { ServiceContext } from "./contexts/contexts";
@@ -19,7 +19,7 @@ import { YourClubs } from "./pages/your_clubs/YourClubs";
 interface AppProps {}
 
 interface AppState {
-  /** @state determines if drawer is shown or not*/ 
+  /** @state determines if drawer is shown or not*/
   navigationDrawerOpen: boolean;
 }
 
@@ -28,15 +28,15 @@ class App extends React.Component<AppProps, AppState> {
     super(props);
     this.state = {
       navigationDrawerOpen: false
-    };  
+    };
   }
 
-  // Handles opening drawer in AppBar and Drawer components 
+  // Handles opening drawer in AppBar and Drawer components
   handleDrawerOpen = () => {
     this.setState({navigationDrawerOpen: true});
   };
 
-  // Handles closing drawer in AppBar and Drawer components 
+  // Handles closing drawer in AppBar and Drawer components
   handleDrawerClose = () => {
     this.setState({navigationDrawerOpen: false});
   };
