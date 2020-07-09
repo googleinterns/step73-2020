@@ -106,7 +106,7 @@ export default function Profile(props: ProfileProps, state: ProfileState) {
             onChange={handleNameChange}
             placeholder="Nickname"
             style={{ margin: 8 }}
-            value={person? person.nickname : ""}
+            value={person ? person.nickname : ""}
             variant="outlined"
           />
           <TextField
@@ -121,7 +121,7 @@ export default function Profile(props: ProfileProps, state: ProfileState) {
             onChange={handlePronounsChange}
             placeholder="Pronouns"
             style={{ margin: 8 }}
-            value={person? person.pronouns : ""}
+            value={person ? person.pronouns : ""}
             variant="outlined"
           />
           <TextField
@@ -135,7 +135,7 @@ export default function Profile(props: ProfileProps, state: ProfileState) {
             onChange={handleEmailChange}
             placeholder="Email"
             style={{ margin: 8 }}
-            value={person? person.email : ""}      
+            value={person ? person.email : ""}      
             variant="outlined"
           />
         </div>
