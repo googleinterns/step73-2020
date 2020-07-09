@@ -19,10 +19,9 @@ export class InvalidUserIdError extends Error {}
  */
 export class MockProfileBackendService {
   private mockProfiles: PersonProps[] = [];
-  private numProfiles = 0;
 
-  constructor(profileCount: number) {
-    for (let i = 0; i < profileCount; i++) {
+  constructor(private readonly numProfiles: number) {
+    for (let i = 0; i < numProfiles; i++) {
       this.mockProfiles.push({
         email: pickRandom(EMAILS),
         nickname: pickRandom(NICKNAMES),
@@ -30,7 +29,6 @@ export class MockProfileBackendService {
         userId: `user_${i}`,
       });
     }
-    this.numProfiles = profileCount;
   }
   
   loadPerson(id: string): Promise<PersonProps> {
