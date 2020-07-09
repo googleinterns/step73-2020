@@ -7,7 +7,7 @@ export class NonExistentProfileError extends Error {
   }
 }
 
-/** Error that occurs if Id was unable to be added */
+/** Error that occurs if Id was unable to be updated */
 export class FailureToUpdateProfile extends Error {
   constructor(readonly id: string) {
     super(`Unable to update Profile ${id}`);
