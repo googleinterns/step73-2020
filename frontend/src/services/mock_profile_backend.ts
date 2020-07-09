@@ -31,16 +31,18 @@ export class MockProfileBackendService {
     }
   }
   
-  loadPerson(id: string): Promise<PersonProps> {
+  loadPerson(id: string): Promise<string> {
     const matched = this.mockProfiles.find((mockProfile) => mockProfile.userId === id);
     if (matched) { 
-      return Promise.resolve(matched); 
+      const person = JSON.stringify(matched);
+      return Promise.resolve(person); 
     }
     throw new InvalidUserIdError();
   }
 
   /** TODO: Make sure you're updating person, not just adding them  */
-  updatePerson(person: PersonProps): Promise<boolean> {
+  updatePerson(personJson: string): Promise<boolean> {
+    const person = JSON.parse(personJson);
     const id = person.userId;
     for (let i = 0; i < this.numProfiles; i++) {
       if (id === this.mockProfiles[i].userId) {

@@ -15,7 +15,7 @@ export class FailureToUpdateProfile extends Error {
 }
 
 interface ProfileHandlerServiceInterface {
-  getPerson(id: string): Promise<PersonProps>;
+  getPerson(id: string): Promise<string>;
   updatePerson(PersonProps): Promise<boolean>;
   deletePerson(id: string): Promise<boolean>;
 }
@@ -31,7 +31,8 @@ export class ProfileHandlerService implements ProfileHandlerServiceInterface {
 
   async getPerson(id: string) {
     try {
-      const person = await this.backend.loadPerson(id);
+      const personJson = await this.backend.loadPerson(id);
+      const person = JSON.parse(personJson);
       return person;
     /** 
      * TODO: Add different types of errors based off of what failure occurs. 
@@ -43,7 +44,8 @@ export class ProfileHandlerService implements ProfileHandlerServiceInterface {
   }
 
   async updatePerson(person: PersonProps) {
-    const success = await this.backend.updatePerson(person);
+    const personJson = JSON.stringify(person);
+    const success = await this.backend.updatePerson(personJson);
     return success;
   }
 
