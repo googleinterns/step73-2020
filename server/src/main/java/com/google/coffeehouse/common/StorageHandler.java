@@ -62,11 +62,8 @@ public class StorageHandler {
         while (resultSet.next()) {
           email = resultSet.getString("email");
           nickname = resultSet.getString("nickname");
-          if (resultSet.isNull("pronouns") || resultSet.getString("pronouns").isEmpty()) {
-            pronouns = NO_PRONOUNS;
-          } else {
-            pronouns = "Pronouns: " + resultSet.getString("pronouns");
-          }
+          pronouns = (resultSet.isNull("pronouns") || resultSet.getString("pronouns").isEmpty())
+              ? NO_PRONOUNS : "Pronouns: " + resultSet.getString("pronouns");
         }
         personInfo = String.format("User ID: %s || Email: %s || Nickname: %s || %s\n",
                                       userId, email, nickname, pronouns);
@@ -146,16 +143,10 @@ public class StorageHandler {
       try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
         while (resultSet.next()) {
           title = resultSet.getString("title");
-          if (resultSet.isNull("author") || resultSet.getString("author").isEmpty()) {
-            author = NO_AUTHOR;
-          } else {
-            author = "Author: " + resultSet.getString("author");
-          }
-          if (resultSet.isNull("isbn") || resultSet.getString("isbn").isEmpty()) {
-            isbn = NO_ISBN;
-          } else {
-            isbn = "ISBN: " + resultSet.getString("isbn");
-          }
+          author = (resultSet.isNull("author") || resultSet.getString("author").isEmpty())
+              ? NO_AUTHOR : "Author: " + resultSet.getString("author");
+          isbn = (resultSet.isNull("isbn") || resultSet.getString("isbn").isEmpty())
+              ? NO_ISBN : "ISBN: " + resultSet.getString("isbn");
         }
         bookInfo = String.format(
                           "Book ID: %s || %s || %s || Title: %s\n",
