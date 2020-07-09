@@ -19,7 +19,6 @@ export class InvalidUserIdError extends Error {}
  */
 export class MockProfileBackendService {
   private mockProfiles: PersonProps[] = [];
-  private readonly changeListeners: Array<(val: PersonProps[]) => void> = [];
   private numProfiles = 0;
 
   constructor(profileCount: number) {
