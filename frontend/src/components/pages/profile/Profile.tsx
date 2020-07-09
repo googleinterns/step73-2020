@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     submissionMessage: {
       display: 'flex',
-      margin: 8 
+      marginTop: '10px'
     }
   }),
 );
@@ -112,7 +112,6 @@ export default function Profile() {
             onChange={handleNameChange}
             placeholder="Nickname"
             required
-            style={{ margin: 8 }}
             value={person ? person.nickname : ""}
             variant="outlined"
           />
@@ -128,7 +127,6 @@ export default function Profile() {
             margin="normal"
             onChange={handlePronounsChange}
             placeholder="Pronouns"
-            style={{ margin: 8 }}
             value={person ? person.pronouns : ""}
             variant="outlined"
           />
@@ -149,7 +147,6 @@ export default function Profile() {
             onChange={handleEmailChange}
             placeholder="Email"
             required
-            style={{ margin: 8 }}
             value={person ? person.email : ""}      
             variant="outlined"
           />
@@ -158,7 +155,6 @@ export default function Profile() {
           <Button 
             color="primary" 
             onClick={handleSubmit}
-            style={{ margin: 8 }} 
             variant="contained" 
           >
             Submit
