@@ -32,10 +32,9 @@ export class MockProfileBackendService {
   }
   
   loadPerson(id: string): Promise<PersonProps> {
-    for (let i = 0; i < this.numProfiles; i++) {
-      if (id === this.mockProfiles[i].userId) {
-        return Promise.resolve(this.mockProfiles[i]);
-      }
+    const matched = this.mockProfiles.find((mockProfile) => mockProfile.userId === id);
+    if (matched) { 
+      return Promise.resolve(matched); 
     }
     throw new InvalidUserIdError();
   }
