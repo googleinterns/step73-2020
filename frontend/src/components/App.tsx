@@ -12,7 +12,7 @@ import Profile from "./pages/profile/Profile";
 import { Route } from "react-router-dom";
 import { Switch } from "react-router-dom";
 import { ServiceContext } from "./contexts/contexts";
-import { ServiceHandlers } from "./contexts/contexts";
+import { defaultServices } from "./contexts/contexts";
 import { withStyles } from "@material-ui/core/styles";
 import { YourClubs } from "./pages/your_clubs/YourClubs";
 
@@ -44,7 +44,7 @@ class App extends React.Component<AppProps, AppState> {
   public render() {
     return (
       <BrowserRouter>
-        <ServiceContext.Provider value={ServiceHandlers}>
+        <ServiceContext.Provider value={defaultServices}>
           <CssBaseline />
           <AppBar 
             navigationDrawerOpen={this.state.navigationDrawerOpen}

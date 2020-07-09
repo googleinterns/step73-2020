@@ -5,8 +5,8 @@ import { ProfileHandlerService } from "../../services/profile_handler_service";
 const NUM_PROFILES = 10;
 
 /** TODO: Change to real backend service implementation */
-export const MockBackendService = new MockProfileBackendService(NUM_PROFILES);
-export const ServiceHandlers = { 
-  profileHandlerService: new ProfileHandlerService(MockBackendService),
+export const mockBackendService = new MockProfileBackendService(NUM_PROFILES);
+export const defaultServices = { 
+  profileHandlerService: new ProfileHandlerService(mockBackendService),
 }
-export const ServiceContext = React.createContext(ServiceHandlers);
+export const ServiceContext = React.createContext(defaultServices);
