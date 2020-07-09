@@ -37,13 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface ProfileProps {}
-
-interface ProfileState {
-  personProps: PersonProps;
-}
-
-export default function Profile(props: ProfileProps, state: ProfileState) {
+export default function Profile() {
 
   const classes = useStyles();
 
