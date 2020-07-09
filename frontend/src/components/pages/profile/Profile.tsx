@@ -1,6 +1,8 @@
 import * as React from "react";
 import Button from "@material-ui/core/Button";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { createStyles } from "@material-ui/core/styles";
+import ErrorIcon from '@material-ui/icons/Error';
 import FilledInput from "@material-ui/core/FilledInput";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
@@ -34,6 +36,9 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(1),
       width: '25ch',
     },
+    submissionMessage: {
+      display: 'flex',
+    }
   }),
 );
 
@@ -73,11 +78,14 @@ export default function Profile() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
+    console.log(person.email);
+    console.log(person.nickname);
     (async() => {
-      const success = (person.email === "" || person.nickname === "")
-        ? false /** At least one required field is missing */
-        : await profileHandlerService.updatePerson(person);
+      if (person.email === "" || person.nickname === "") {
+        setSubmitSuccess(false);
+        return;
+      }
+      const success = await profileHandlerService.updatePerson(person);
       setSubmitSuccess(success);
     })();
   };
@@ -87,8 +95,9 @@ export default function Profile() {
       <form>
         <div>
           <TextField
+            error={person ? person.nickname === "" : false }
             fullWidth
-            helperText="to be displayed around CoffeeHouse"
+            helperText="Required field."
             id="nickname"
             InputLabelProps={{
               shrink: true,
@@ -97,13 +106,13 @@ export default function Profile() {
             margin="normal"
             onChange={handleNameChange}
             placeholder="Nickname"
+            required
             style={{ margin: 8 }}
             value={person ? person.nickname : ""}
             variant="outlined"
           />
           <TextField
             fullWidth
-            helperText="to be displayed around CoffeeHouse"
             id="pronouns"
             InputLabelProps={{
               shrink: true,
@@ -117,7 +126,9 @@ export default function Profile() {
             variant="outlined"
           />
           <TextField
+            error={person ? person.email === "" : false }
             fullWidth
+            helperText = "Required field."
             id="email"
             InputLabelProps={{
               shrink: true,
@@ -126,6 +137,7 @@ export default function Profile() {
             margin="normal"
             onChange={handleEmailChange}
             placeholder="Email"
+            required
             style={{ margin: 8 }}
             value={person ? person.email : ""}      
             variant="outlined"
@@ -141,7 +153,7 @@ export default function Profile() {
             Submit
           </Button>
         </div>
-        <DisplaySubmitStatus success={submitSuccess} />
+        <DisplaySubmitStatus success={submitSuccess} personProps={person} />
       </form>
     </div>
   );
@@ -152,22 +164,27 @@ export default function Profile() {
  * a profile change. 
  */
 function DisplaySubmitStatus(props) {
+  const classes = useStyles();
   const success = props.success;
+  const person = props.personProps;
 
   if (success === undefined) {
     return (<div></div>);
   } else {
     if (success) {
       return (
-        <div>
+        <div className={classes.submissionMessage}>
+          <CheckCircleIcon />
           <p style={{ color: 'green', margin: 8 }}>
             Profile successfully updated.
           </p>
+          
         </div>
       );
     } else {
       return (
-        <div>
+        <div className={classes.submissionMessage}>
+          <ErrorIcon />
           <p style={{ color: 'red', margin: 8 }}>
             Something went wrong.
           </p>

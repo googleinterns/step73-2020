@@ -51,7 +51,6 @@ export class MockProfileBackendService {
         this.mockProfiles[i].email = person.email;
         this.mockProfiles[i].nickname = person.nickname;
         this.mockProfiles[i].pronouns = person.pronouns;
-        console.log(this.mockProfiles[i]);
         return Promise.resolve(true);
       }
     }
