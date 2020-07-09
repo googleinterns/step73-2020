@@ -24,10 +24,8 @@ interface AppState {
 }
 
 class App extends React.Component<AppProps, AppState> {
-  
   constructor(props) {
     super(props);
-    
     this.state = {
       navigationDrawerOpen: false
     };  
