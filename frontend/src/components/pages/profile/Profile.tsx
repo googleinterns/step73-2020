@@ -13,7 +13,7 @@ import { USER_ID } from "../../../utils/temporary_testing_consts";
 import { ProfileHandlerService } from "../../../services/profile_handler_service";
 import { MockProfileBackendService } from "../../../services/mock_profile_backend";
 import { ServiceContext } from "../../contexts/contexts";
-import { ServiceHandlers } from "../../contexts/contexts";
+import { defaultServices } from "../../contexts/contexts";
 import { Theme } from "@material-ui/core/styles";
 import TextField from '@material-ui/core/TextField';
 
@@ -37,9 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface ProfileProps {
-  profileHandlerService: ProfileHandlerService;
-}
+interface ProfileProps {}
 
 interface ProfileState {
   personProps: PersonProps;
