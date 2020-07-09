@@ -100,7 +100,7 @@ export default function Profile() {
             fullWidth
             helperText = {person 
               ? (person.nickname === "" 
-                ? "Email is a required field." 
+                ? "Nickname is a required field." 
                 : "Preferred nickname to be displayed on your public profile.")
               : "Email is a required field."}
             id="nickname"
