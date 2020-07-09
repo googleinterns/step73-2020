@@ -1,4 +1,7 @@
-import { pickRandom, EMAILS, NICKNAMES, PRONOUNS } from "../utils/random_data";
+import { EMAILS } from "../utils/random_data";
+import { NICKNAMES } from "../utils/random_data";
+import { PRONOUNS } from "../utils/random_data"
+import { pickRandom } from "../utils/random_data";
 
 export interface PersonProps {
   email: string;
@@ -30,16 +33,6 @@ export class MockProfileBackendService {
     }
     this.numProfiles = profileCount;
   }
-
-  /** Adds a function that will be called whenever mockProfiles changes. */
-  listen(listener: (val: PersonProps[]) => void): void {
-    this.changeListeners.push(listener);
-  }
-
-  private update(newMockProfiles: PersonProps[]): void {
-    this.mockProfiles = newMockProfiles;
-    this.changeListeners.forEach((listener) => listener(newMockProfiles));
-  }
   
   loadPerson(id: string): Promise<PersonProps> {
     for (let i = 0; i < this.numProfiles; i++) {
@@ -58,6 +51,7 @@ export class MockProfileBackendService {
         this.mockProfiles[i].email = person.email;
         this.mockProfiles[i].nickname = person.nickname;
         this.mockProfiles[i].pronouns = person.pronouns;
+        console.log(this.mockProfiles[i]);
         return Promise.resolve(true);
       }
     }

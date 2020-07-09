@@ -9,14 +9,13 @@ import InputLabel from "@material-ui/core/InputLabel";
 import { makeStyles } from "@material-ui/core/styles";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import { PersonProps } from "../../../services/mock_profile_backend";
+import { USER_ID } from "./Profile.spec";
 import { ProfileHandlerService } from "../../../services/profile_handler_service";
 import { MockProfileBackendService } from "../../../services/mock_profile_backend";
 import { ServiceContext } from "../../contexts/contexts";
 import { ServiceHandlers } from "../../contexts/contexts";
 import { Theme } from "@material-ui/core/styles";
 import TextField from '@material-ui/core/TextField';
-
-const USER_ID = "user_0";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
