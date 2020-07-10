@@ -14,17 +14,11 @@ export class FailureToUpdateProfile extends Error {
   }
 }
 
-interface ProfileHandlerServiceInterface {
-  getPerson(id: string): Promise<string>;
-  updatePerson(PersonProps): Promise<boolean>;
-  deletePerson(id: string): Promise<boolean>;
-}
-
 /**
  * Profile Handling service that manages list of user profiles using a mocked
  * backend database.
  */
-export class ProfileHandlerService implements ProfileHandlerServiceInterface {
+export class ProfileHandlerService {
 
   /** Backend is responsible for holding all profile information */
   constructor(private readonly backend: MockProfileBackendService) {}; 
