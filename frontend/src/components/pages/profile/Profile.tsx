@@ -79,8 +79,6 @@ export default function Profile() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(person.email);
-    console.log(person.nickname);
     (async() => {
       if (person.email === "" || person.nickname === "") {
         setSubmitSuccess(false);
