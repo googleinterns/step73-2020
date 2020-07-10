@@ -1,4 +1,9 @@
-import { PersonProps, MockProfileBackendService } from "./mock_profile_backend";
+import { BackendServiceInterface } from 
+  "../backend_service_interface/backend_service_interface";
+import { MockProfileBackendService } from 
+  "../mock_profile_backend/mock_profile_backend";
+import { PersonProps } from 
+  "../mock_profile_backend/mock_profile_backend";
 
 /** Error that occurs when Id does not exist */
 export class NonExistentProfileError extends Error {
@@ -12,12 +17,6 @@ export class FailureToUpdateProfile extends Error {
   constructor(readonly id: string) {
     super(`Unable to update Profile ${id}`);
   }
-}
-
-interface BackendServiceInterface {
-  loadProfile(id: string): Promise<string>;
-  updateProfile(personJson: string): Promise<Boolean>;
-  deleteProfile(id: string): Promise<Boolean>;
 }
 
 /**

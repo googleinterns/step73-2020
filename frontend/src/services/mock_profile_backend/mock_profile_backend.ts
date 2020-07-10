@@ -1,7 +1,7 @@
-import { EMAILS } from "../utils/random_data";
-import { NICKNAMES } from "../utils/random_data";
-import { PRONOUNS } from "../utils/random_data"
-import { pickRandom } from "../utils/random_data";
+import { EMAILS } from "../../utils/random_data";
+import { NICKNAMES } from "../../utils/random_data";
+import { PRONOUNS } from "../../utils/random_data"
+import { pickRandom } from "../../utils/random_data";
 
 export interface PersonProps {
   email: string;

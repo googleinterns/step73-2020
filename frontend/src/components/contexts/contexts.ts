@@ -1,6 +1,8 @@
 import * as React from "react";
-import { MockProfileBackendService } from "../../services/mock_profile_backend";
-import { ProfileHandlerService } from "../../services/profile_handler_service";
+import { MockProfileBackendService } from 
+  "../../services/mock_profile_backend/mock_profile_backend";
+import { ProfileHandlerService } from 
+  "../../services/profile_handler_service/profile_handler_service";
 
 const NUM_PROFILES = 10;
 
