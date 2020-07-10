@@ -5,7 +5,8 @@ This project uses [Maven](https://maven.apache.org/) for building and deploying 
 
 Before running any server code, one must verify their gcloud project is set to 
 coffeehouse-step2020 through the command `gcloud config set project coffeehouse-step2020`
-  
+
+
 ## Running Locally
 Run the dev server with the command `mvn package appengine:run`
 
