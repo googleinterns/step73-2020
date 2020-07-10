@@ -31,7 +31,7 @@ export class MockProfileBackendService {
     }
   }
   
-  loadPerson(id: string): Promise<string> {
+  loadProfile(id: string): Promise<string> {
     const matched = this.mockProfiles.find((mockProfile) => mockProfile.userId === id);
     if (matched) { 
       const person = JSON.stringify(matched);
@@ -41,7 +41,7 @@ export class MockProfileBackendService {
   }
 
   /** TODO: Make sure you're updating person, not just adding them  */
-  updatePerson(personJson: string): Promise<boolean> {
+  updateProfile(personJson: string): Promise<boolean> {
     const person = JSON.parse(personJson);
     const id = person.userId;
     for (let i = 0; i < this.numProfiles; i++) {
@@ -55,7 +55,7 @@ export class MockProfileBackendService {
     return Promise.resolve(false);
   }
 
-  deletePerson(id: string): Promise<boolean> {
+  deleteProfile(id: string): Promise<boolean> {
     for (let i = 0; i < this.numProfiles; i++) {
       if (id === this.mockProfiles[i].userId) {
         return Promise.resolve(true);

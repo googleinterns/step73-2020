@@ -14,18 +14,23 @@ export class FailureToUpdateProfile extends Error {
   }
 }
 
+interface BackendServiceInterface {
+  loadProfile(id: string): Promise<string>;
+  updateProfile(personJson: string): Promise<Boolean>;
+  deleteProfile(id: string): Promise<Boolean>;
+}
+
 /**
  * Profile Handling service that manages list of user profiles using a mocked
  * backend database.
  */
 export class ProfileHandlerService {
-
   /** Backend is responsible for holding all profile information */
-  constructor(private readonly backend: MockProfileBackendService) {}; 
+  constructor(private readonly backend: BackendServiceInterface) {}; 
 
   async getPerson(id: string) {
     try {
-      const personJson = await this.backend.loadPerson(id);
+      const personJson = await this.backend.loadProfile(id);
       const person = JSON.parse(personJson);
       return person;
     /** 
@@ -39,12 +44,12 @@ export class ProfileHandlerService {
 
   async updatePerson(person: PersonProps) {
     const personJson = JSON.stringify(person);
-    const success = await this.backend.updatePerson(personJson);
+    const success = await this.backend.updateProfile(personJson);
     return success;
   }
 
   async deletePerson(id: string) {
-    const success = await this.backend.deletePerson(id);
+    const success = await this.backend.deleteProfile(id);
     if (!success) {
       throw new NonExistentProfileError(id);
     } else {
