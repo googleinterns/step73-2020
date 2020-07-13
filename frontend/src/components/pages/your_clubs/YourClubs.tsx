@@ -1,4 +1,8 @@
 import * as React from "react";
+import AddIcon from "@material-ui/icons/Add";
+import { borders } from "@material-ui/system";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import ChromeReaderModeIcon from "@material-ui/icons/ChromeReaderMode";
 import { createStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
@@ -21,6 +25,11 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex', 
       flexWrap: 'wrap',
       justifyContent: 'center',
+    },
+    createClubButton : {
+      marginLeft: theme.spacing(8),
+      marginTop: '20px',
+      maxHeight: '50px',
     },
     formControl: {
       margin: theme.spacing(1),
@@ -72,6 +81,14 @@ export const YourClubs = () => {
           The number of clubs of which you are a member to be displayed.
         </FormHelperText>
       </FormControl>
+      <Button
+        className={classes.createClubButton}
+        color="primary"
+        endIcon={<AddIcon />}
+        variant="contained"
+      >
+        Create Club
+      </Button>
     </div>
   );
 }
