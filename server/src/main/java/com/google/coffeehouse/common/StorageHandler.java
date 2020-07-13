@@ -109,8 +109,12 @@ public class StorageHandler {
           description = resultSet.getString("description");
           ownerId = resultSet.getString("ownerId");
         }
-        Club.Builder clubBuilder = Club.newBuilder(name, bookId);
-        Club club = clubBuilder.build();
+        Book book = getbookQuery(dbClient, bookId);
+        Club.Builder clubBuilder = Club.newBuilder(name, book);
+        Club club = clubBuilder
+                        .setDescription(description)
+                        .set
+                        .build();
       }
     } else if (resultCount > 1) {
       throw new IllegalArgumentException(ERROR_MORE_THAN_ONE_CLUB);
