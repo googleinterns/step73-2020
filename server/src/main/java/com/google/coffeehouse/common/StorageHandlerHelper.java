@@ -23,6 +23,58 @@ import com.google.cloud.spanner.Statement;
 * matching the primary keys of different Cloud Spanner tables.
 */
 public class StorageHandlerHelper {
+
+  /**
+  * Returns a long that is the number of results matching a specific user ID
+  * @param  dbClient  the database client
+  * @param  userId    the user ID string used to query and get how many users have that key
+  * @return count     the long representing the number of results from the query
+  */
+  public static Boolean checkPersonInClubQuery(DatabaseClient dbClient, String userId, String clubId) {
+    Boolean exists = null;
+    Statement statement = 
+        Statement.newBuilder(
+                "SELECT (EXISTS ("
+                  + "SELECT userId, clubId "
+                  + "FROM Memberships "
+                  + "WHERE userId = @userId AND clubId = @clubId))")
+              .bind("userId")
+              .to(userId)
+              .bind("clubId")
+              .to(clubId)
+              .build();
+    try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
+      while (resultSet.next()) {
+        exists = resultSet.getBoolean(0);
+      }
+    }
+    return exists;
+  }
+
+  /**
+  * Returns a long that is the number of results matching a specific user ID
+  * @param  dbClient  the database client
+  * @param  userId    the user ID string used to query and get how many users have that key
+  * @return count     the long representing the number of results from the query
+  */
+  public static long getMemberCountQuery(DatabaseClient dbClient, String clubId) {
+    long count = 0;
+    Statement statement = 
+        Statement.newBuilder(
+                "SELECT COUNT(*) as count "
+                  + "FROM Memberships "
+                  + "WHERE clubId = @clubId AND membershipType = " + Membership.MEMBER)
+              .bind("clubId")
+              .to(clubId)
+              .build();
+    try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
+      while (resultSet.next()) {
+        count = resultSet.getLong("count");
+      }
+    }
+    return count;
+  }
+
   /**
   * Returns a long that is the number of results matching a specific user ID
   * @param  dbClient  the database client

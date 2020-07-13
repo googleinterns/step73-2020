@@ -16,10 +16,8 @@ package com.google.coffeehouse.common;
 
 import com.google.cloud.spanner.DatabaseClient;
 import com.google.cloud.spanner.DatabaseId;
-import com.google.cloud.spanner.ResultSet;
 import com.google.cloud.spanner.Spanner;
 import com.google.cloud.spanner.SpannerOptions;
-import com.google.cloud.spanner.Statement;
 
 /**
 * The StorageHandlerSetup class creates and sets up the Spanner service and database
@@ -36,7 +34,7 @@ public class StorageHandlerSetup {
   * the creation and instantiation of a database client
   * @return spanner
   */
-  public Spanner createSpannerService() {
+  public static Spanner createSpannerService() {
     // Instantiates a client
     SpannerOptions options = SpannerOptions.newBuilder().build();
     Spanner spanner = options.getService();
@@ -49,7 +47,7 @@ public class StorageHandlerSetup {
   * of querying the database given the functions in StorageHandler.java
   * @return dbClient
   */
-  public DatabaseClient createDbClient(Spanner spanner) {
+  public static DatabaseClient createDbClient(Spanner spanner) {
     SpannerOptions options = spanner.getOptions();
     DatabaseId db = DatabaseId.of(options.getProjectId(), INSTANCE_ID, DATABASE_ID);
     DatabaseClient dbClient = spanner.getDatabaseClient(db);

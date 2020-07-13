@@ -261,142 +261,150 @@ public class StorageHandlerTest {
     dbClient.write(mutations);
   }
 
+  // @Test
+  // public void getPersonQuery_doesNotExistInDb() throws Exception {
+  //   Person actual = StorageHandler.getPersonQuery(dbClient, "personThatDoesNotExist");
+  //   String expected = StorageHandler.PERSON_DOES_NOT_EXIST;
+  //   assertEquals(expected, actual);
+  // }
+
+  // @Test
+  // public void getPersonQuery_existsWithNoPronouns() throws Exception {
+  //   insertPersonWithPronouns();
+  //   Person actual = StorageHandler.getPersonQuery(dbClient, "hasPronouns");
+  //   String expected = "User ID: hasPronouns || Email: pronouns@test.com || Nickname: Pro-Test || Pronouns: she/he/they\n";
+  //   assertEquals(expected, actual);
+  // }
+
+  // @Test
+  // public void getPersonQuery_existsWithNullPronouns() throws Exception {
+  //   insertPersonWithNullPronouns();
+  //   Person actual = StorageHandler.getPersonQuery(dbClient, "nullPronouns");
+  //   String expected = String.format("User ID: nullPronouns || Email: null@test.com || "
+  //                                     + "Nickname: Null-Test || %s\n", StorageHandler.NO_PRONOUNS);
+  //   assertEquals(expected, actual);
+  // }
+
+  // @Test
+  // public void getPersonQuery_existsWithEmptyPronouns() throws Exception {
+  //   insertPersonWithEmptyPronouns();
+  //   Person actual = StorageHandler.getPersonQuery(dbClient, "emptyPronouns");
+  //   String expected = String.format("User ID: emptyPronouns || Email: empty@test.com || "
+  //                                     + "Nickname: Empty-Test || No pronouns\n",
+  //                                     StorageHandler.NO_PRONOUNS);
+  //   assertEquals(expected, actual);
+  // }
+
+  // @Test
+  // public void getClubQuery_doesNotExistInDb() throws Exception {
+  //   Club actual = StorageHandler.getClubQuery(dbClient, "clubThatDoesNotExist");
+  //   String expected = StorageHandler.CLUB_DOES_NOT_EXIST;
+  //   assertEquals(expected, actual);
+  // }
+
+  // @Test
+  // public void getClubQuery_existsInDb() throws Exception {
+  //   insertClub();
+  //   Club actual = StorageHandler.getClubQuery(dbClient, "bellhooksbooks");
+  //   String expected = "Club ID: bellhooksbooks || Book ID: bellhooksallaboutlove || "
+  //                       + "Description: All of bell hooks' books about revolutionary Black feminism. || "
+  //                       + "Name: bell hooks lovers || Owner ID: bellhookstopfan\n";
+  //   assertEquals(expected, actual);
+  // }
+
+  // @Test
+  // public void getBookQuery_doesNotExistInDb() throws Exception {
+  //   Book actual = StorageHandler.getBookQuery(dbClient, "bookThatDoesNotExist");
+  //   String expected = StorageHandler.BOOK_DOES_NOT_EXIST;
+  //   assertEquals(expected, actual);
+  // }
+
+  // @Test
+  // public void getBookQuery_existsInDb() throws Exception {
+  //   insertBookWithAuthorAndIsbn();
+  //   Book actual = StorageHandler.getBookQuery(dbClient, "bookWithAuthorAndIsbn");
+  //   String expected = "Book ID: bookWithAuthorAndIsbn || Author: bell hooks || "
+  //                       + "ISBN: 9780060959470 || Title: all about love: new visions\n";
+  //   assertEquals(expected, actual);
+  // }
+
+  // @Test
+  // public void getBookQuery_existsWithNullAuthor() throws Exception {
+  //   insertBookWithNullAuthor();
+  //   Book actual = StorageHandler.getBookQuery(dbClient, "bookWithNullAuthor");
+  //   String expected = "Book ID: bookWithNullAuthor || No author || "
+  //                       + "ISBN: 9780060959470 || Title: all about love: new visions\n";
+  //   assertEquals(expected, actual);
+  // }
+
+  // @Test
+  // public void getBookQuery_existsWithNullIsbn() throws Exception {
+  //   insertBookWithNullIsbn();
+  //   Book actual = StorageHandler.getBookQuery(dbClient, "bookWithNullIsbn");
+  //   String expected = "Book ID: bookWithNullIsbn || Author: bell hooks || "
+  //                       + "No ISBN || Title: all about love: new visions\n";
+  //   assertEquals(expected, actual);
+  // }
+
+  // @Test
+  // public void getBookQuery_existsWithNullAuthorAndNullIsbn() throws Exception {
+  //   insertBookWithNullAuthorAndNullIsbn();
+  //   Book actual = StorageHandler.getBookQuery(dbClient, "bookWithNullAuthorAndNullIsbn");
+  //   String expected = "Book ID: bookWithNullAuthorAndNullIsbn || No author || "
+  //                       + "No ISBN || Title: anonymous book about love\n";
+  //   assertEquals(expected, actual);
+  // }
+
+  // @Test
+  // public void getBookQuery_existsWithEmptyAuthor() throws Exception {
+  //   insertBookWithEmptyAuthor();
+  //   Book actual = StorageHandler.getBookQuery(dbClient, "bookWithEmptyAuthor");
+  //   String expected = "Book ID: bookWithEmptyAuthor || No author || "
+  //                       + "ISBN: 9780060959470 || Title: all about love: new visions\n";
+  //   assertEquals(expected, actual);
+  // }
+
+  // @Test
+  // public void getBookQuery_existsWithEmptyIsbn() throws Exception {
+  //   insertBookWithEmptyIsbn();
+  //   Book actual =StorageHandler.getBookQuery(dbClient, "bookWithEmptyIsbn");
+  //   String expected = "Book ID: bookWithEmptyIsbn || Author: bell hooks || "
+  //                       + "No ISBN || Title: all about love: new visions\n";
+  //   assertEquals(expected, actual);
+  // }
+
+  // @Test
+  // public void getBookQuery_existsWithEmptyAuthorAndEmptyIsbn() throws Exception {
+  //   insertBookWithEmptyAuthorAndEmptyIsbn();
+  //   Book actual = StorageHandler.getBookQuery(dbClient, "bookWithEmptyAuthorAndEmptyIsbn");
+  //   String expected = "Book ID: bookWithEmptyAuthorAndEmptyIsbn || No author || "
+  //                       + "No ISBN || Title: anonymous book about love\n";
+  //   assertEquals(expected, actual);
+  // }
+
+  // @Test
+  // public void getBookQuery_existsWithEmptyAuthorAndNullIsbn() throws Exception {
+  //   insertBookWithEmptyAuthorAndNullIsbn();
+  //   Book actual = StorageHandler.getBookQuery(dbClient, "bookWithEmptyAuthorAndNullIsbn");
+  //   String expected = "Book ID: bookWithEmptyAuthorAndNullIsbn || No author || "
+  //                       + "No ISBN || Title: anonymous book about love\n";
+  //   assertEquals(expected, actual);
+  // }
+
+  // @Test
+  // public void getBookQuery_existsWithNullAuthorAndEmptyIsbn() throws Exception {
+  //   insertBookWithNullAuthorAndEmptyIsbn();
+  //   Book actual = StorageHandler.getBookQuery(dbClient, "bookWithNullAuthorAndEmptyIsbn");
+  //   String expected = "Book ID: bookWithNullAuthorAndEmptyIsbn || No author || "
+  //                       + "No ISBN || Title: anonymous book about love\n";
+  //   assertEquals(expected, actual);
+  // }
+
   @Test
-  public void getPersonQuery_doesNotExistInDb() throws Exception {
-    String actual = StorageHandler.getPersonQuery(dbClient, "personThatDoesNotExist");
-    String expected = StorageHandler.PERSON_DOES_NOT_EXIST;
-    assertEquals(expected, actual);
+  public void getListOfMembersQuery_oneMember() throws Exception {
   }
 
   @Test
-  public void getPersonQuery_existsWithNoPronouns() throws Exception {
-    insertPersonWithPronouns();
-    String actual = StorageHandler.getPersonQuery(dbClient, "hasPronouns");
-    String expected = "User ID: hasPronouns || Email: pronouns@test.com || Nickname: Pro-Test || Pronouns: she/he/they\n";
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  public void getPersonQuery_existsWithNullPronouns() throws Exception {
-    insertPersonWithNullPronouns();
-    String actual = StorageHandler.getPersonQuery(dbClient, "nullPronouns");
-    String expected = String.format("User ID: nullPronouns || Email: null@test.com || "
-                                      + "Nickname: Null-Test || %s\n", StorageHandler.NO_PRONOUNS);
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  public void getPersonQuery_existsWithEmptyPronouns() throws Exception {
-    insertPersonWithEmptyPronouns();
-    String actual = StorageHandler.getPersonQuery(dbClient, "emptyPronouns");
-    String expected = String.format("User ID: emptyPronouns || Email: empty@test.com || "
-                                      + "Nickname: Empty-Test || No pronouns\n",
-                                      StorageHandler.NO_PRONOUNS);
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  public void getClubQuery_doesNotExistInDb() throws Exception {
-    String actual = StorageHandler.getClubQuery(dbClient, "clubThatDoesNotExist");
-    String expected = StorageHandler.CLUB_DOES_NOT_EXIST;
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  public void getClubQuery_existsInDb() throws Exception {
-    insertClub();
-    String actual = StorageHandler.getClubQuery(dbClient, "bellhooksbooks");
-    String expected = "Club ID: bellhooksbooks || Book ID: bellhooksallaboutlove || "
-                        + "Description: All of bell hooks' books about revolutionary Black feminism. || "
-                        + "Name: bell hooks lovers || Owner ID: bellhookstopfan\n";
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  public void getBookQuery_doesNotExistInDb() throws Exception {
-    String actual = StorageHandler.getBookQuery(dbClient, "bookThatDoesNotExist");
-    String expected = StorageHandler.BOOK_DOES_NOT_EXIST;
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  public void getBookQuery_existsInDb() throws Exception {
-    insertBookWithAuthorAndIsbn();
-    String actual = StorageHandler.getBookQuery(dbClient, "bookWithAuthorAndIsbn");
-    String expected = "Book ID: bookWithAuthorAndIsbn || Author: bell hooks || "
-                        + "ISBN: 9780060959470 || Title: all about love: new visions\n";
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  public void getBookQuery_existsWithNullAuthor() throws Exception {
-    insertBookWithNullAuthor();
-    String actual = StorageHandler.getBookQuery(dbClient, "bookWithNullAuthor");
-    String expected = "Book ID: bookWithNullAuthor || No author || "
-                        + "ISBN: 9780060959470 || Title: all about love: new visions\n";
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  public void getBookQuery_existsWithNullIsbn() throws Exception {
-    insertBookWithNullIsbn();
-    String actual = StorageHandler.getBookQuery(dbClient, "bookWithNullIsbn");
-    String expected = "Book ID: bookWithNullIsbn || Author: bell hooks || "
-                        + "No ISBN || Title: all about love: new visions\n";
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  public void getBookQuery_existsWithNullAuthorAndNullIsbn() throws Exception {
-    insertBookWithNullAuthorAndNullIsbn();
-    String actual = StorageHandler.getBookQuery(dbClient, "bookWithNullAuthorAndNullIsbn");
-    String expected = "Book ID: bookWithNullAuthorAndNullIsbn || No author || "
-                        + "No ISBN || Title: anonymous book about love\n";
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  public void getBookQuery_existsWithEmptyAuthor() throws Exception {
-    insertBookWithEmptyAuthor();
-    String actual = StorageHandler.getBookQuery(dbClient, "bookWithEmptyAuthor");
-    String expected = "Book ID: bookWithEmptyAuthor || No author || "
-                        + "ISBN: 9780060959470 || Title: all about love: new visions\n";
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  public void getBookQuery_existsWithEmptyIsbn() throws Exception {
-    insertBookWithEmptyIsbn();
-    String actual =StorageHandler.getBookQuery(dbClient, "bookWithEmptyIsbn");
-    String expected = "Book ID: bookWithEmptyIsbn || Author: bell hooks || "
-                        + "No ISBN || Title: all about love: new visions\n";
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  public void getBookQuery_existsWithEmptyAuthorAndEmptyIsbn() throws Exception {
-    insertBookWithEmptyAuthorAndEmptyIsbn();
-    String actual = StorageHandler.getBookQuery(dbClient, "bookWithEmptyAuthorAndEmptyIsbn");
-    String expected = "Book ID: bookWithEmptyAuthorAndEmptyIsbn || No author || "
-                        + "No ISBN || Title: anonymous book about love\n";
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  public void getBookQuery_existsWithEmptyAuthorAndNullIsbn() throws Exception {
-    insertBookWithEmptyAuthorAndNullIsbn();
-    String actual = StorageHandler.getBookQuery(dbClient, "bookWithEmptyAuthorAndNullIsbn");
-    String expected = "Book ID: bookWithEmptyAuthorAndNullIsbn || No author || "
-                        + "No ISBN || Title: anonymous book about love\n";
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  public void getBookQuery_existsWithNullAuthorAndEmptyIsbn() throws Exception {
-    insertBookWithNullAuthorAndEmptyIsbn();
-    String actual = StorageHandler.getBookQuery(dbClient, "bookWithNullAuthorAndEmptyIsbn");
-    String expected = "Book ID: bookWithNullAuthorAndEmptyIsbn || No author || "
-                        + "No ISBN || Title: anonymous book about love\n";
-    assertEquals(expected, actual);
+  public void getListOfMembersQuery_noMembers() throws Exception {
   }
 }
