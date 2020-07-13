@@ -107,7 +107,7 @@ public class StorageHandlerHelperTest {
         .set("clubId")
         .to("club")
         .set("membershipType")
-        .to(Membership.MEMBER)
+        .to(MembershipConstants.MEMBER)
         .set("timestamp")
         .to(Value.COMMIT_TIMESTAMP)
         .build());

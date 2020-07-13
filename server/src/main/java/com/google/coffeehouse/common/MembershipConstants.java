@@ -17,7 +17,7 @@ package com.google.coffeehouse.common;
 /**
 * The Membership class holds constant values that denote membership status.
 */
-public class Membership {
+public class MembershipConstants {
   public static final int MEMBER = 1;
   public static final int OWNER = 2;
 
@@ -28,5 +28,8 @@ public class Membership {
 
   public static enum MembershipStatus {
     MEMBER, NOT_MEMBER;
+  }
+  
+  private MembershipConstants(){
   }
 }

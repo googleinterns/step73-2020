@@ -25,10 +25,11 @@ import com.google.cloud.spanner.Statement;
 public class StorageHandlerHelper {
 
   /**
-  * Returns a long that is the number of results matching a specific user ID
+  * Returns a Boolean that indicates whether or not a person is in a club
   * @param  dbClient  the database client
-  * @param  userId    the user ID string used to query and get how many users have that key
-  * @return count     the long representing the number of results from the query
+  * @param  userId    the user ID string of the user we are checking is in a club
+  * @param  clubid    the club ID string of the club we are checking the user is in
+  * @return exists    the boolean representing whether or not a person is in a club
   */
   public static Boolean checkPersonInClubQuery(DatabaseClient dbClient, String userId, String clubId) {
     Boolean exists = null;
@@ -45,7 +46,7 @@ public class StorageHandlerHelper {
               .build();
     try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
       while (resultSet.next()) {
-        exists = resultSet.getBoolean(0);
+        exists = resultSet.getBoolean(/* columnIndex= */0);
       }
     }
     return exists;
@@ -63,7 +64,7 @@ public class StorageHandlerHelper {
         Statement.newBuilder(
                 "SELECT COUNT(*) as count "
                   + "FROM Memberships "
-                  + "WHERE clubId = @clubId AND membershipType = " + Membership.MEMBER)
+                  + "WHERE clubId = @clubId AND membershipType = " + MembershipConstants.MEMBER)
               .bind("clubId")
               .to(clubId)
               .build();

@@ -43,14 +43,14 @@ public class StorageHandler {
   public static final String BOOK_DOES_NOT_EXIST = "This book does not exist in the database.";
   public static final String ERROR_MORE_THAN_ONE_BOOK = "More than one book per book ID.";
   
-  public static Person createPersonFromId(String userId) {
+  public static Person fetchPersonFromId(String userId) {
     Spanner spanner = StorageHandlerSetup.createSpannerService();
     DatabaseClient dbClient = StorageHandlerSetup.createDbClient(spanner);
     Person person = StorageHandler.getPersonQuery(dbClient, userId);
     return person;
   }
 
-  public static Club createClubFromId(String clubId) {
+  public static Club fetchClubFromId(String clubId) {
     Spanner spanner = StorageHandlerSetup.createSpannerService();
     DatabaseClient dbClient = StorageHandlerSetup.createDbClient(spanner);
     Club club = StorageHandler.getClubQuery(dbClient, clubId);
@@ -61,21 +61,21 @@ public class StorageHandler {
     Spanner spanner = StorageHandlerSetup.createSpannerService();
     DatabaseClient dbClient = StorageHandlerSetup.createDbClient(spanner);
     List<Mutation> mutations = new ArrayList<>();
-    try {
+    if (!StorageHandlerHelper.checkPersonInClubQuery(dbClient, userId, clubId)) {
       mutations.add(
-      Mutation.newInsertBuilder("Memberships")
-        .set("userId")
-        .to(userId)
-        .set("clubId")
-        .to(clubId)
-        .set("membershipType")
-        .to(Membership.MEMBER)
-        .set("timestamp")
-        .to(Value.COMMIT_TIMESTAMP)
-        .build());
-    dbClient.write(mutations);
-    } catch (Exception e) {
-      throw new IllegalArgumentException(Membership.PERSON_ALREADY_IN_CLUB);
+        Mutation.newInsertBuilder("Memberships")
+          .set("userId")
+          .to(userId)
+          .set("clubId")
+          .to(clubId)
+          .set("membershipType")
+          .to(MembershipConstants.MEMBER)
+          .set("timestamp")
+          .to(Value.COMMIT_TIMESTAMP)
+          .build());
+        dbClient.write(mutations);
+    } else {
+      throw new IllegalArgumentException(MembershipConstants.PERSON_ALREADY_IN_CLUB);
     }
   }
 
@@ -97,7 +97,7 @@ public class StorageHandler {
               }
             });
     } else {
-      throw new IllegalArgumentException(Membership.PERSON_NOT_IN_CLUB);
+      throw new IllegalArgumentException(MembershipConstants.PERSON_NOT_IN_CLUB);
     }
   }
 
@@ -137,6 +137,7 @@ public class StorageHandler {
         }
       }
       Person.Builder personBuilder = Person.newBuilder(email, nickname);
+      // TODO: implement setting the userId field @JosephBushagour
       if (!pronouns.isEmpty()) {
         personBuilder.setPronouns(pronouns);
       }
@@ -183,11 +184,12 @@ public class StorageHandler {
         }
       }
       Book.Builder bookBuilder = Book.newBuilder(title);
+      // TODO: implement setting the bookId field @JosephBushagour
       if (!author.isEmpty()) {
         bookBuilder.setAuthor(author);
       }
       if (!isbn.isEmpty()) {
-        bookBuilder.setAuthor(isbn);
+        bookBuilder.setIsbn(isbn);
       }
       book = bookBuilder.build();
     } else if (resultCount > 1) {
@@ -231,6 +233,8 @@ public class StorageHandler {
       }
       Book book = getBookQuery(dbClient, bookId);
       Club.Builder clubBuilder = Club.newBuilder(name, book);
+      // TODO: implement setting the clubId field @JosephBushagour
+      // TODO: implement setting the ownerId field @JosephBushagour
       club = clubBuilder
                         .setDescription(description)
                         .build();
@@ -257,7 +261,9 @@ public class StorageHandler {
         Statement.newBuilder(
                 "SELECT userId, clubId, membershipType "
                   + "FROM Memberships "
-                  + "WHERE clubId = @clubId AND membershipType = " + Membership.MEMBER)
+                  + "WHERE clubId = @clubId AND "
+                  + "(membershipType = " + MembershipConstants.MEMBER
+                  + " OR membershipType = " + MembershipConstants.OWNER + ")")
             .bind("clubId")
             .to(clubId)
             .build();
@@ -269,7 +275,7 @@ public class StorageHandler {
         }
       }
     } else {
-      throw new IllegalArgumentException(Membership.NO_MEMBERS);
+      throw new IllegalArgumentException(MembershipConstants.NO_MEMBERS);
     }
     return persons;
   }
@@ -283,26 +289,22 @@ public class StorageHandler {
   * @param  userId      the user ID string used to query and get a list of clubs
   * @return clubs       the list of Club objects
   */
-  public static List<Club> getListOfClubsQuery(DatabaseClient dbClient, String userId, Membership.MembershipStatus membershipStatus) {
+  public static List<Club> getListOfClubsQuery(DatabaseClient dbClient, String userId, MembershipConstants.MembershipStatus membershipStatus) {
+    Statement statement;
     List<Club> clubs = new ArrayList<>();
-    if (membershipStatus == Membership.MembershipStatus.MEMBER) {
-      Statement statement = 
+    if (membershipStatus == MembershipConstants.MembershipStatus.MEMBER) {
+      statement = 
         Statement.newBuilder(
                 "SELECT userId, clubId, membershipType "
                   + "FROM Memberships "
                   + "WHERE userId = @userId AND "
-                  + "membershipType = " + Membership.MEMBER)
+                  + "(membershipType = " + MembershipConstants.MEMBER
+                  + " OR membershipType = " + MembershipConstants.OWNER + ")")
             .bind("userId")
             .to(userId)
             .build();
-      try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
-        while (resultSet.next()) {
-          String clubId = resultSet.getString("clubId");
-          clubs.add(getClubQuery(dbClient, clubId));
-        }
-      }
-    } else if (membershipStatus == Membership.MembershipStatus.NOT_MEMBER) {
-      Statement statement = 
+    } else {
+      statement = 
         Statement.newBuilder(
                 "SELECT clubId, userId "
                   + "FROM Clubs "
@@ -310,21 +312,22 @@ public class StorageHandler {
                   + "SELECT userId, clubId, membershipType "
                   + "FROM Memberships "
                   + "WHERE userId = @userId"
-                  + "membershipType = " + Membership.MEMBER + ")")
+                  + "(membershipType = " + MembershipConstants.MEMBER
+                  + " OR membershipType = " + MembershipConstants.OWNER + "))")
             .bind("userId")
             .to(userId)
             .build();
-      try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
-        while (resultSet.next()) {
-          String clubId = resultSet.getString("clubId");
-          clubs.add(getClubQuery(dbClient, clubId));
-        }
+    }
+    try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
+      while (resultSet.next()) {
+        String clubId = resultSet.getString("clubId");
+        clubs.add(getClubQuery(dbClient, clubId));
       }
     }
     return clubs;
   }
 
-  public static List<Club> listClubsFromUserId(String userId, Membership.MembershipStatus membershipStatus) {
+  public static List<Club> listClubsFromUserId(String userId, MembershipConstants.MembershipStatus membershipStatus) {
     Spanner spanner = StorageHandlerSetup.createSpannerService();
     DatabaseClient dbClient = StorageHandlerSetup.createDbClient(spanner);
     List<Club> clubs = getListOfClubsQuery(dbClient, userId, membershipStatus);
