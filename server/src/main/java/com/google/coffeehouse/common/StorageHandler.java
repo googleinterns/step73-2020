@@ -89,7 +89,7 @@ public class StorageHandler {
             new TransactionCallable<Void>() {
               @Override
               public Void run(TransactionContext transaction) throws Exception {
-                String sql = "DELETE from Memberships WHERE userId = '"
+                String sql = "DELETE FROM Memberships WHERE userId = '"
                       + userId + "' AND clubId = '" + clubId + "'";
                 long rowCount = transaction.executeUpdate(Statement.of(sql));
                 System.out.printf("%d record deleted.\n", rowCount);
