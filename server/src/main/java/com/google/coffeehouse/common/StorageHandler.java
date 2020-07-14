@@ -119,7 +119,7 @@ public class StorageHandler {
     long resultCount = StorageHandlerHelper.getPersonCountQuery(dbClient, userId);
     if (resultCount > 1) {
       throw new IllegalArgumentException(ERROR_MORE_THAN_ONE_PERSON);
-    } else {
+    } else if (resultCount < 1) {
       throw new IllegalArgumentException(PERSON_DOES_NOT_EXIST);
     }
     Statement statement = 
@@ -161,7 +161,7 @@ public class StorageHandler {
     long resultCount = StorageHandlerHelper.getBookCountQuery(dbClient, bookId);
     if (resultCount > 1) {
       throw new IllegalArgumentException(ERROR_MORE_THAN_ONE_BOOK);
-    } else {
+    } else if (resultCount < 1) {
       throw new IllegalArgumentException(BOOK_DOES_NOT_EXIST);
     }
     Statement statement = 
@@ -247,6 +247,9 @@ public class StorageHandler {
   public static List<Person> getListOfMembersQuery(DatabaseClient dbClient, String clubId) {
     List<Person> persons = new ArrayList<>();
     long resultCount = StorageHandlerHelper.getMemberCountQuery(dbClient, clubId);
+    if (resultCount < 0) {
+      throw new IllegalArgumentException(MembershipConstants.NO_MEMBERS);
+    }
     Statement statement = 
         Statement.newBuilder(
                 "SELECT userId, clubId, membershipType "
@@ -257,15 +260,11 @@ public class StorageHandler {
             .bind("clubId")
             .to(clubId)
             .build();
-    if (resultCount > 0) {
-      try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
-        while (resultSet.next()) {
-          String userId = resultSet.getString("userId");
-          persons.add(getPersonQuery(dbClient, userId));
-        }
+    try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
+      while (resultSet.next()) {
+        String userId = resultSet.getString("userId");
+        persons.add(getPersonQuery(dbClient, userId));
       }
-    } else {
-      throw new IllegalArgumentException(MembershipConstants.NO_MEMBERS);
     }
     return persons;
   }
