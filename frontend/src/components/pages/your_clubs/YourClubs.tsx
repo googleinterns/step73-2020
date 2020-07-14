@@ -40,14 +40,25 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: '20px',
       maxHeight: '50px',
     },
+    buttonsContainer : {
+      alignItems: 'right',
+      display: 'flex',
+    },
     club : {
       marginTop: '20px',
       maxWidth: '900px',
     },
-    clubContent : {
+    clubContent: {
       display: 'flex',
       flexWrap: 'wrap',
       margin: theme.spacing(1),
+    },
+    clubPhoto: {
+      marginTop: '15px',
+    },
+    clubTitle: {
+      marginBottom: 0,
+      marginRight: 50, 
     },
     formControl: {
       margin: theme.spacing(1),
@@ -56,10 +67,17 @@ const useStyles = makeStyles((theme: Theme) =>
       minWidth: 120,
     },
     listedClubsContainer: {
+      alignItems: 'center',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center',
       marginBottom: '20px',
+    },
+    textElement: {
+      marginBottom: '0px',
+    },
+    topUtilitiesContainer: {
+      display: 'flex',
+      justifyContent: 'center',
     },
   }),
 );
@@ -89,7 +107,7 @@ export const YourClubs = () => {
     })();
   }, [numClubsDisplayed]);
 
-  // Associates each text value with its corresponding number.
+  /** Associates each text value with its corresponding number. */
   const textNumberRepresentation = [
     {text: "None", val: 0},
     {text: "One", val: 1},
@@ -110,7 +128,7 @@ export const YourClubs = () => {
 
   return (
     <div className={classes.root}>
-      <div>
+      <div className={classes.topUtilitiesContainer}>
         <FormControl className={classes.formControl}>
           <InputLabel id="number-of-displayed-clubs-label">
             Number of Displayed Clubs
@@ -161,13 +179,13 @@ function DisplayListedClubs(props: DisplayListedClubsProps) {
   /** If clubs to display is not yet defined, or 'None' are chosen to display. */
   if (clubsToDisplay ? /** defined */ true : /** undefined */ false)  {
     return (
-      <div>
+      <div className={classes.listedClubsContainer}>
         {clubsToDisplay.map((item, index) => (
           <div className={classes.club} key={item.name}>
             <Box border={1} borderColor="text.primary" borderRadius={16}>
               <div className={classes.clubContent}>
-                <h2 style={{marginRight: 50, marginBottom: 0}}>{item.name}</h2>
-                <LibraryBooksRoundedIcon style={{marginTop: 15}}/>
+                <h2 className={classes.clubTitle}>{item.name}</h2>
+                <LibraryBooksRoundedIcon className={classes.clubPhoto} />
                 <LoadClubDescription description={item.description} />
                 <LoadBookInfo book={item.currentBook} />
                 <LoadContentWarnings contentWarnings={item.contentWarnings} />
@@ -188,13 +206,14 @@ interface LoadClubDescriptionProps {
   description: string;
 };
 
+/** Displays the club's description. */
 function LoadClubDescription(props: LoadClubDescriptionProps) {
   const classes = useStyles();
 
   return (
     <div>
       <div className={classes.break}></div>
-      <p style={{marginBottom: 0}}>
+      <p className={classes.textElement}>
         <b>Description: </b><br/>
         {props.description}
       </p>
@@ -206,12 +225,13 @@ interface LoadBookInfoProps {
   book: BookProps;
 };
 
+/** Displays the title and author of the club's current book. */
 function LoadBookInfo(props: LoadBookInfoProps) {
   const classes = useStyles();
 
   return (
     <div>
-      <p style={{marginBottom: 0, marginRight: 20}}>
+      <p className={classes.textElement} style={{marginRight: 20}}>
         <b>Current Book: </b><br/>
         {' ' + props.book.title}<br/>
         by {props.book.author}
@@ -220,13 +240,14 @@ function LoadBookInfo(props: LoadBookInfoProps) {
   );
 }
 
+/** Displays content warnings associated with the club's current book. */
 function LoadContentWarnings(props) {
   const classes = useStyles();
   const contentWarnings = props.contentWarnings;
 
   return (
     <div>
-      <p  style={{marginBottom: 0}}><b>Content Warnings</b></p>
+      <p  className={classes.textElement}><b>Content Warnings</b></p>
       {contentWarnings.map((item, index) => (
         <div>
           - <b>{item}<br/></b>
@@ -244,7 +265,7 @@ function LoadButtons () {
   const classes = useStyles();
 
   return (
-    <div>
+    <div className={classes.buttonsContainer}>
       <Button
         className={classes.button}
         color="primary"
