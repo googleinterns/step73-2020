@@ -1,53 +1,45 @@
-# React Webpack Typescript Starter
-> Minimal starter with hot module replacement (HMR) for rapid development.
+# CoffeeHouse Frontend
 
-* **[React](https://facebook.github.io/react/)** (16.x)
-* **[Webpack](https://webpack.js.org/)** (4.x)
-* **[Typescript](https://www.typescriptlang.org/)** (3.x)
-* **[Hot Module Replacement (HMR)](https://webpack.js.org/concepts/hot-module-replacement/)** using [React Hot Loader](https://github.com/gaearon/react-hot-loader) (4.x)
-* [Babel](http://babeljs.io/) (7.x)
-* [SASS](http://sass-lang.com/)
-* [Jest](https://facebook.github.io/jest/) - Testing framework for React applications
-* Production build script
-* Image loading/minification using [Image Webpack Loader](https://github.com/tcoopman/image-webpack-loader)
-* Typescript compiling using [Awesome Typescript Loader](https://github.com/s-panferov/awesome-typescript-loader) (5.x)
-* Code quality (linting) for Typescript.
+This project uses [React](https://facebook.github.io/react/) and
+[Typescript](https://www.typescriptlang.org/) for the frontend. 
 
-## Installation
-1. Clone/download repo
-2. `yarn install` (or `npm install` for npm)
+Before running any code, one must use `npm install` to install the required dependencies.
 
-## Usage
-**Development**
 
-`yarn run start-dev`
+## Running Locally
+Run the dev server with the command `npm run start-dev`
 
-* Build app continuously (HMR enabled)
-* App served @ `http://localhost:8080`
+To use, visit http://localhost:9000
 
-**Production**
+If you see any errors that say "System limit for number of file watchers reached",
+you can run the following command to temporarily increase that limit -
+`sudo sysctl -w fs.inotify.max_user_watches=100000`
 
-`yarn run start-prod`
 
-* Build app once (HMR disabled) to `/dist/`
-* App served @ `http://localhost:3000`
+## Deploying
+The frontend service (know as the `default` service in `app.yaml`) can
+be deployed with the command `npm run build && gcloud app deploy`
+
+To visit the deployed site, navigate to
+[http://coffeehouse-step2020.appspot.com](http://coffeehouse-step2020.appspot.com/)
+
+
+## Testing
+Unit tests can be ran with the command `npm run test`
+
+The unit tests are written with:
+-  [Jest](https://facebook.github.io/jest/)
+
 
 ---
-
-**All commands**
+### All commands
 
 Command | Description
 --- | ---
-`yarn run start-dev` | Build app continuously (HMR enabled) and serve @ `http://localhost:8080`
-`yarn run start-prod` | Build app once (HMR disabled) to `/dist/` and serve @ `http://localhost:3000`
-`yarn run build` | Build app to `/dist/`
-`yarn run test` | Run tests
-`yarn run lint` | Run Typescript linter
-`yarn run lint --fix` | Run Typescript linter and fix issues
-`yarn run start` | (alias of `yarn run start-dev`)
-
-**Note**: replace `yarn` with `npm` in `package.json` if you use npm.
-
-## See also
-* [React Webpack Babel Starter](https://github.com/vikpe/react-webpack-babel-starter)
-* [Isomorphic Webapp Starter](https://github.com/vikpe/isomorphic-webapp-starter)
+`npm run start-dev` | Build app continuously (HMR enabled) and serve @ `http://localhost:9000`
+`npm run start-prod` | Build app once (HMR disabled) to `/dist/` and serve @ `http://localhost:9000`
+`npm run build` | Build app to `/dist/`
+`npm run test` | Run tests
+`npm run lint` | Run Typescript linter
+`npm run lint --fix` | Run Typescript linter and fix issues
+`npm run start` | (alias of `npm run start-dev`)
