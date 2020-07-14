@@ -15,7 +15,7 @@ import { YourClubsHandlerService } from
 /** TODO: Change to real backend service implementation */
 export const mockProfileBackendService = new MockProfileBackendService(NUM_PROFILES);
 export const mockYourClubsBackendService = new MockYourClubsBackendService();
-export const defaultServices = { 
+export const defaultServices = {
   profileHandlerService: new ProfileHandlerService(mockProfileBackendService),
   yourClubsHandlerService: new YourClubsHandlerService(mockYourClubsBackendService),
 }
