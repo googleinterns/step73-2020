@@ -112,12 +112,16 @@ public class StorageHandler {
   * @return person      the Person object built containing the person information
   */
   public static Person getPersonQuery(DatabaseClient dbClient, String userId) {
-    Person person;
     String email = "";
     String nickname = "";
     String pronouns = "";
     // TODO: implement setting user ID if it already exists @linamontes10
     long resultCount = StorageHandlerHelper.getPersonCountQuery(dbClient, userId);
+    if (resultCount > 1) {
+      throw new IllegalArgumentException(ERROR_MORE_THAN_ONE_PERSON);
+    } else {
+      throw new IllegalArgumentException(PERSON_DOES_NOT_EXIST);
+    }
     Statement statement = 
         Statement.newBuilder(
                 "SELECT userId, email, nickname, pronouns "
@@ -126,28 +130,21 @@ public class StorageHandler {
               .bind("userId")
               .to(userId)
               .build();
-    if (resultCount == 1) {
-      try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
-        while (resultSet.next()) {
-          email = resultSet.getString("email");
-          nickname = resultSet.getString("nickname");
-          if (!resultSet.isNull("pronouns") || !resultSet.getString("pronouns").isEmpty()) {
-            pronouns = resultSet.getString("pronouns");
-          }
+    try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
+      while (resultSet.next()) {
+        email = resultSet.getString("email");
+        nickname = resultSet.getString("nickname");
+        if (!resultSet.isNull("pronouns") || !resultSet.getString("pronouns").isEmpty()) {
+          pronouns = resultSet.getString("pronouns");
         }
       }
-      Person.Builder personBuilder = Person.newBuilder(email, nickname);
-      // TODO: implement setting the userId field @JosephBushagour
-      if (!pronouns.isEmpty()) {
-        personBuilder.setPronouns(pronouns);
-      }
-      person = personBuilder.build();
-    } else if (resultCount > 1) {
-      throw new IllegalArgumentException(ERROR_MORE_THAN_ONE_PERSON);
-    } else {
-      throw new IllegalArgumentException(PERSON_DOES_NOT_EXIST);
     }
-    return person;
+    Person.Builder personBuilder = Person.newBuilder(email, nickname);
+    // TODO: implement setting the userId field @JosephBushagour
+    if (!pronouns.isEmpty()) {
+      personBuilder.setPronouns(pronouns);
+    }
+    return personBuilder.build();
   }
 
   /**
@@ -158,11 +155,15 @@ public class StorageHandler {
   * @return book      the Book object built containing the book information
   */
   public static Book getBookQuery(DatabaseClient dbClient, String bookId) {
-    Book book;
     String author = "";
     String isbn = "";
     String title = "";
     long resultCount = StorageHandlerHelper.getBookCountQuery(dbClient, bookId);
+    if (resultCount > 1) {
+      throw new IllegalArgumentException(ERROR_MORE_THAN_ONE_BOOK);
+    } else {
+      throw new IllegalArgumentException(BOOK_DOES_NOT_EXIST);
+    }
     Statement statement = 
         Statement.newBuilder(
                 "SELECT bookId, author, isbn, title "
@@ -171,33 +172,26 @@ public class StorageHandler {
             .bind("bookId")
             .to(bookId)
             .build();
-    if (resultCount == 1) {
-      try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
-        while (resultSet.next()) {
-          title = resultSet.getString("title");
-          if (!resultSet.isNull("author") || !resultSet.getString("author").isEmpty()) {
-            author = resultSet.getString("author");
-          }
-          if (!resultSet.isNull("isbn") || !resultSet.getString("isbn").isEmpty()) {
-            isbn = resultSet.getString("isbn");
-          }
+    try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
+      while (resultSet.next()) {
+        title = resultSet.getString("title");
+        if (!resultSet.isNull("author") || !resultSet.getString("author").isEmpty()) {
+          author = resultSet.getString("author");
+        }
+        if (!resultSet.isNull("isbn") || !resultSet.getString("isbn").isEmpty()) {
+          isbn = resultSet.getString("isbn");
         }
       }
-      Book.Builder bookBuilder = Book.newBuilder(title);
-      // TODO: implement setting the bookId field @JosephBushagour
-      if (!author.isEmpty()) {
-        bookBuilder.setAuthor(author);
-      }
-      if (!isbn.isEmpty()) {
-        bookBuilder.setIsbn(isbn);
-      }
-      book = bookBuilder.build();
-    } else if (resultCount > 1) {
-      throw new IllegalArgumentException(ERROR_MORE_THAN_ONE_BOOK);
-    } else {
-      throw new IllegalArgumentException(BOOK_DOES_NOT_EXIST);
     }
-    return book;
+    Book.Builder bookBuilder = Book.newBuilder(title);
+    // TODO: implement setting the bookId field @JosephBushagour
+    if (!author.isEmpty()) {
+      bookBuilder.setAuthor(author);
+    }
+    if (!isbn.isEmpty()) {
+      bookBuilder.setIsbn(isbn);
+    }
+    return bookBuilder.build();
   }
 
   /**
@@ -208,12 +202,16 @@ public class StorageHandler {
   * @return club      the Club object built containing the club information
   */
   public static Club getClubQuery(DatabaseClient dbClient, String clubId) {
-    Club club;
     String bookId = "";
     String description = "";
     String ownerId = "";
     String name = "";
     long resultCount = StorageHandlerHelper.getClubCountQuery(dbClient, clubId);
+    if (resultCount > 1) {
+      throw new IllegalArgumentException(ERROR_MORE_THAN_ONE_CLUB);
+    } else if (resultCount < 1) {
+      throw new IllegalArgumentException(CLUB_DOES_NOT_EXIST);
+    }
     Statement statement = 
         Statement.newBuilder(
                 "SELECT clubId, bookId, description, name, ownerId "
@@ -222,28 +220,20 @@ public class StorageHandler {
             .bind("clubId")
             .to(clubId)
             .build();
-    if (resultCount == 1) {
-      try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
-        while (resultSet.next()) {
-          bookId = resultSet.getString("bookId");
-          name = resultSet.getString("name");
-          description = resultSet.getString("description");
-          ownerId = resultSet.getString("ownerId");
-        }
+    try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
+      while (resultSet.next()) {
+        bookId = resultSet.getString("bookId");
+        name = resultSet.getString("name");
+        description = resultSet.getString("description");
+        ownerId = resultSet.getString("ownerId");
       }
-      Book book = getBookQuery(dbClient, bookId);
-      Club.Builder clubBuilder = Club.newBuilder(name, book);
-      // TODO: implement setting the clubId field @JosephBushagour
-      // TODO: implement setting the ownerId field @JosephBushagour
-      club = clubBuilder
-                        .setDescription(description)
-                        .build();
-    } else if (resultCount > 1) {
-      throw new IllegalArgumentException(ERROR_MORE_THAN_ONE_CLUB);
-    } else {
-      throw new IllegalArgumentException(CLUB_DOES_NOT_EXIST);
     }
-    return club;
+    Book book = getBookQuery(dbClient, bookId);
+    Club.Builder clubBuilder = Club.newBuilder(name, book);
+    // TODO: implement setting the clubId field @JosephBushagour
+    // TODO: implement setting the ownerId field @JosephBushagour
+    clubBuilder.setDescription(description)
+    return clubBuilder.build();
   }
 
   /**
