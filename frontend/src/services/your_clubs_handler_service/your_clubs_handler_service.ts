@@ -5,7 +5,7 @@ import { MockYourClubsBackendService } from
 import { ClubProps } from
   "../mock_backend/mock_your_clubs_backend";
 
-/** Error that occurs when Id does not exist */
+/** Error that occurs when Id does not exist. */
 export class ErrorLoadingClubs extends Error {
   constructor(readonly numClubs: number) {
     super(`Error occurred while loading ${numClubs} clubs.`);
@@ -17,7 +17,7 @@ export class ErrorLoadingClubs extends Error {
  * loads them to the user's Your Clubs page.
  */
 export class YourClubsHandlerService {
-  /** Backend is responsible for holding all YourClubs information */
+  /** Backend is responsible for holding all YourClubs information. */
   constructor(private readonly backend: BackendYourClubsServiceInterface) {};
 
   async listClubs(numClubs: number) {
