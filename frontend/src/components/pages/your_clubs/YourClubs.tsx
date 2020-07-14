@@ -11,7 +11,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import InputLabel from "@material-ui/core/InputLabel";
-import LibraryBooksRoundedIcon from '@material-ui/icons/LibraryBooksRounded';
+import LibraryBooksRoundedIcon from "@material-ui/icons/LibraryBooksRounded";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import PageviewIcon from "@material-ui/icons/Pageview";
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     club : {
       marginTop: '20px',
-      maxWidth: '700px',
+      maxWidth: '900px',
     },
     clubContent : {
       display: 'flex', 
@@ -162,12 +162,17 @@ function DisplayListedClubs(props: DisplayListedClubsProps) {
                 <h2 style={{marginRight: 50, marginBottom: 0}}>{item.name}</h2>
                 <LibraryBooksRoundedIcon style={{marginTop: 15}}/>
                 <div className={classes.break}></div>
-                <p>
-                  <b>Description: </b>
-                  <br />
+                <p style={{marginBottom: 0}}>
+                  <b>Description: </b><br/>
                   {item.description}
                 </p>
-                <LoadContentWarnings props={item.contentWarnings} />
+                <p style={{marginBottom: 0}}>
+                  <b>Current Book: </b><br/>
+                  {' ' + item.currentBook.title}<br/>
+                  by {item.currentBook.author}
+                </p>
+                <LoadContentWarnings contentWarnings={item.contentWarnings} />
+                <div className={classes.break}></div>
                 <LoadButtons />
               </div>
             </Box>
@@ -178,6 +183,22 @@ function DisplayListedClubs(props: DisplayListedClubsProps) {
   } else {
     return (<div></div>);
   }
+}
+
+function LoadContentWarnings(props) {
+  const classes = useStyles();
+  const contentWarnings = props.contentWarnings;
+
+  return (
+    <div>
+      <p  style={{marginBottom: 0}}><b>Content Warnings</b></p>
+      {contentWarnings.map((item, index) => (
+        <div>
+          - <b>{item}<br/></b>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 /**
