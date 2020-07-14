@@ -25,7 +25,8 @@ import com.google.cloud.spanner.Statement;
 public class StorageHandlerHelper {
 
   /**
-  * Returns a Boolean that indicates whether or not a person is in a club
+  * Returns a Boolean that indicates whether or not a person is in a club.
+  *
   * @param  dbClient  the database client
   * @param  userId    the user ID string of the user we are checking is in a club
   * @param  clubid    the club ID string of the club we are checking the user is in
@@ -53,7 +54,8 @@ public class StorageHandlerHelper {
   }
 
   /**
-  * Returns a long that is the number of results matching a specific user ID
+  * Returns a long that is the number of members in a club, including the owner.
+  *
   * @param  dbClient  the database client
   * @param  userId    the user ID string used to query and get how many users have that key
   * @return count     the long representing the number of results from the query
@@ -64,7 +66,9 @@ public class StorageHandlerHelper {
         Statement.newBuilder(
                 "SELECT COUNT(*) as count "
                   + "FROM Memberships "
-                  + "WHERE clubId = @clubId AND membershipType = " + MembershipConstants.MEMBER)
+                  + "WHERE clubId = @clubId AND "
+                  + "(membershipType = " + MembershipConstants.MEMBER
+                  + " OR membershipType = " + MembershipConstants.OWNER + ")")
               .bind("clubId")
               .to(clubId)
               .build();
@@ -77,7 +81,8 @@ public class StorageHandlerHelper {
   }
 
   /**
-  * Returns a long that is the number of results matching a specific user ID
+  * Returns a long that is the number of results matching a specific user ID.
+  *
   * @param  dbClient  the database client
   * @param  userId    the user ID string used to query and get how many users have that key
   * @return count     the long representing the number of results from the query
@@ -101,7 +106,8 @@ public class StorageHandlerHelper {
   }
 
   /**
-  *Returns a long that is the number of results matching a specific club ID
+  * Returns a long that is the number of results matching a specific club ID.
+  *
   * @param  dbClient  the database client
   * @param  clubId    the club ID string used to query and get how many clubs have that key
   * @return count     the long representing the number of results from the query
@@ -125,7 +131,8 @@ public class StorageHandlerHelper {
   }
 
   /**
-  * Returns a long that is the number of results matching a specific book ID
+  * Returns a long that is the number of results matching a specific book ID.
+  *
   * @param  dbClient  the database client
   * @param  bookId    the book ID string used to query and get how many books have that key
   * @return count     the long representing the number of results from the query

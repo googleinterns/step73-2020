@@ -20,41 +20,65 @@ import java.util.List;
 
 /**
 * The StorageHandlerApi class holds all the wrapper functions that the rest of the code will
-* use to interact with the StorageHandler class. Each function will instantiate a Spanner and
-* Database Client.
+* use to interact with the StorageHandler class. The class also instantiates a Spanner and
+* Database Client which is then referenced throughout the file.
 */
 
 public class StorageHandlerApi {
 
+  private static final Spanner spanner = StorageHandlerSetup.createSpannerService();
+  private static final DatabaseClient dbClient = StorageHandlerSetup.createDbClient(spanner);
+
+  /**
+  * Fetches a person from the database and returns a {@link Person}.
+  *
+  * @param  userId    the user ID string used to query the Persons table from the database
+  * @return person    a {@link Person} object containing information from the database
+  */
   public static Person fetchPersonFromId(String userId) {
-    Spanner spanner = StorageHandlerSetup.createSpannerService();
-    DatabaseClient dbClient = StorageHandlerSetup.createDbClient(spanner);
     Person person = StorageHandler.getPersonQuery(dbClient, userId);
     return person;
   }
 
+  /**
+  * Fetches a club from the database and returns a {@link Club}.
+  *
+  * @param  clubId    the club ID string used to query the Clubs table from the database.
+  * @return club      a {@link Club} containing information from the database
+  */
   public static Club fetchClubFromId(String clubId) {
-    Spanner spanner = StorageHandlerSetup.createSpannerService();
-    DatabaseClient dbClient = StorageHandlerSetup.createDbClient(spanner);
     Club club = StorageHandler.getClubQuery(dbClient, clubId);
     return club;
   }
 
-  public static void deletePersonClubMembership(String userId, String clubId) {
-    Spanner spanner = StorageHandlerSetup.createSpannerService();
-    DatabaseClient dbClient = StorageHandlerSetup.createDbClient(spanner);
-    StorageHandler.deletePersonClubMembershipDml(dbClient, userId, clubId);
-  }
-
+  /**
+  * Adds a membership to the database.
+  *
+  * @param  userId      the user ID string used to insert the membership into the table
+  * @param  clubId      the club ID string used to insert the membership into the table
+  */
   public static void addPersonClubMembership(String userId, String clubId) {
-    Spanner spanner = StorageHandlerSetup.createSpannerService();
-    DatabaseClient dbClient = StorageHandlerSetup.createDbClient(spanner);
     StorageHandler.addPersonClubMembershipMutation(dbClient, userId, clubId);
   }
 
+  /**
+  * Deletes a membership from the database.
+  *
+  * @param  userId      the user ID string used to query the membership table
+  * @param  clubId      the club ID string used to query the membership table
+  */
+  public static void deletePersonClubMembership(String userId, String clubId) {
+    StorageHandler.deletePersonClubMembershipDml(dbClient, userId, clubId);
+  }
+
+  /**
+  * Creates and returns a list of {@link Club}s depending on the user's membership status.
+  *
+  * @param  userId            the user ID string used to query and get a list of clubs
+  * @param  membershipStatus  the enum specifying whether the user is a member or not
+  * @return clubs             the list of {@link Club}s
+  */
   public static List<Club> listClubsFromUserId(String userId, MembershipConstants.MembershipStatus membershipStatus) {
-    Spanner spanner = StorageHandlerSetup.createSpannerService();
-    DatabaseClient dbClient = StorageHandlerSetup.createDbClient(spanner);
     List<Club> clubs = StorageHandler.getListOfClubsQuery(dbClient, userId, membershipStatus);
     return clubs;
   }

@@ -19,12 +19,10 @@ import static com.google.cloud.spanner.TransactionRunner.TransactionCallable;
 import com.google.cloud.spanner.DatabaseClient;
 import com.google.cloud.spanner.Mutation;
 import com.google.cloud.spanner.ResultSet;
-import com.google.cloud.spanner.Spanner;
 import com.google.cloud.spanner.Statement;
 import com.google.cloud.spanner.TransactionContext;
 import com.google.cloud.spanner.Value;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -43,7 +41,15 @@ public class StorageHandler {
   public static final String BOOK_DOES_NOT_EXIST = "This book does not exist in the database.";
   public static final String ERROR_MORE_THAN_ONE_BOOK = "More than one book per book ID.";
 
-  
+  /**
+  * Adds a membership from the database.
+  * This method checks if a person is already a member of a club. If the person is already a member, it will throw
+  * an exception. Otherwise, it adss the row containing the user ID and club ID to the Memberships table.
+  *
+  * @param  dbClient    the database client 
+  * @param  userId      the user ID string used to insert the membership into the table
+  * @param  clubId      the club ID string used to insert the membership into the table
+  */
   public static void addPersonClubMembershipMutation(DatabaseClient dbClient, String userId, String clubId) {
     List<Mutation> mutations = new ArrayList<>();
     if (StorageHandlerHelper.checkPersonInClubQuery(dbClient, userId, clubId)) {
@@ -63,6 +69,15 @@ public class StorageHandler {
       dbClient.write(mutations);
   }
 
+  /**
+  * Deletes a membership from the database.
+  * This method checks if a person is already a member of a club. If the person is not a member, it will throw
+  * an exception. Otherwise, it deletes the row containing the user ID and club ID from the Memberships table.
+  *
+  * @param  dbClient    the database client 
+  * @param  userId      the user ID string used to query the membership table
+  * @param  clubId      the club ID string used to query the membership table
+  */
   public static void deletePersonClubMembershipDml(DatabaseClient dbClient, String userId, String clubId) {
     if (!StorageHandlerHelper.checkPersonInClubQuery(dbClient, userId, clubId)) {
       throw new IllegalArgumentException(MembershipConstants.PERSON_NOT_IN_CLUB);
@@ -131,6 +146,7 @@ public class StorageHandler {
   /**
   * Creates and returns a {@link Book} with the info about a book queried from the database.
   * This method builds a {@link Book} with a book's ID, author, ISBN, and title.
+  *
   * @param  dbClient  the database client
   * @param  bookId    the book ID string used to query and get a book's information
   * @return book      the Book object built containing the book information
@@ -178,6 +194,7 @@ public class StorageHandler {
   /**
   * Creates and returns a {@link Club} with the info about a club queried from the database.
   * This method builds a {@link Club} with a club's ID, book ID, description, name, and ownerID.
+  *
   * @param  dbClient  the database client
   * @param  clubId    the club ID string used to query and get a club's information
   * @return club      the Club object built containing the club information
@@ -221,6 +238,7 @@ public class StorageHandler {
   * Creates and returns a list of {@link Persons}s that are a member of a club.
   * This method builds a {@link Person} for each person who is a member of the club
   * specified by club ID. Each {@link Person} is added to a list that gets returned.
+  *
   * @param  dbClient    the database client
   * @param  clubId      the club ID string used to query
   * @return persons     the list of Person objects
@@ -255,9 +273,11 @@ public class StorageHandler {
   * This method builds a {@link Club} with a club's ID, book ID, description, name, and ownerID
   * for each club that a user is either a member of or not a member of, and appends each club
   * to a list of clubs that gets returned.
-  * @param  dbClient    the database client
-  * @param  userId      the user ID string used to query and get a list of clubs
-  * @return clubs       the list of Club objects
+  *
+  * @param  dbClient          the database client
+  * @param  userId            the user ID string used to query and get a list of clubs
+  * @param  membershipStatus  the enum specifying whether the user is a member or not
+  * @return clubs             the list of {@link Club}s
   */
   public static List<Club> getListOfClubsQuery(DatabaseClient dbClient, String userId, MembershipConstants.MembershipStatus membershipStatus) {
     Statement statement;

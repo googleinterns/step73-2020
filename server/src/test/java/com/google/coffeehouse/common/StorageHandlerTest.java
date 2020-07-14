@@ -38,7 +38,8 @@ import java.util.List;
 
 /**
 * The StorageHandlerTest class encompasses functions to set up the spanner service
-* and database client, insert data for each specific test, and then deletes the data in tearDown().
+* and database client, insert data for each specific test, and delete the data
+* inserted from a previous test.
 */
 @RunWith(JUnit4.class)
 public class StorageHandlerTest {

@@ -15,7 +15,7 @@
 package com.google.coffeehouse.common;
 
 /**
-* The Membership class holds constant values that denote membership status.
+* The MembershipConstants class holds constant values that denote membership status.
 */
 public class MembershipConstants {
   public static final int MEMBER = 1;
