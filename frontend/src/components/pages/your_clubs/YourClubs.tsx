@@ -4,6 +4,8 @@ import { borders } from "@material-ui/system";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import ChromeReaderModeIcon from "@material-ui/icons/ChromeReaderMode";
+import { ClubProps } from 
+  "../../../services/mock_backend/mock_your_clubs_backend";
 import { createStyles } from "@material-ui/core/styles";
 import { defaultServices } from "../../contexts/contexts";
 import FormControl from "@material-ui/core/FormControl";
@@ -43,8 +45,27 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const YourClubs = () => {
   const classes = useStyles();
+
+  /** 
+   * ServiceHandlers is an object containing various TS Handlers and provides
+   * functionality to communicate data from the frontend to the backend
+   */
+  const contextServices = React.useContext(ServiceContext);
+  const yourClubsHandlerService = contextServices.yourClubsHandlerService;
+
+  const [listedClubs, setListedClubs] = React.useState<ClubProps|undefined>(undefined);
   const [numClubsDisplayed, setNumClubsDisplayed] = React.useState<number|undefined>(undefined);
-  
+
+  /** Re-renders Profile only when number of displayed clubs changes. */
+  React.useEffect(() => {
+    (async() => {
+      let numClubsToDisplay = numClubsDisplayed ? numClubsDisplayed : 0; 
+      const listedClubsPromise = await yourClubsHandlerService.listClubs(numClubsToDisplay);
+      setListedClubs(listedClubsPromise);
+      console.log(listedClubs);
+    })();
+  }, [numClubsDisplayed]);
+
   // Associates each text value with its corresponding number.
   const textNumberRepresentation = [
     {text: "None", val: 0},
@@ -66,31 +87,36 @@ export const YourClubs = () => {
 
   return (
     <div className={classes.root}>
-      <FormControl className={classes.formControl}>
-        <InputLabel id="number-of-displayed-clubs-label">Number of Displayed Clubs</InputLabel>
-        <Select
-          labelId="number-of-displayed-clubs-label"
-          id="number-of-displayed-clubs"
-          value={numClubsDisplayed ? numClubsDisplayed : 0}
-          onChange={handleNumClubsChange}
-          label="Age"
+      <div>
+        <FormControl className={classes.formControl}>
+          <InputLabel id="number-of-displayed-clubs-label">Number of Displayed Clubs</InputLabel>
+          <Select
+            labelId="number-of-displayed-clubs-label"
+            id="number-of-displayed-clubs"
+            value={numClubsDisplayed ? numClubsDisplayed : 0}
+            onChange={handleNumClubsChange}
+            label="Age"
+          >
+            {textNumberRepresentation.map((item, index) => (
+              <MenuItem value={item.val}>{item.text}</MenuItem>
+            ))}
+          </Select>
+          <FormHelperText>
+            The number of clubs of which you are a member to be displayed.
+          </FormHelperText>
+        </FormControl>
+        <Button
+          className={classes.createClubButton}
+          color="primary"
+          endIcon={<AddIcon />}
+          variant="contained"
         >
-          {textNumberRepresentation.map((item, index) => (
-            <MenuItem value={item.val}>{item.text}</MenuItem>
-          ))}
-        </Select>
-        <FormHelperText>
-          The number of clubs of which you are a member to be displayed.
-        </FormHelperText>
-      </FormControl>
-      <Button
-        className={classes.createClubButton}
-        color="primary"
-        endIcon={<AddIcon />}
-        variant="contained"
-      >
-        Create Club
-      </Button>
+          Create Club
+        </Button>
+      </div>
+      <div>
+      </div>
     </div>
   );
 }
+

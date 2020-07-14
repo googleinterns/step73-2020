@@ -2,7 +2,7 @@ import { BOOKS_LIST } from "../../utils/mock_club_data";
 import { CLUB_DESCRIPTIONS } from "../../utils/mock_club_data";
 import { CLUB_NAMES } from "../../utils/mock_club_data";
 import { CONTENT_WARNINGS } from "../../utils/mock_club_data";
-import { NUM_CLUBS } from "../../utils/temporary_testing_consts";
+import { MAX_NUM_CLUBS } from "../../utils/temporary_testing_consts";
 
 export interface BookProps {
   title: string, 
@@ -25,7 +25,7 @@ export class MockYourClubsBackendService {
   private mockClubs: ClubProps[] = [];
 
   constructor() {
-    for (let i = 0; i < NUM_CLUBS; i++) {
+    for (let i = 0; i < MAX_NUM_CLUBS; i++) {
       this.mockClubs.push({
         name: CLUB_NAMES[i],
         description: CLUB_DESCRIPTIONS[i],
@@ -38,7 +38,7 @@ export class MockYourClubsBackendService {
   /** TODO: Update parameters to include Membership status, user Id, page. */
   listClubs(numClubs: number): Promise<string> {
     let listedClubs: ClubProps[] = [];
-    for (let i = 0; i < Math.min(numClubs, this.mockClubs.length); i++) {
+    for (let i = 0; i < Math.min(numClubs, MAX_NUM_CLUBS); i++) {
       listedClubs.push(this.mockClubs[i]);
     }
     const listedClubsJson = JSON.stringify(listedClubs);
