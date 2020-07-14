@@ -1,7 +1,8 @@
-import { EMAILS } from "../../utils/random_data";
-import { NICKNAMES } from "../../utils/random_data";
-import { PRONOUNS } from "../../utils/random_data"
-import { pickRandom } from "../../utils/random_data";
+import { BOOKS_LIST } from "../../utils/mock_club_data";
+import { CLUB_DESCRIPTIONS } from "../../utils/mock_club_data";
+import { CLUB_NAMES } from "../../utils/mock_club_data";
+import { CONTENT_WARNINGS } from "../../utils/mock_club_data";
+import { NUM_CLUBS } from "../../utils/temporary_testing_consts";
 
 export interface BookProps {
   title: string, 
@@ -20,50 +21,32 @@ export interface ClubProps {
  * Mimics the functionality of a Java Servlet that fetches list of clubs
  * that the user is in.
  */
-export class MockProfileBackendService {
-  private mockProfiles: PersonProps[] = [];
+export class MockYourClubsBackendService {
+  private mockClubs: ClubProps[] = [];
 
-  constructor(private readonly numProfiles: number) {
-    for (let i = 0; i < numProfiles; i++) {
-      this.mockProfiles.push({
-        email: pickRandom(EMAILS),
-        nickname: pickRandom(NICKNAMES),
-        pronouns: pickRandom(PRONOUNS),
-        userId: `user_${i}`,
-      });
+  constructor() {
+    for (let i = 0; i < NUM_CLUBS; i++) {
+      this.mockClubs.push({
+        name: CLUB_NAMES[i],
+        description: CLUB_DESCRIPTIONS[i],
+        contentWarnings: CONTENT_WARNINGS[i],
+        currentBook: BOOKS_LIST[i],
+      })
     }
   }
-  
-  loadProfile(id: string): Promise<string> {
-    const matched = this.mockProfiles.find((mockProfile) => mockProfile.userId === id);
-    if (matched) { 
-      const person = JSON.stringify(matched);
-      return Promise.resolve(person); 
+
+  /** TODO: Update parameters to include Membership status, user Id, page. */
+  listClubs(numClubs: number): Promise<string> {
+    let listedClubs: ClubProps[] = [];
+    for (let i = 0; i < Math.min(numClubs, this.mockClubs.length); i++) {
+      listedClubs.push(this.mockClubs[i]);
     }
-    throw new InvalidUserIdError();
+    const listedClubsJson = JSON.stringify(listedClubs);
+    return Promise.resolve(listedClubsJson);
   }
 
-  /** TODO: Make sure you're updating person, not just adding them  */
-  updateProfile(personJson: string): Promise<boolean> {
-    const person = JSON.parse(personJson);
-    const id = person.userId;
-    for (let i = 0; i < this.numProfiles; i++) {
-      if (id === this.mockProfiles[i].userId) {
-        this.mockProfiles[i].email = person.email;
-        this.mockProfiles[i].nickname = person.nickname;
-        this.mockProfiles[i].pronouns = person.pronouns;
-        return Promise.resolve(true);
-      }
-    }
-    return Promise.resolve(false);
-  }
-
-  deleteProfile(id: string): Promise<boolean> {
-    for (let i = 0; i < this.numProfiles; i++) {
-      if (id === this.mockProfiles[i].userId) {
-        return Promise.resolve(true);
-      }
-    }
-    return Promise.resolve(false);
+  leaveClub(id: string): Promise<boolean> {
+    /** TODO: Add functionality for user to leave club. */
+    return Promise.resolve(true);
   }
 }

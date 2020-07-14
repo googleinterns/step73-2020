@@ -1,9 +1,9 @@
-import { BackendServiceInterface } from 
+import { BackendProfileServiceInterface } from 
   "../backend_service_interface/backend_service_interface";
 import { MockProfileBackendService } from 
-  "../mock_profile_backend/mock_profile_backend";
+  "../mock_backend/mock_profile_backend";
 import { PersonProps } from 
-  "../mock_profile_backend/mock_profile_backend";
+  "../mock_backend/mock_profile_backend";
 
 /** Error that occurs when Id does not exist */
 export class NonExistentProfileError extends Error {
@@ -25,7 +25,7 @@ export class FailureToUpdateProfile extends Error {
  */
 export class ProfileHandlerService {
   /** Backend is responsible for holding all profile information */
-  constructor(private readonly backend: BackendServiceInterface) {}; 
+  constructor(private readonly backend: BackendProfileServiceInterface) {};
 
   async getPerson(id: string) {
     try {
