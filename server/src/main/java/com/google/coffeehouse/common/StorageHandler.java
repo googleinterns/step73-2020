@@ -42,63 +42,44 @@ public class StorageHandler {
   public static final String NO_ISBN = "No ISBN";
   public static final String BOOK_DOES_NOT_EXIST = "This book does not exist in the database.";
   public static final String ERROR_MORE_THAN_ONE_BOOK = "More than one book per book ID.";
-  
-  public static Person fetchPersonFromId(String userId) {
-    Spanner spanner = StorageHandlerSetup.createSpannerService();
-    DatabaseClient dbClient = StorageHandlerSetup.createDbClient(spanner);
-    Person person = StorageHandler.getPersonQuery(dbClient, userId);
-    return person;
-  }
 
-  public static Club fetchClubFromId(String clubId) {
-    Spanner spanner = StorageHandlerSetup.createSpannerService();
-    DatabaseClient dbClient = StorageHandlerSetup.createDbClient(spanner);
-    Club club = StorageHandler.getClubQuery(dbClient, clubId);
-    return club;
-  }
   
-  public static void addPersonToClub(String userId, String clubId) {
-    Spanner spanner = StorageHandlerSetup.createSpannerService();
-    DatabaseClient dbClient = StorageHandlerSetup.createDbClient(spanner);
+  public static void addPersonClubMembershipMutation(DatabaseClient dbClient, String userId, String clubId) {
     List<Mutation> mutations = new ArrayList<>();
-    if (!StorageHandlerHelper.checkPersonInClubQuery(dbClient, userId, clubId)) {
-      mutations.add(
-        Mutation.newInsertBuilder("Memberships")
-          .set("userId")
-          .to(userId)
-          .set("clubId")
-          .to(clubId)
-          .set("membershipType")
-          .to(MembershipConstants.MEMBER)
-          .set("timestamp")
-          .to(Value.COMMIT_TIMESTAMP)
-          .build());
-        dbClient.write(mutations);
-    } else {
+    if (StorageHandlerHelper.checkPersonInClubQuery(dbClient, userId, clubId)) {
       throw new IllegalArgumentException(MembershipConstants.PERSON_ALREADY_IN_CLUB);
     }
+    mutations.add(
+      Mutation.newInsertBuilder("Memberships")
+        .set("userId")
+        .to(userId)
+        .set("clubId")
+        .to(clubId)
+        .set("membershipType")
+        .to(MembershipConstants.MEMBER)
+        .set("timestamp")
+        .to(Value.COMMIT_TIMESTAMP)
+        .build());
+      dbClient.write(mutations);
   }
 
-  public static void deletePersonFromClub(String userId, String clubId) {
-    Spanner spanner = StorageHandlerSetup.createSpannerService();
-    DatabaseClient dbClient = StorageHandlerSetup.createDbClient(spanner);
-    if (StorageHandlerHelper.checkPersonInClubQuery(dbClient, userId, clubId)) {
-      dbClient
-        .readWriteTransaction()
-        .run(
-            new TransactionCallable<Void>() {
-              @Override
-              public Void run(TransactionContext transaction) throws Exception {
-                String sql = "DELETE FROM Memberships WHERE userId = '"
-                      + userId + "' AND clubId = '" + clubId + "'";
-                long rowCount = transaction.executeUpdate(Statement.of(sql));
-                System.out.printf("%d record deleted.\n", rowCount);
-                return null;
-              }
-            });
-    } else {
+  public static void deletePersonClubMembershipDml(DatabaseClient dbClient, String userId, String clubId) {
+    if (!StorageHandlerHelper.checkPersonInClubQuery(dbClient, userId, clubId)) {
       throw new IllegalArgumentException(MembershipConstants.PERSON_NOT_IN_CLUB);
     }
+    dbClient
+      .readWriteTransaction()
+      .run(
+          new TransactionCallable<Void>() {
+            @Override
+            public Void run(TransactionContext transaction) throws Exception {
+              String sql = "DELETE FROM Memberships WHERE userId = '"
+                    + userId + "' AND clubId = '" + clubId + "'";
+              long rowCount = transaction.executeUpdate(Statement.of(sql));
+              System.out.printf("%d record deleted.\n", rowCount);
+              return null;
+            }
+          });
   }
 
   /**
@@ -232,7 +213,7 @@ public class StorageHandler {
     Club.Builder clubBuilder = Club.newBuilder(name, book);
     // TODO: implement setting the clubId field @JosephBushagour
     // TODO: implement setting the ownerId field @JosephBushagour
-    clubBuilder.setDescription(description)
+    clubBuilder.setDescription(description);
     return clubBuilder.build();
   }
 
@@ -313,13 +294,6 @@ public class StorageHandler {
         clubs.add(getClubQuery(dbClient, clubId));
       }
     }
-    return clubs;
-  }
-
-  public static List<Club> listClubsFromUserId(String userId, MembershipConstants.MembershipStatus membershipStatus) {
-    Spanner spanner = StorageHandlerSetup.createSpannerService();
-    DatabaseClient dbClient = StorageHandlerSetup.createDbClient(spanner);
-    List<Club> clubs = getListOfClubsQuery(dbClient, userId, membershipStatus);
     return clubs;
   }
 }

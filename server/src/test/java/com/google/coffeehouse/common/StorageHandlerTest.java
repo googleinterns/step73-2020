@@ -261,6 +261,41 @@ public class StorageHandlerTest {
     dbClient.write(mutations);
   }
 
+  public void insertPerson() {
+    List<Mutation> mutations = new ArrayList<>();
+    mutations.add(
+      Mutation.newInsertBuilder("Persons")
+        .set("userId")
+        .to("person")
+        .set("email")
+        .to("person@test.com")
+        .set("nickname")
+        .to("person")
+        .set("pronouns")
+        .to("she/he/they")
+        .build());
+    dbClient.write(mutations);
+  }
+
+  @Test
+  public void addPersonClubMembershipMutation() throws Exception {
+    insertPerson();
+    StorageHandler.addPersonClubMembershipMutation(dbClient, "person", "bellhooksbooks");
+    Boolean actual = StorageHandlerHelper.checkPersonInClubQuery(dbClient, "person", "bellhooksbooks");
+    Boolean expected = true;
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void deletePersonClubMembership() throws Exception {
+    insertPerson();
+    StorageHandler.addPersonClubMembershipMutation(dbClient, "person", "bellhooksbooks");
+    StorageHandler.deletePersonClubMembershipDml(dbClient, "person", "bellhooksbooks");
+    Boolean actual = StorageHandlerHelper.checkPersonInClubQuery(dbClient, "person", "bellhooksbooks");
+    Boolean expected = false;
+    assertEquals(expected, actual);
+  }
+
   // @Test
   // public void getPersonQuery_doesNotExistInDb() throws Exception {
   //   Person actual = StorageHandler.getPersonQuery(dbClient, "personThatDoesNotExist");
