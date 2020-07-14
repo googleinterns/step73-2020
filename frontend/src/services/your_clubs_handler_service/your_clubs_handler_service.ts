@@ -1,4 +1,4 @@
-import { BackendYourClubsServiceInterface } from 
+import { BackendYourClubsServiceInterface } from
   "../backend_service_interface/backend_service_interface";
 import { MockYourClubsBackendService } from 
   "../mock_backend/mock_your_clubs_backend";
