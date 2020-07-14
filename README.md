@@ -10,10 +10,17 @@
 
 ## Running Locally
 Both the frontend and backend development servers can be run together
-through the command `bash run-dev.sh` (assuming that one has installed
-all frontend packages with `npm install` and has set their gcloud project
-to `coffeehouse-step2020` through the command
-`gcloud config set project coffeehouse-step2020`).
+through the command `bash run-dev.sh`.
+
+The frontend and backend development servers will encounter errors when running
+if it is not the case that one has installed all frontend packages with
+`npm install` and set their gcloud project to `coffeehouse-step2020`.
+
+To easily perform these operations, run the command `bash run-dev.sh -setup`
+(or just `bash run-dev.sh -s`), which will install packages, set the gcloud
+project, configure file watchers (to avoid frontend warnings), and start the
+development servers. This only needs to be run once upon switching branches
+or reopening the terminal.
 
 The outputs of both the frontend and backend development servers will be
 sent to `stdout`, as well as logged to either the `server.log` or `frontend.log`
