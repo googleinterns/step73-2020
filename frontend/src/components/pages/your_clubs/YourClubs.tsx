@@ -3,16 +3,18 @@ import AddIcon from "@material-ui/icons/Add";
 import { borders } from "@material-ui/system";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import ChromeReaderModeIcon from "@material-ui/icons/ChromeReaderMode";
 import { ClubProps } from 
   "../../../services/mock_backend/mock_your_clubs_backend";
 import { createStyles } from "@material-ui/core/styles";
 import { defaultServices } from "../../contexts/contexts";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import InputLabel from "@material-ui/core/InputLabel";
+import LibraryBooksRoundedIcon from '@material-ui/icons/LibraryBooksRounded';
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
+import PageviewIcon from "@material-ui/icons/Pageview";
 import Select from "@material-ui/core/Select";
 import { ServiceContext } from "../../contexts/contexts";
 import { Theme } from "@material-ui/core/styles";
@@ -21,24 +23,41 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
+      flexDirection: 'column',
       flexWrap: 'wrap',
       marginTop: '100px',
       marginLeft: theme.spacing(4),
     },
-    club : {
-      display: 'flex', 
-      flexWrap: 'wrap',
-      justifyContent: 'center',
+    break : {
+      flexBasis: '100%',
+      height: 0,
     },
-    createClubButton : {
-      marginLeft: theme.spacing(8),
+    button : {
+      margin: theme.spacing(1),
+      marginLeft: theme.spacing(0),
       marginTop: '20px',
       maxHeight: '50px',
+    },
+    club : {
+      marginTop: '20px',
+      maxWidth: '700px',
+    },
+    clubContent : {
+      display: 'flex', 
+      flexWrap: 'wrap',
+      margin: theme.spacing(1),
     },
     formControl: {
       margin: theme.spacing(1),
       marginBottom: '5px',
+      marginRight: theme.spacing(8),
       minWidth: 120,
+    },
+    listedClubsContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      marginBottom: '20px',
     },
   }),
 );
@@ -53,7 +72,7 @@ export const YourClubs = () => {
   const contextServices = React.useContext(ServiceContext);
   const yourClubsHandlerService = contextServices.yourClubsHandlerService;
 
-  const [listedClubs, setListedClubs] = React.useState<ClubProps|undefined>(undefined);
+  const [listedClubs, setListedClubs] = React.useState<ClubProps[]|undefined>(undefined);
   const [numClubsDisplayed, setNumClubsDisplayed] = React.useState<number|undefined>(undefined);
 
   /** Re-renders Profile only when number of displayed clubs changes. */
@@ -62,7 +81,6 @@ export const YourClubs = () => {
       let numClubsToDisplay = numClubsDisplayed ? numClubsDisplayed : 0; 
       const listedClubsPromise = await yourClubsHandlerService.listClubs(numClubsToDisplay);
       setListedClubs(listedClubsPromise);
-      console.log(listedClubs);
     })();
   }, [numClubsDisplayed]);
 
@@ -106,7 +124,7 @@ export const YourClubs = () => {
           </FormHelperText>
         </FormControl>
         <Button
-          className={classes.createClubButton}
+          className={classes.button}
           color="primary"
           endIcon={<AddIcon />}
           variant="contained"
@@ -114,9 +132,70 @@ export const YourClubs = () => {
           Create Club
         </Button>
       </div>
-      <div>
+      <div className={classes.listedClubsContainer}>
+        <DisplayListedClubs clubsToDisplay={listedClubs} />
       </div>
     </div>
   );
 }
 
+interface DisplayListedClubsProps {
+  clubsToDisplay: ClubProps[],
+}
+
+function DisplayListedClubs(props: DisplayListedClubsProps) {
+  const classes = useStyles();
+  const clubsToDisplay = props.clubsToDisplay;
+
+  /** If clubs to display is not yet defined, or 'None' are chosen to display. */
+  if (clubsToDisplay ? /** defined */ true : /** undefined */ false)  {
+    return (
+      <div>
+        {clubsToDisplay.map((item, index) => (
+          <div className={classes.club} key={item.name}>
+            <Box border={1} borderColor="text.primary" borderRadius={16}>
+              <div className={classes.clubContent}>
+                <h2 style={{marginRight: 50, marginBottom: 0}}>{item.name}</h2>
+                <LibraryBooksRoundedIcon style={{marginTop: 15}}/>
+                <div className={classes.break}></div>
+                <p>
+                  <b>Description: </b>
+                  <br />
+                  {item.description}
+                </p>
+                <LoadButtons />
+              </div>
+            </Box>
+          </div>
+        ))}
+      </div>
+    );
+  } else {
+    return (<div></div>);
+  }
+}
+
+function LoadButtons () {
+  const classes = useStyles();
+
+  return (
+    <div>
+      <Button
+        className={classes.button}
+        color="primary"
+        endIcon={<PageviewIcon />}
+        variant="contained"
+      >
+        View Club
+      </Button>
+      <Button
+        className={classes.button}
+        color="secondary"
+        endIcon={<HighlightOffIcon />}
+        variant="contained"
+      >
+        Leave Club
+      </Button>
+    </div>
+  );
+}

@@ -23,7 +23,7 @@ export class YourClubsHandlerService {
   async listClubs(numClubs: number) {
     try {
       const clubsJson = await this.backend.listClubs(numClubs);
-      const clubs = JSON.parse(clubsJson);
+      const clubs: ClubProps[] = JSON.parse(clubsJson);
       return clubs;
     } catch(err) {
       throw new ErrorLoadingClubs(numClubs);
