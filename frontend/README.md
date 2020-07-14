@@ -11,6 +11,10 @@ Run the dev server with the command `npm run start-dev`
 
 To use, visit port 9000 on your localhost
 
+If you see any errors that say "System limit for number of file watchers reached",
+you can run the following command to temporarily increase that limit -
+`sudo sysctl -w fs.inotify.max_user_watches=100000`
+
 
 ## Deploying
 The frontend service (know as the `default` service in `app.yaml`) can
