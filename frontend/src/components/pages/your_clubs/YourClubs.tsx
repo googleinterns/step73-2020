@@ -5,7 +5,7 @@ import { BookProps } from
 import { borders } from "@material-ui/system";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import { ClubProps } from 
+import { ClubProps } from
   "../../../services/mock_backend/mock_your_clubs_backend";
 import { createStyles } from "@material-ui/core/styles";
 import { defaultServices } from "../../contexts/contexts";
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
       maxWidth: '900px',
     },
     clubContent : {
-      display: 'flex', 
+      display: 'flex',
       flexWrap: 'wrap',
       margin: theme.spacing(1),
     },
@@ -67,21 +67,24 @@ const useStyles = makeStyles((theme: Theme) =>
 export const YourClubs = () => {
   const classes = useStyles();
 
-  /** 
+  /**
    * ServiceHandlers is an object containing various TS Handlers and provides
    * functionality to communicate data from the frontend to the backend
    */
   const contextServices = React.useContext(ServiceContext);
   const yourClubsHandlerService = contextServices.yourClubsHandlerService;
 
-  const [listedClubs, setListedClubs] = React.useState<ClubProps[]|undefined>(undefined);
-  const [numClubsDisplayed, setNumClubsDisplayed] = React.useState<number|undefined>(undefined);
+  const [listedClubs, setListedClubs] =
+    React.useState<ClubProps[]|undefined>(undefined);
+  const [numClubsDisplayed, setNumClubsDisplayed] =
+    React.useState<number|undefined>(undefined);
 
   /** Re-renders Profile only when number of displayed clubs changes. */
   React.useEffect(() => {
     (async() => {
-      let numClubsToDisplay = numClubsDisplayed ? numClubsDisplayed : 0; 
-      const listedClubsPromise = await yourClubsHandlerService.listClubs(numClubsToDisplay);
+      let numClubsToDisplay = numClubsDisplayed ? numClubsDisplayed : 0;
+      const listedClubsPromise =
+        await yourClubsHandlerService.listClubs(numClubsToDisplay);
       setListedClubs(listedClubsPromise);
     })();
   }, [numClubsDisplayed]);
@@ -109,7 +112,9 @@ export const YourClubs = () => {
     <div className={classes.root}>
       <div>
         <FormControl className={classes.formControl}>
-          <InputLabel id="number-of-displayed-clubs-label">Number of Displayed Clubs</InputLabel>
+          <InputLabel id="number-of-displayed-clubs-label">
+            Number of Displayed Clubs
+          </InputLabel>
           <Select
             labelId="number-of-displayed-clubs-label"
             id="number-of-displayed-clubs"
@@ -146,7 +151,7 @@ interface DisplayListedClubsProps {
 }
 
 /**
- * Displays up to the number of clubs that the user has requested to to 
+ * Displays up to the number of clubs that the user has requested to to
  * the page.
  */
 function DisplayListedClubs(props: DisplayListedClubsProps) {
