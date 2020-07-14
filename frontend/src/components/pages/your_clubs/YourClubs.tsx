@@ -143,6 +143,10 @@ interface DisplayListedClubsProps {
   clubsToDisplay: ClubProps[],
 }
 
+/**
+ * Displays up to the number of clubs that the user has requested to to 
+ * the page.
+ */
 function DisplayListedClubs(props: DisplayListedClubsProps) {
   const classes = useStyles();
   const clubsToDisplay = props.clubsToDisplay;
@@ -163,6 +167,7 @@ function DisplayListedClubs(props: DisplayListedClubsProps) {
                   <br />
                   {item.description}
                 </p>
+                <LoadContentWarnings props={item.contentWarnings} />
                 <LoadButtons />
               </div>
             </Box>
@@ -175,6 +180,10 @@ function DisplayListedClubs(props: DisplayListedClubsProps) {
   }
 }
 
+/**
+ * Displays two buttons, one for viewing the club and another for leaving
+ * the club.
+ */
 function LoadButtons () {
   const classes = useStyles();
 
