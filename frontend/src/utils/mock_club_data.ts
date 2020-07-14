@@ -55,7 +55,7 @@ export const CLUB_DESCRIPTIONS = [
 export const CONTENT_WARNINGS = [
   ["Fantasy and SciFi violence", "Strong language"],
   ["Discussion of police brutality", 
-   "Discussion ofiolence and injustices against minority groups."],
+   "Discussion of violence and injustices against minority groups."],
   ["Discussion of anxiety, depression, and mental illness",
     "Insensitive depictions of mental illness.",
     "Depictions of violence and strong language."],
