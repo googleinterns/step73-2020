@@ -29,7 +29,7 @@ file.
 Halting this process with Ctrl+C will stop both the frontend and backend
 development servers.
 
-To use, visit port 9000 on your localhost.
+To use, visit http://localhost:9000.
 
 
 ## Deploying

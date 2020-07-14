@@ -9,7 +9,7 @@ Before running any code, one must use `npm install` to install the required depe
 ## Running Locally
 Run the dev server with the command `npm run start-dev`
 
-To use, visit port 9000 on your localhost
+To use, visit http://localhost:9000
 
 If you see any errors that say "System limit for number of file watchers reached",
 you can run the following command to temporarily increase that limit -

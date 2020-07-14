@@ -10,7 +10,7 @@ coffeehouse-step2020 through the command `gcloud config set project coffeehouse-
 ## Running Locally
 Run the dev server with the command `mvn package appengine:run`
 
-To use, visit port 8080 on your localhost
+To use, visit http://localhost:8080
 
 
 ## Deploying
