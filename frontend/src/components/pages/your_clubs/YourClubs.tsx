@@ -1,5 +1,7 @@
 import * as React from "react";
 import AddIcon from "@material-ui/icons/Add";
+import { BookProps } from
+  "../../../services/mock_backend/mock_your_clubs_backend";
 import { borders } from "@material-ui/system";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
@@ -161,16 +163,8 @@ function DisplayListedClubs(props: DisplayListedClubsProps) {
               <div className={classes.clubContent}>
                 <h2 style={{marginRight: 50, marginBottom: 0}}>{item.name}</h2>
                 <LibraryBooksRoundedIcon style={{marginTop: 15}}/>
-                <div className={classes.break}></div>
-                <p style={{marginBottom: 0}}>
-                  <b>Description: </b><br/>
-                  {item.description}
-                </p>
-                <p style={{marginBottom: 0}}>
-                  <b>Current Book: </b><br/>
-                  {' ' + item.currentBook.title}<br/>
-                  by {item.currentBook.author}
-                </p>
+                <LoadClubDescription description={item.description} />
+                <LoadBookInfo book={item.currentBook} />
                 <LoadContentWarnings contentWarnings={item.contentWarnings} />
                 <div className={classes.break}></div>
                 <LoadButtons />
@@ -183,6 +177,42 @@ function DisplayListedClubs(props: DisplayListedClubsProps) {
   } else {
     return (<div></div>);
   }
+}
+
+interface LoadClubDescriptionProps {
+  description: string;
+};
+
+function LoadClubDescription(props: LoadClubDescriptionProps) {
+  const classes = useStyles();
+
+  return (
+    <div>
+      <div className={classes.break}></div>
+      <p style={{marginBottom: 0}}>
+        <b>Description: </b><br/>
+        {props.description}
+      </p>
+    </div>
+  );
+}
+
+interface LoadBookInfoProps {
+  book: BookProps;
+};
+
+function LoadBookInfo(props: LoadBookInfoProps) {
+  const classes = useStyles();
+
+  return (
+    <div>
+      <p style={{marginBottom: 0, marginRight: 20}}>
+        <b>Current Book: </b><br/>
+        {' ' + props.book.title}<br/>
+        by {props.book.author}
+      </p>
+    </div>
+  );
 }
 
 function LoadContentWarnings(props) {
