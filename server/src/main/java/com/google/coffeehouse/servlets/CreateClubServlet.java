@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  * Servlet to create a {@link Club} from Http POST Request Body (in JSON format),
  * save it in database, and return it in JSON format.
  */
-@WebServlet("/create-club")
+@WebServlet("/api/create-club")
 public class CreateClubServlet extends HttpServlet {
 
   /** 

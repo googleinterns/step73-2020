@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  * Servlet to create a {@link Person} from Http POST Request Body (in JSON format),
  * save it in database, and return it in JSON format.
  */
-@WebServlet("/create-person")
+@WebServlet("/api/create-person")
 public class CreatePersonServlet extends HttpServlet {
 
   /** 
