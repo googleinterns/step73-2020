@@ -27,7 +27,6 @@ import java.util.List;
 * use to interact with the StorageHandler class. This class also instantiates a Spanner and
 * Database Client which is then referenced throughout the file.
 */
-
 public class StorageHandlerApi {
 
   private static final Spanner spanner = StorageHandlerSetup.createSpannerService();

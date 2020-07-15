@@ -26,7 +26,6 @@ import java.util.List;
 * The StorageHandler class holds the functions that add mutations in order to
 * query from the database.
 */
-
 public class StorageHandlerCommonMutations {
   /**
   * Returns a single Mutation that can add a membership to the database.
