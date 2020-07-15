@@ -73,43 +73,4 @@ public class StorageHandlerHelperTest {
     long actual = StorageHandlerHelper.getMemberCount(dbClient, "club");
     assertEquals(0, actual);
   }
-
-  @Test
-  public void getPersonCount_onePersonExists() throws Exception {
-    StorageHandlerTestHelper.insertPerson();
-    long actual = StorageHandlerHelper.getPersonCount(dbClient, "person");
-    assertEquals(1, actual);
-  }
-
-  @Test
-  public void getPersonCount_noPersonExists() throws Exception {
-    long actual = StorageHandlerHelper.getPersonCount(dbClient, "personThatDoesNotExist");
-    assertEquals(0, actual);
-  }
-
-   @Test
-  public void getClubCount_oneClubExists() throws Exception {
-    StorageHandlerTestHelper.insertClub();
-    long actual = StorageHandlerHelper.getClubCount(dbClient, "club");
-    assertEquals(1, actual);
-  }
-
-  @Test
-  public void getClubCount_noClubExists() throws Exception {
-    long actual = StorageHandlerHelper.getClubCount(dbClient, "clubThatDoesNotExist");
-    assertEquals(0, actual);
-  }
-
- @Test
-  public void getBookCount_oneBookExists() throws Exception {
-    StorageHandlerTestHelper.insertBook();
-    long actual = StorageHandlerHelper.getBookCount(dbClient, "book");
-    assertEquals(1, actual);
-  }
-
-  @Test
-  public void getBookCount_noBookExists() throws Exception {
-    long actual = StorageHandlerHelper.getBookCount(dbClient, "bookThatDoesNotExist");
-    assertEquals(0, actual);
-  }
 }
