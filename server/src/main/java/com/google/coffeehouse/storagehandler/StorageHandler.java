@@ -58,10 +58,6 @@ public class StorageHandler {
     String email = "";
     String nickname = "";
     String pronouns = "";
-    // long resultCount = StorageHandlerHelper.getPersonCount(dbClient, userId);
-    // if (resultCount == 0) {
-    //   throw new IllegalArgumentException(PERSON_DOES_NOT_EXIST);
-    // }
     Struct row = 
         dbClient
             .singleUse()
@@ -98,10 +94,6 @@ public class StorageHandler {
     String author = "";
     String isbn = "";
     String title = "";
-    // long resultCount = StorageHandlerHelper.getBookCount(dbClient, bookId);
-    // if (resultCount == 0) {
-    //   throw new IllegalArgumentException(BOOK_DOES_NOT_EXIST);
-    // }
     Struct row = 
         dbClient
             .singleUse()
@@ -144,10 +136,6 @@ public class StorageHandler {
     String description = "";
     String ownerId = "";
     String name = "";
-    // long resultCount = StorageHandlerHelper.getClubCount(dbClient, clubId);
-    // if (resultCount == 0) {
-    //   throw new IllegalArgumentException(CLUB_DOES_NOT_EXIST);
-    // }
     Struct row = 
       dbClient
           .singleUse()
@@ -255,6 +243,8 @@ public class StorageHandler {
   * user ID and club ID to the Memberships table.
   *
   * @param  dbClient    the database client
+  * @param  userId      the user ID string used to query the membership table
+  * @param  clubId      the club ID string used to query the membership table
   */
   public static void getAddMembershipTransaction(DatabaseClient dbClient, String userId, String clubId) {
     dbClient
