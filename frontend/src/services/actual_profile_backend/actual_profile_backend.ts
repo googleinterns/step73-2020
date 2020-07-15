@@ -1,5 +1,5 @@
 /**
- * Communicates with update 
+ * Communicates with the backend to load, update, and delete user profiles.
  */
 export class ProfileBackendService {
   
@@ -9,7 +9,7 @@ export class ProfileBackendService {
     return Promise.resolve(returnMessage);
   }
 
-  /** TODO: Make sure you're updating person, not just adding them  */
+  /** TODO: Make sure you're updating person, not just adding them.  */
   async updateProfile(personAndChangeFieldsJson: string): Promise<string> {
     try {
       const newPerson = await fetch('/update-person', {
@@ -19,7 +19,7 @@ export class ProfileBackendService {
       const newPersonJson = JSON.stringify(newPerson);
       return newPersonJson;
     } catch(err) {
-      /** TODO: Add and return different types of errors */
+      /** TODO: Add and return different types of errors. */
       return Promise.resolve(personAndChangeFieldsJson);
     }
   }

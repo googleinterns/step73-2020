@@ -87,7 +87,7 @@ export const YourClubs = () => {
 
   /**
    * ServiceHandlers is an object containing various TS Handlers and provides
-   * functionality to communicate data from the frontend to the backend
+   * functionality to communicate data from the frontend to the backend.
    */
   const contextServices = React.useContext(ServiceContext);
   const yourClubsHandlerService = contextServices.yourClubsHandlerService;
