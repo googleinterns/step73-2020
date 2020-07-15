@@ -12,7 +12,7 @@ import { ProfileHandlerService } from
 import { YourClubsHandlerService } from
   "../../services/your_clubs_handler_service/your_clubs_handler_service";
 
-/** TODO: Change to real backend service implementation */
+/** TODO: Change to real backend service implementation. */
 export const mockProfileBackendService = new MockProfileBackendService(NUM_PROFILES);
 export const mockYourClubsBackendService = new MockYourClubsBackendService();
 export const defaultServices = {
