@@ -12,13 +12,6 @@ import { Theme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      display: 'flex',
-      flexDirection: 'column',
-      flexWrap: 'wrap',
-      marginTop: '100px',
-      marginLeft: theme.spacing(4),
-    },
     break : {
       flexBasis: '100%',
       height: 0,
@@ -26,37 +19,36 @@ const useStyles = makeStyles((theme: Theme) =>
     button : {
       margin: theme.spacing(1),
       marginLeft: theme.spacing(0),
-      marginTop: '20px',
+      marginTop: theme.spacing(1),
       maxHeight: '50px',
     },
-    buttonsContainer : {
-      alignItems: 'right',
-      display: 'flex',
-    },
     club : {
-      marginTop: '20px',
+      marginTop: theme.spacing(3),
       maxWidth: '900px',
     },
     clubContent: {
       display: 'flex',
       flexWrap: 'wrap',
-      margin: theme.spacing(1),
+      marginBottom: theme.spacing(1),
+      marginLeft: theme.spacing(4),
+      marginRight: theme.spacing(4),
+      marginTop: theme.spacing(1),
     },
     clubPhoto: {
-      marginTop: '15px',
+      marginTop: theme.spacing(2),
     },
     clubTitle: {
-      marginBottom: 0,
-      marginRight: 50, 
+      marginBottom: theme.spacing(0),
+      marginRight: theme.spacing(6), 
     },
     listedClubsContainer: {
       alignItems: 'center',
       display: 'flex',
       flexDirection: 'column',
-      marginBottom: '20px',
+      marginBottom: theme.spacing(3),
     },
     textElement: {
-      marginBottom: '0px',
+      marginBottom: theme.spacing(0),
     },
   }),
 );
@@ -87,7 +79,7 @@ export function ClubList(props: ClubListProps) {
                 <BookInfo book={item.currentBook} />
                 <ContentWarnings contentWarnings={item.contentWarnings} />
                 <div className={classes.break}></div>
-                <div className={classes.buttonsContainer}>
+                <div>
                   <Button
                     className={classes.button}
                     color="primary"
