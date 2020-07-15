@@ -1,7 +1,5 @@
-import { BackendYourClubsServiceInterface } from
-  "../backend_service_interface/backend_service_interface";
-import { ClubProps, MockYourClubsBackendService } from
-  "../mock_backend/mock_your_clubs_backend";
+import { BackendYourClubsServiceInterface } from "../backend_service_interface/backend_service_interface";
+import { ClubProps, MockYourClubsBackendService } from "../mock_backend/mock_your_clubs_backend";
 
 /** Error that occurs when Id does not exist. */
 export class ErrorLoadingClubs extends Error {

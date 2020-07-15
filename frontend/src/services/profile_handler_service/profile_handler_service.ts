@@ -1,7 +1,5 @@
-import { BackendProfileServiceInterface } from 
-  "../backend_service_interface/backend_service_interface";
-import { MockProfileBackendService, PersonProps } from 
-  "../mock_backend/mock_profile_backend";
+import { BackendProfileServiceInterface } from "../backend_service_interface/backend_service_interface";
+import { MockProfileBackendService, PersonProps } from "../mock_backend/mock_profile_backend";
 
 /** Error that occurs when Id does not exist. */
 export class NonExistentProfileError extends Error {

@@ -1,10 +1,8 @@
 import * as React from "react";
-import { BookProps } from
-  "../../../services/mock_backend/mock_your_clubs_backend";
+import { BookProps } from "../../../services/mock_backend/mock_your_clubs_backend";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import { ClubProps } from
-  "../../../services/mock_backend/mock_your_clubs_backend";
+import { ClubProps } from "../../../services/mock_backend/mock_your_clubs_backend";
 import { createStyles } from "@material-ui/core/styles";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import LibraryBooksRoundedIcon from "@material-ui/icons/LibraryBooksRounded";
