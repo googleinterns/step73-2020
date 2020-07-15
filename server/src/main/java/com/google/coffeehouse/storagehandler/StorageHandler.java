@@ -96,27 +96,21 @@ public class StorageHandler {
             .readRow(
               "Books",
               Key.of(bookId),
-              Arrays.asList("author", "isbn", "title"));
+              Arrays.asList("title", "autho", "isbn"));
     if (row != null) {
-      if (!row.isNull(/*index=*/0) || !row.getString(/*index=*/0).isEmpty()) {
-        author = row.getString(/*index=*/0);
-      }
+      Book.Builder bookBuilder = Book.newBuilder(row.getString(/*titleIndex=*/0));
+      // TODO: implement setting the bookId field @JosephBushagour
+
       if (!row.isNull(/*index=*/1) || !row.getString(/*index=*/1).isEmpty()) {
-        isbn = row.getString(/*index=*/1);
+        bookBuilder.setAuthor(row.getString(/*authorIndex=*/1));
       }
-      title = row.getString(/*index=*/2);
+      if (!row.isNull(/*index=*/2) || !row.getString(/*index=*/2).isEmpty()) {
+        bookBuilder.setIsbn(row.getString(/*isbnIndex=*/2));
+      }
+      return bookBuilder.build();
     } else {
       throw new IllegalArgumentException(BOOK_DOES_NOT_EXIST);
     }
-    Book.Builder bookBuilder = Book.newBuilder(title);
-    // TODO: implement setting the bookId field @JosephBushagour
-    if (!author.isEmpty()) {
-      bookBuilder.setAuthor(author);
-    }
-    if (!isbn.isEmpty()) {
-      bookBuilder.setIsbn(isbn);
-    }
-    return bookBuilder.build();
   }
 
   /**
