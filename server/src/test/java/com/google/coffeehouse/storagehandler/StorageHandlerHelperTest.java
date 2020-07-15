@@ -47,7 +47,7 @@ public class StorageHandlerHelperTest {
     StorageHandlerTestHelper.insertMembership();
     ReadContext readContext = dbClient.singleUse();
     Boolean actual = StorageHandlerHelper.checkMembership(readContext, "person", "club");
-    assertEquals(true, actual);
+    assertTrue(actual);
   }
 
   @Test
@@ -55,7 +55,7 @@ public class StorageHandlerHelperTest {
     StorageHandlerTestHelper.insertClub();
     ReadContext readContext = dbClient.singleUse();
     Boolean actual = StorageHandlerHelper.checkMembership(readContext, "personNotInClub", "club");
-    assertEquals(false, actual);
+    assertFalse(actual);
   }
 
   @Test

@@ -226,21 +226,21 @@ public class StorageHandlerTest {
   }
 
   @Test
-  public void addPersonClubMembershipMutation() throws Exception {
+  public void getAddMembershipTransaction() throws Exception {
     StorageHandlerTestHelper.insertPerson();
     StorageHandler.getAddMembershipTransaction(dbClient, "person", "club");
     ReadContext readContext = dbClient.singleUse();
     Boolean actual = StorageHandlerHelper.checkMembership(readContext, "person", "club");
-    assertEquals(true, actual);
+    assertTrue(actual);
   }
 
   @Test
-  public void deletePersonClubMembership() throws Exception {
+  public void getDeleteMembershipTransaction() throws Exception {
     StorageHandlerTestHelper.insertPerson();
     StorageHandlerTestHelper.insertMembership();
     StorageHandler.getDeleteMembershipTransaction(dbClient, "person", "club");
     ReadContext readContext = dbClient.singleUse();
     Boolean actual = StorageHandlerHelper.checkMembership(readContext, "person", "club");
-    assertEquals(false, actual);
+    assertFalse(actual);
   }
 }
