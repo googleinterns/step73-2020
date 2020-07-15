@@ -139,7 +139,7 @@ function BookInfo(props: BookInfoProps) {
     <>
       <p className={classes.textElement} style={{marginRight: 20}}>
         <b>Current Book: </b><br/>
-        {' ' + props.book.title}<br/>
+        {props.book.title}<br/>
         by {props.book.author}
       </p>
     </>
