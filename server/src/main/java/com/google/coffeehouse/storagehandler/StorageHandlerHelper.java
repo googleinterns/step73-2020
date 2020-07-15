@@ -64,9 +64,7 @@ public class StorageHandlerHelper {
         Statement.newBuilder(
                 "SELECT COUNT(*) as count "
                   + "FROM Memberships "
-                  + "WHERE clubId = @clubId AND "
-                  + "(membershipType = " + MembershipConstants.MEMBER
-                  + " OR membershipType = " + MembershipConstants.OWNER + ")")
+                  + "WHERE clubId = @clubId")
               .bind("clubId")
               .to(clubId)
               .build();
