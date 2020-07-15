@@ -55,9 +55,6 @@ public class StorageHandler {
   * @return person      the Person object built containing the person information
   */
   public static Person getPerson(DatabaseClient dbClient, String userId) {
-    String email = "";
-    String nickname = "";
-    String pronouns = "";
     Struct row = 
         dbClient
             .singleUse()
@@ -119,31 +116,24 @@ public class StorageHandler {
   * @return club      the Club object built containing the club information
   */
   public static Club getClub(DatabaseClient dbClient, String clubId) {
-    String bookId = "";
-    String description = "";
-    String ownerId = "";
-    String name = "";
     Struct row = 
       dbClient
           .singleUse()
           .readRow(
             "Books",
-            Key.of(bookId),
-            Arrays.asList("bookId", "description", "name", "ownerId"));
+            Key.of(clubId),
+            Arrays.asList("bookId", "name", "description", "ownerId"));
     if (row != null) {
-      bookId = row.getString(/*index=*/0);
-      description = row.getString(/*index=*/1);
-      name = row.getString(/*index=*/2);
-      ownerId = row.getString(/*index=*/3);
+      Book book = getBook(dbClient, row.getString(/*bookIdIndex=*/0));
+      Club.Builder clubBuilder = Club.newBuilder(row.getString(/*nameIndex=*/1),
+                                                 book);
+      // TODO: implement setting the clubId field @JosephBushagour
+      // TODO: implement setting the ownerId field @JosephBushagour
+      clubBuilder.setDescription(row.getString(/*descriptionIndex=*/2));
+      return clubBuilder.build();
     } else {
       throw new IllegalArgumentException(CLUB_DOES_NOT_EXIST);
     }
-    Book book = getBook(dbClient, bookId);
-    Club.Builder clubBuilder = Club.newBuilder(name, book);
-    // TODO: implement setting the clubId field @JosephBushagour
-    // TODO: implement setting the ownerId field @JosephBushagour
-    clubBuilder.setDescription(description);
-    return clubBuilder.build();
   }
 
   /**
