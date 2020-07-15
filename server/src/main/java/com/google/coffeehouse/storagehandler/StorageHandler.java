@@ -87,9 +87,6 @@ public class StorageHandler {
   * @return book      the Book object built containing the book information
   */
   public static Book getBook(DatabaseClient dbClient, String bookId) {
-    String author = "";
-    String isbn = "";
-    String title = "";
     Struct row = 
         dbClient
             .singleUse()
