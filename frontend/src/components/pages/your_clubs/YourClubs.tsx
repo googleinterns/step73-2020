@@ -177,7 +177,7 @@ function DisplayListedClubs(props: DisplayListedClubsProps) {
   const clubsToDisplay = props.clubsToDisplay;
 
   /** If clubs to display is not yet defined, or 'None' are chosen to display. */
-  if (clubsToDisplay ? /** defined */ true : /** undefined */ false)  {
+  if (clubsToDisplay !== undefined)  {
     return (
       <div className={classes.listedClubsContainer}>
         {clubsToDisplay.map((item, index) => (
