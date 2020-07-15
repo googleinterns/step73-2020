@@ -12,12 +12,11 @@ export class ProfileBackendService {
   /** TODO: Make sure you're updating person, not just adding them.  */
   async updateProfile(personAndChangeFieldsJson: string): Promise<string> {
     try {
-      const newPerson = await fetch('/update-person', {
+      const response = await fetch('/update-person', {
         method: 'POST',
         body: personAndChangeFieldsJson,
       })
-      const newPersonJson = JSON.stringify(newPerson);
-      return newPersonJson;
+      return response.json();
     } catch(err) {
       /** TODO: Add and return different types of errors. */
       return Promise.resolve(personAndChangeFieldsJson);
