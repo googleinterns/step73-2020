@@ -38,7 +38,7 @@ export class MockYourClubsBackendService {
   /** TODO: Update parameters to include Membership status, user Id, page. */
   listClubs(numClubs: number): Promise<string> {
     let listedClubs: ClubProps[] = [];
-    for (let i = 0; i < Math.min(numClubs, MAX_NUM_CLUBS); i++) {
+    for (let i = 0; i < Math.min(numClubs, this.mockClubs.length); i++) {
       listedClubs.push(this.mockClubs[i]);
     }
     const listedClubsJson = JSON.stringify(listedClubs);
