@@ -11,9 +11,9 @@ export interface BookProps {
 }
 
 export interface ClubProps {
-  name: string;
-  description: string;
-  contentWarnings: Array<string>; 
+  name: string,
+  description: string,
+  contentWarnings: Array<string>, 
   currentBook: BookProps,
 }
 
