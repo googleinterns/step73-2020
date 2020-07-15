@@ -1,7 +1,4 @@
-import { BOOKS_LIST } from "../../utils/mock_club_data";
-import { CLUB_DESCRIPTIONS } from "../../utils/mock_club_data";
-import { CLUB_NAMES } from "../../utils/mock_club_data";
-import { CONTENT_WARNINGS } from "../../utils/mock_club_data";
+import { CLUBS } from "../../utils/mock_club_data";
 import { MAX_NUM_CLUBS } from "../../utils/temporary_testing_consts";
 
 export interface BookProps {
@@ -27,10 +24,10 @@ export class MockYourClubsBackendService {
   constructor() {
     for (let i = 0; i < MAX_NUM_CLUBS; i++) {
       this.mockClubs.push({
-        name: CLUB_NAMES[i],
-        description: CLUB_DESCRIPTIONS[i],
-        contentWarnings: CONTENT_WARNINGS[i],
-        currentBook: BOOKS_LIST[i],
+        name: CLUBS[i].name,
+        description: CLUBS[i].description,
+        contentWarnings: CLUBS[i].contentWarnings,
+        currentBook: CLUBS[i].currentBook,
       })
     }
   }

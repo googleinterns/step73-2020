@@ -1,4 +1,4 @@
-export const CLUB_NAMES = [
+const CLUB_NAMES = [
   "SciFi Lovers Club", 
   "Justice in America United",
   "Mental Health in Literature Club",
@@ -6,7 +6,7 @@ export const CLUB_NAMES = [
   "Developing Programmers Coalition", 
 ];
 
-export const BOOKS_LIST = [
+const BOOKS_LIST = [
   {
     title: "Dune",
     author: "Frank Herbert", 
@@ -34,7 +34,7 @@ export const BOOKS_LIST = [
   },
 ];
 
-export const CLUB_DESCRIPTIONS = [
+const CLUB_DESCRIPTIONS = [
   "This club aims to bring SciFi lovers together in their exploration of \
   world-building and universes different from our own. All are welcome!",
   "This club aims to bring about discussion concerning the current state \
@@ -52,7 +52,7 @@ export const CLUB_DESCRIPTIONS = [
   discussion include Java, language evolution, and programming best-practices.",
 ];
 
-export const CONTENT_WARNINGS = [
+const CONTENT_WARNINGS = [
   ["Fantasy and SciFi violence", "Strong language"],
   ["Discussion of police brutality", 
    "Discussion of violence and injustices against minority groups."],
@@ -61,4 +61,37 @@ export const CONTENT_WARNINGS = [
     "Depictions of violence and strong language."],
   ["Discussion of religion and political systems."],
   ["Existential dread regarding career choice"],
+];
+
+export const CLUBS = [
+  {
+    name: CLUB_NAMES[0],
+    description: CLUB_DESCRIPTIONS[0],
+    contentWarnings: CONTENT_WARNINGS[0],
+    currentBook: BOOKS_LIST[0],
+  },
+  {
+    name: CLUB_NAMES[1],
+    description: CLUB_DESCRIPTIONS[1],
+    contentWarnings: CONTENT_WARNINGS[1],
+    currentBook: BOOKS_LIST[1],
+  },
+  {
+    name: CLUB_NAMES[2],
+    description: CLUB_DESCRIPTIONS[2],
+    contentWarnings: CONTENT_WARNINGS[2],
+    currentBook: BOOKS_LIST[2],
+  },
+  {
+    name: CLUB_NAMES[3],
+    description: CLUB_DESCRIPTIONS[3],
+    contentWarnings: CONTENT_WARNINGS[3],
+    currentBook: BOOKS_LIST[3],
+  },
+  {
+    name: CLUB_NAMES[4],
+    description: CLUB_DESCRIPTIONS[4],
+    contentWarnings: CONTENT_WARNINGS[4],
+    currentBook: BOOKS_LIST[4],
+  },
 ];
