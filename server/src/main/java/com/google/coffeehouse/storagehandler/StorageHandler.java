@@ -66,20 +66,16 @@ public class StorageHandler {
               Key.of(userId),
               Arrays.asList("email", "nickname", "pronouns"));
     if (row != null) {
-      email = row.getString(/*index=*/0);
-      nickname = row.getString(/*index=*/1);
+      Person.Builder personBuilder = Person.newBuilder(row.getString(/*emailIndex=*/0),
+                                                       row.getString(/*nicknameIndex=*/1));
+      // TODO: implement setting the userId field @JosephBushagour
       if (!row.isNull(/*index=*/2) || !row.getString(/*index=*/2).isEmpty()) {
-        pronouns = row.getString(/*index=*/2);
+        personBuilder.setPronouns(row.getString(/*pronounsIndex=*/2));
       }
+      return personBuilder.build();
     } else {
       throw new IllegalArgumentException(PERSON_DOES_NOT_EXIST);
     }
-    Person.Builder personBuilder = Person.newBuilder(email, nickname);
-    // TODO: implement setting the userId field @JosephBushagour
-    if (!pronouns.isEmpty()) {
-      personBuilder.setPronouns(pronouns);
-    }
-    return personBuilder.build();
   }
 
   /**

@@ -39,7 +39,7 @@ public class StorageHandlerApi {
   * @return person    a {@link Person} object containing information from the database
   */
   public static Person fetchPersonFromId(String userId) {
-    return StorageHandler.getPerson(dbClient, userId);;
+    return StorageHandler.getPerson(dbClient, userId);
   }
 
   /**
@@ -86,6 +86,6 @@ public class StorageHandlerApi {
   * @return clubs             the list of {@link Club}s
   */
   public static List<Club> listClubsFromUserId(String userId, MembershipConstants.MembershipStatus membershipStatus) {
-    return StorageHandler.getListOfClubs(dbClient, userId, membershipStatus);;
+    return StorageHandler.getListOfClubs(dbClient, userId, membershipStatus);
   }
 }
