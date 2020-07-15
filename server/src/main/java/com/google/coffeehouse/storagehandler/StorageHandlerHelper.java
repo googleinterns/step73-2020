@@ -12,11 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.coffeehouse.common;
+package com.google.coffeehouse.storagehandler;
 
+import com.google.coffeehouse.common.MembershipConstants;
 import com.google.cloud.spanner.DatabaseClient;
+import com.google.cloud.spanner.Key;
+import com.google.cloud.spanner.ReadContext;
 import com.google.cloud.spanner.ResultSet;
 import com.google.cloud.spanner.Statement;
+import com.google.cloud.spanner.Struct;
+import java.util.Arrays;
+import java.util.List;
 
 /**
 * The StorageHandlerHelper class holds helper query functions that get the number of results
@@ -25,32 +31,24 @@ import com.google.cloud.spanner.Statement;
 public class StorageHandlerHelper {
 
   /**
-  * Returns a Boolean that indicates whether or not a person is in a club.
+  * Returns a Boolean that indicates whether or not a person is a member of a club.
+  * This method creates a Struct that holds a single row from a database read row transacation.
+  * It returns false if the Struct is null, indicating the membership does not exist.
+  * It returns true if the Struct is not null, indicating the membership does exist.
   *
-  * @param  dbClient  the database client
-  * @param  userId    the user ID string of the user we are checking is in a club
-  * @param  clubid    the club ID string of the club we are checking the user is in
-  * @return exists    the boolean representing whether or not a person is in a club
+  * @param  readContext  the context for an attempt to perform a transaction
+  * @param  userId       the user ID string of the user we are checking is in a club
+  * @param  clubId       the club ID string of the club we are checking the user is in
+  * @return Boolean      the Boolean true or false representing if the membership exists or not
   */
-  public static Boolean checkPersonInClubQuery(DatabaseClient dbClient, String userId, String clubId) {
-    Boolean exists = null;
-    Statement statement = 
-        Statement.newBuilder(
-                "SELECT (EXISTS ("
-                  + "SELECT userId, clubId "
-                  + "FROM Memberships "
-                  + "WHERE userId = @userId AND clubId = @clubId))")
-              .bind("userId")
-              .to(userId)
-              .bind("clubId")
-              .to(clubId)
-              .build();
-    try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
-      while (resultSet.next()) {
-        exists = resultSet.getBoolean(/* columnIndex= */0);
-      }
-    }
-    return exists;
+  public static Boolean checkMembership(ReadContext readContext, String userId, String clubId) {
+    Struct row =
+          readContext
+            .readRow(
+              "Memberships",
+              Key.of(userId, clubId),
+              Arrays.asList("userId"));
+    return (row != null) ? true : false;
   }
 
   /**
@@ -60,7 +58,7 @@ public class StorageHandlerHelper {
   * @param  userId    the user ID string used to query and get how many users have that key
   * @return count     the long representing the number of results from the query
   */
-  public static long getMemberCountQuery(DatabaseClient dbClient, String clubId) {
+  public static long getMemberCount(DatabaseClient dbClient, String clubId) {
     long count = 0;
     Statement statement = 
         Statement.newBuilder(
@@ -87,7 +85,7 @@ public class StorageHandlerHelper {
   * @param  userId    the user ID string used to query and get how many users have that key
   * @return count     the long representing the number of results from the query
   */
-  public static long getPersonCountQuery(DatabaseClient dbClient, String userId) {
+  public static long getPersonCount(DatabaseClient dbClient, String userId) {
     long count = 0;
     Statement statement = 
         Statement.newBuilder(
@@ -112,7 +110,7 @@ public class StorageHandlerHelper {
   * @param  clubId    the club ID string used to query and get how many clubs have that key
   * @return count     the long representing the number of results from the query
   */
-  public static long getClubCountQuery(DatabaseClient dbClient, String clubId) {
+  public static long getClubCount(DatabaseClient dbClient, String clubId) {
     long count = 0;
     Statement statement = 
         Statement.newBuilder(
@@ -137,7 +135,7 @@ public class StorageHandlerHelper {
   * @param  bookId    the book ID string used to query and get how many books have that key
   * @return count     the long representing the number of results from the query
   */
-  public static long getBookCountQuery(DatabaseClient dbClient, String bookId) {
+  public static long getBookCount(DatabaseClient dbClient, String bookId) {
     long count = 0;
     Statement statement = 
         Statement.newBuilder(

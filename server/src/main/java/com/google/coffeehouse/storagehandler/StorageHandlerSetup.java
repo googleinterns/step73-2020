@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.coffeehouse.common;
+package com.google.coffeehouse.storagehandler;
 
 import com.google.cloud.spanner.DatabaseClient;
 import com.google.cloud.spanner.DatabaseId;
@@ -32,7 +32,8 @@ public class StorageHandlerSetup {
   * Returns a spanner service.
   * This method creates a spanner service which is then returned and passed into
   * the creation and instantiation of a database client
-  * @return spanner
+  *
+  * @return spanner     the spanner service
   */
   public static Spanner createSpannerService() {
     // Instantiates a client
@@ -45,7 +46,9 @@ public class StorageHandlerSetup {
   * Returns a database client that is used to query information.
   * This method creates a database client, which is then returned for the purposes
   * of querying the database given the functions in StorageHandler.java
-  * @return dbClient
+  *
+  * @param spanner      the spanner service
+  * @return dbClient    the database client used to query the database
   */
   public static DatabaseClient createDbClient(Spanner spanner) {
     SpannerOptions options = spanner.getOptions();

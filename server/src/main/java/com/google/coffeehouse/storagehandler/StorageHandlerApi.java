@@ -12,7 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.coffeehouse.common;
+package com.google.coffeehouse.storagehandler;
+
+import com.google.coffeehouse.common.Club;
+import com.google.coffeehouse.common.MembershipConstants;
+import com.google.coffeehouse.common.Person;
 
 import com.google.cloud.spanner.DatabaseClient;
 import com.google.cloud.spanner.Spanner;
@@ -20,7 +24,7 @@ import java.util.List;
 
 /**
 * The StorageHandlerApi class holds all the wrapper functions that the rest of the code will
-* use to interact with the StorageHandler class. The class also instantiates a Spanner and
+* use to interact with the StorageHandler class. This class also instantiates a Spanner and
 * Database Client which is then referenced throughout the file.
 */
 
@@ -30,45 +34,51 @@ public class StorageHandlerApi {
   private static final DatabaseClient dbClient = StorageHandlerSetup.createDbClient(spanner);
 
   /**
-  * Fetches a person from the database and returns a {@link Person}.
+  * Fetches a person by ID from the database and returns a {@link Person}.
   *
   * @param  userId    the user ID string used to query the Persons table from the database
   * @return person    a {@link Person} object containing information from the database
   */
   public static Person fetchPersonFromId(String userId) {
-    Person person = StorageHandler.getPersonQuery(dbClient, userId);
+    Person person = StorageHandler.getPerson(dbClient, userId);
     return person;
   }
 
   /**
-  * Fetches a club from the database and returns a {@link Club}.
+  * Fetches a club by ID from the database and returns a {@link Club}.
   *
   * @param  clubId    the club ID string used to query the Clubs table from the database.
   * @return club      a {@link Club} containing information from the database
   */
   public static Club fetchClubFromId(String clubId) {
-    Club club = StorageHandler.getClubQuery(dbClient, clubId);
+    Club club = StorageHandler.getClub(dbClient, clubId);
     return club;
   }
 
   /**
-  * Adds a membership to the database.
+  * Performs a transaction that adds a membership to the database.
+  * This method checks if a person is already a member of a club. If the person is
+  * already a member, it will throw an exception. Otherwise, it adds the row containing the
+  * user ID and club ID to the Memberships table.
   *
-  * @param  userId      the user ID string used to insert the membership into the table
-  * @param  clubId      the club ID string used to insert the membership into the table
+  * @param  userId      the user ID string used to perform the transaction
+  * @param  clubId      the club ID string used to perform the transaction
   */
-  public static void addPersonClubMembership(String userId, String clubId) {
-    StorageHandler.addPersonClubMembershipMutation(dbClient, userId, clubId);
+  public static void performAddMembershipTransaction(String userId, String clubId) {
+    StorageHandler.getAddMembershipTransaction(dbClient, userId, clubId);
   }
 
   /**
-  * Deletes a membership from the database.
+  * Performs a transaction that deletes a membership from the database.
+  * This method checks if a person is already a member of a club. If the person is
+  * not a member, it will throw an exception. Otherwise, it deletes the row
+  * containing the user ID and club ID from the Memberships table.
   *
-  * @param  userId      the user ID string used to query the membership table
-  * @param  clubId      the club ID string used to query the membership table
+  * @param  userId      the user ID string used to perform the transaction
+  * @param  clubId      the club ID string used to perform the transaction
   */
-  public static void deletePersonClubMembership(String userId, String clubId) {
-    StorageHandler.deletePersonClubMembershipDml(dbClient, userId, clubId);
+  public static void performDeleteMembershipTransaction(String userId, String clubId) {
+    StorageHandler.getDeleteMembershipTransaction(dbClient, userId, clubId);
   }
 
   /**
@@ -79,7 +89,7 @@ public class StorageHandlerApi {
   * @return clubs             the list of {@link Club}s
   */
   public static List<Club> listClubsFromUserId(String userId, MembershipConstants.MembershipStatus membershipStatus) {
-    List<Club> clubs = StorageHandler.getListOfClubsQuery(dbClient, userId, membershipStatus);
+    List<Club> clubs = StorageHandler.getListOfClubs(dbClient, userId, membershipStatus);
     return clubs;
   }
 }
