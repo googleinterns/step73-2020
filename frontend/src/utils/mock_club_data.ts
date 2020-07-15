@@ -4,7 +4,7 @@ export const CLUB_NAMES = [
   "Mental Health in Literature Club",
   "Universe Investigators Coalition", 
   "Developing Programmers Coalition", 
-]
+];
 
 export const BOOKS_LIST = [
   {
