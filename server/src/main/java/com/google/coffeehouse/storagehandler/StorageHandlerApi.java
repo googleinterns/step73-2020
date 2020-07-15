@@ -61,8 +61,8 @@ public class StorageHandlerApi {
   * @param  userId      the user ID string used to perform the transaction
   * @param  clubId      the club ID string used to perform the transaction
   */
-  public static void performAddMembershipTransaction(String userId, String clubId) {
-    StorageHandler.getAddMembershipTransaction(dbClient, userId, clubId);
+  public static void addMembership(String userId, String clubId) {
+    StorageHandler.runAddMembershipTransaction(dbClient, userId, clubId);
   }
 
   /**
@@ -74,8 +74,8 @@ public class StorageHandlerApi {
   * @param  userId      the user ID string used to perform the transaction
   * @param  clubId      the club ID string used to perform the transaction
   */
-  public static void performDeleteMembershipTransaction(String userId, String clubId) {
-    StorageHandler.getDeleteMembershipTransaction(dbClient, userId, clubId);
+  public static void deleteMembership(String userId, String clubId) {
+    StorageHandler.runDeleteMembershipTransaction(dbClient, userId, clubId);
   }
 
   /**

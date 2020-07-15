@@ -50,7 +50,7 @@ public class StorageHandlerTest {
   @Test
   public void getAddMembershipTransaction() throws Exception {
     StorageHandlerTestHelper.insertPerson();
-    StorageHandler.getAddMembershipTransaction(dbClient, "person", "club");
+    StorageHandler.runAddMembershipTransaction(dbClient, "person", "club");
     ReadContext readContext = dbClient.singleUse();
     Boolean actual = StorageHandlerHelper.checkMembership(readContext, "person", "club");
     assertTrue(actual);
@@ -60,7 +60,7 @@ public class StorageHandlerTest {
   public void getDeleteMembershipTransaction() throws Exception {
     StorageHandlerTestHelper.insertPerson();
     StorageHandlerTestHelper.insertMembership();
-    StorageHandler.getDeleteMembershipTransaction(dbClient, "person", "club");
+    StorageHandler.runDeleteMembershipTransaction(dbClient, "person", "club");
     ReadContext readContext = dbClient.singleUse();
     Boolean actual = StorageHandlerHelper.checkMembership(readContext, "person", "club");
     assertFalse(actual);
