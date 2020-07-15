@@ -51,12 +51,6 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: 0,
       marginRight: 50, 
     },
-    formControl: {
-      margin: theme.spacing(1),
-      marginBottom: '5px',
-      marginRight: theme.spacing(8),
-      minWidth: 120,
-    },
     listedClubsContainer: {
       alignItems: 'center',
       display: 'flex',
@@ -95,23 +89,23 @@ export function ClubList(props: ClubListProps) {
                 <BookInfo book={item.currentBook} />
                 <ContentWarnings contentWarnings={item.contentWarnings} />
                 <div className={classes.break}></div>
-                  <div className={classes.buttonsContainer}>
-                    <Button
-                      className={classes.button}
-                      color="primary"
-                      endIcon={<PageviewIcon />}
-                      variant="contained"
-                    >
-                      View Club
-                    </Button>
-                    <Button
-                      className={classes.button}
-                      color="secondary"
-                      endIcon={<HighlightOffIcon />}
-                      variant="contained"
-                    >
-                      Leave Club
-                    </Button>
+                <div className={classes.buttonsContainer}>
+                  <Button
+                    className={classes.button}
+                    color="primary"
+                    endIcon={<PageviewIcon />}
+                    variant="contained"
+                  >
+                    View Club
+                  </Button>
+                  <Button
+                    className={classes.button}
+                    color="secondary"
+                    endIcon={<HighlightOffIcon />}
+                    variant="contained"
+                  >
+                    Leave Club
+                  </Button>
                 </div>
               </div>
             </Box>
@@ -169,12 +163,14 @@ function ContentWarnings(props) {
 
   return (
     <>
-      <p  className={classes.textElement}><b>Content Warnings:</b></p>
-      {contentWarnings.map((item, index) => (
-        <div>
-          - <b>{item}<br/></b>
-        </div>
-      ))}
+      <p className={classes.textElement}>
+        <b>Content Warnings:</b>
+        {contentWarnings.map((item, index) => (
+          <div>
+            - <b>{item}<br/></b>
+          </div>
+        ))}
+      </p>
     </>
   );
 }
