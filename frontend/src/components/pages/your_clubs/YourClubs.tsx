@@ -45,6 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const YourClubs = () => {
   const classes = useStyles();
+  const DEFAULT_NUM_DISPLAYED = 10;
 
   /**
    * ServiceHandlers is an object containing various TS Handlers and provides
@@ -61,27 +62,14 @@ export const YourClubs = () => {
   /** Re-renders Profile only when number of displayed clubs changes. */
   React.useEffect(() => {
     (async() => {
-      let numClubsToDisplay = numClubsDisplayed ? numClubsDisplayed : 0;
+      let numClubsToDisplay = numClubsDisplayed 
+        ? numClubsDisplayed 
+        : DEFAULT_NUM_DISPLAYED;
       const listedClubsPromise =
         await yourClubsHandlerService.listClubs(numClubsToDisplay);
       setListedClubs(listedClubsPromise);
     })();
   }, [numClubsDisplayed]);
-
-  /** Associates each text value with its corresponding number. */
-  const textNumberRepresentation = [
-    {text: "None", val: 0},
-    {text: "One", val: 1},
-    {text: "Two", val: 2},
-    {text: "Three", val: 3},
-    {text: "Four", val: 4},
-    {text: "Five", val: 5},
-    {text: "Six", val: 6},
-    {text: "Seven", val: 7},
-    {text: "Eight", val: 8},
-    {text: "Nine", val: 9},
-    {text: "Ten", val: 10},
-  ];
 
   const handleNumClubsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNumClubsDisplayed(Number(event.target.value));
@@ -97,13 +85,14 @@ export const YourClubs = () => {
           <Select
             labelId="number-of-displayed-clubs-label"
             id="number-of-displayed-clubs"
-            value={numClubsDisplayed ? numClubsDisplayed : 0}
+            value={numClubsDisplayed ? numClubsDisplayed : DEFAULT_NUM_DISPLAYED}
             onChange={handleNumClubsChange}
             label="Age"
           >
-            {textNumberRepresentation.map((item, index) => (
-              <MenuItem value={item.val}>{item.text}</MenuItem>
-            ))}
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={25}>25</MenuItem>
+            <MenuItem value={50}>50</MenuItem>
+            <MenuItem value={100}>100</MenuItem>
           </Select>
           <FormHelperText>
             The number of clubs of which you are a member to be displayed.
