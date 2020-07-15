@@ -28,7 +28,7 @@ export class MockYourClubsBackendService {
         description: CLUBS[i].description,
         contentWarnings: CLUBS[i].contentWarnings,
         currentBook: CLUBS[i].currentBook,
-      })
+      });
     }
   }
 
