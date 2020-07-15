@@ -190,7 +190,24 @@ function DisplayListedClubs(props: DisplayListedClubsProps) {
                 <BookInfo book={item.currentBook} />
                 <ContentWarnings contentWarnings={item.contentWarnings} />
                 <div className={classes.break}></div>
-                <LoadButtons />
+                  <div className={classes.buttonsContainer}>
+                    <Button
+                      className={classes.button}
+                      color="primary"
+                      endIcon={<PageviewIcon />}
+                      variant="contained"
+                    >
+                      View Club
+                    </Button>
+                    <Button
+                      className={classes.button}
+                      color="secondary"
+                      endIcon={<HighlightOffIcon />}
+                      variant="contained"
+                    >
+                      Leave Club
+                    </Button>
+                </div>
               </div>
             </Box>
           </div>
@@ -254,34 +271,5 @@ function ContentWarnings(props) {
         </div>
       ))}
     </>
-  );
-}
-
-/**
- * Displays two buttons, one for viewing the club and another for leaving
- * the club.
- */
-function LoadButtons () {
-  const classes = useStyles();
-
-  return (
-    <div className={classes.buttonsContainer}>
-      <Button
-        className={classes.button}
-        color="primary"
-        endIcon={<PageviewIcon />}
-        variant="contained"
-      >
-        View Club
-      </Button>
-      <Button
-        className={classes.button}
-        color="secondary"
-        endIcon={<HighlightOffIcon />}
-        variant="contained"
-      >
-        Leave Club
-      </Button>
-    </div>
   );
 }
