@@ -57,7 +57,7 @@ export const YourClubs = () => {
   const [listedClubs, setListedClubs] =
     React.useState<ClubProps[]|undefined>(undefined);
   const [numClubsDisplayed, setNumClubsDisplayed] =
-    React.useState<number|undefined>(undefined);
+    React.useState<number|undefined>(DEFAULT_NUM_DISPLAYED);
 
   /** Re-renders Profile only when number of displayed clubs changes. */
   React.useEffect(() => {
