@@ -164,7 +164,7 @@ export const YourClubs = () => {
   );
 }
 
-interface DisplayListedClubsProps {
+interface ClubListProps {
   clubsToDisplay: ClubProps[],
 }
 
@@ -172,7 +172,7 @@ interface DisplayListedClubsProps {
  * Displays up to the number of clubs that the user has requested to to
  * the page.
  */
-function DisplayListedClubs(props: DisplayListedClubsProps) {
+function ClubList(props: ClubListProps) {
   const classes = useStyles();
   const clubsToDisplay = props.clubsToDisplay;
 
