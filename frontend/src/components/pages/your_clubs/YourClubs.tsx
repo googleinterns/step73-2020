@@ -186,9 +186,9 @@ function DisplayListedClubs(props: DisplayListedClubsProps) {
               <div className={classes.clubContent}>
                 <h2 className={classes.clubTitle}>{item.name}</h2>
                 <LibraryBooksRoundedIcon className={classes.clubPhoto} />
-                <LoadClubDescription description={item.description} />
-                <LoadBookInfo book={item.currentBook} />
-                <LoadContentWarnings contentWarnings={item.contentWarnings} />
+                <ClubDescription description={item.description} />
+                <BookInfo book={item.currentBook} />
+                <ContentWarnings contentWarnings={item.contentWarnings} />
                 <div className={classes.break}></div>
                 <LoadButtons />
               </div>
@@ -207,17 +207,17 @@ interface LoadClubDescriptionProps {
 };
 
 /** Displays the club's description. */
-function LoadClubDescription(props: LoadClubDescriptionProps) {
+function ClubDescription(props: LoadClubDescriptionProps) {
   const classes = useStyles();
 
   return (
-    <div>
+    <>
       <div className={classes.break}></div>
       <p className={classes.textElement}>
         <b>Description: </b><br/>
         {props.description}
       </p>
-    </div>
+    </>
   );
 }
 
@@ -226,34 +226,34 @@ interface LoadBookInfoProps {
 };
 
 /** Displays the title and author of the club's current book. */
-function LoadBookInfo(props: LoadBookInfoProps) {
+function BookInfo(props: LoadBookInfoProps) {
   const classes = useStyles();
 
   return (
-    <div>
+    <>
       <p className={classes.textElement} style={{marginRight: 20}}>
         <b>Current Book: </b><br/>
         {' ' + props.book.title}<br/>
         by {props.book.author}
       </p>
-    </div>
+    </>
   );
 }
 
 /** Displays content warnings associated with the club's current book. */
-function LoadContentWarnings(props) {
+function ContentWarnings(props) {
   const classes = useStyles();
   const contentWarnings = props.contentWarnings;
 
   return (
-    <div>
+    <>
       <p  className={classes.textElement}><b>Content Warnings</b></p>
       {contentWarnings.map((item, index) => (
         <div>
           - <b>{item}<br/></b>
         </div>
       ))}
-    </div>
+    </>
   );
 }
 
