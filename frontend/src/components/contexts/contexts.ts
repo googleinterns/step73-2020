@@ -3,9 +3,7 @@ import { MockProfileBackendService } from
   "../../services/mock_backend/mock_profile_backend";
 import { MockYourClubsBackendService } from
   "../../services/mock_backend/mock_your_clubs_backend";
-import { MAX_NUM_CLUBS } from
-  "../../utils/temporary_testing_consts";
-import { NUM_PROFILES } from
+import { MAX_NUM_CLUBS, NUM_PROFILES } from
   "../../utils/temporary_testing_consts";
 import { ProfileHandlerService } from
   "../../services/profile_handler_service/profile_handler_service";
