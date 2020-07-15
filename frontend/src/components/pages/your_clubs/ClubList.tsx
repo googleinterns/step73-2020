@@ -58,7 +58,7 @@ interface ClubListProps {
 }
 
 /**
- * Displays up to the number of clubs that the user has requested to to
+ * Displays up to the number of clubs that the user has requested to
  * the page.
  */
 export function ClubList(props: ClubListProps) {
