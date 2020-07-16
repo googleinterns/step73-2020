@@ -33,7 +33,7 @@ public class StorageHandlerSetup {
   * This method creates a spanner service which is then returned and passed into
   * the creation and instantiation of a database client
   *
-  * @return spanner     the spanner service
+  * @return     the spanner service
   */
   public static Spanner createSpannerService() {
     // Instantiates a client
@@ -48,7 +48,7 @@ public class StorageHandlerSetup {
   * of querying the database given the functions in StorageHandler.java
   *
   * @param spanner      the spanner service
-  * @return dbClient    the database client used to query the database
+  * @return             the database client used to query the database
   */
   public static DatabaseClient createDbClient(Spanner spanner) {
     SpannerOptions options = spanner.getOptions();

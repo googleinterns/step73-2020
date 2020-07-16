@@ -39,7 +39,7 @@ public class StorageHandlerHelper {
   * @param  readContext  the context for an attempt to perform a transaction
   * @param  userId       the user ID string of the user we are checking is in a club
   * @param  clubId       the club ID string of the club we are checking the user is in
-  * @return Boolean      the Boolean true or false representing if the membership exists or not
+  * @return              the Boolean true or false representing if the membership exists or not
   */
   public static Boolean checkMembership(ReadContext readContext, String userId, String clubId) {
     Struct row =
@@ -56,7 +56,7 @@ public class StorageHandlerHelper {
   *
   * @param  dbClient  the database client
   * @param  userId    the user ID string used to query and get how many users have that key
-  * @return count     the long representing the number of results from the query
+  * @return           the long representing the number of results from the query
   */
   public static long getMemberCount(DatabaseClient dbClient, String clubId) {
     long count = 0;

@@ -34,6 +34,7 @@ public class StorageHandlerCommonMutations {
   *
   * @param  userId      the user ID string used to insert the membership into the table
   * @param  clubId      the club ID string used to insert the membership into the table
+  * @return             the single mutation to add a membership
   */
   public static Mutation addMembershipMutation(String userId, String clubId) {
     return Mutation.newInsertBuilder("Memberships")
@@ -55,6 +56,7 @@ public class StorageHandlerCommonMutations {
   *
   * @param  userId      the user ID string used to query the membership table
   * @param  clubId      the club ID string used to query the membership table
+  * @return             the single mutation to delete a membership
   */
   public static Mutation deleteMembershipMutation(String userId, String clubId) {
     return Mutation.delete("Memberships",

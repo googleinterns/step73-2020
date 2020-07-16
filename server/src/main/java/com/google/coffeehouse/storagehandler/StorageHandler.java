@@ -52,7 +52,7 @@ public class StorageHandler {
   *
   * @param  dbClient    the database client 
   * @param  userId      the user ID string used to query and get a person's information
-  * @return person      the Person object built containing the person information
+  * @return             the Person object built containing the person information
   */
   public static Person getPerson(DatabaseClient dbClient, String userId) {
     Struct row = 
@@ -81,7 +81,7 @@ public class StorageHandler {
   *
   * @param  dbClient  the database client
   * @param  bookId    the book ID string used to query and get a book's information
-  * @return book      the Book object built containing the book information
+  * @return           the Book object built containing the book information
   */
   public static Book getBook(DatabaseClient dbClient, String bookId) {
     Struct row = 
@@ -113,7 +113,7 @@ public class StorageHandler {
   *
   * @param  dbClient  the database client
   * @param  clubId    the club ID string used to query and get a club's information
-  * @return club      the Club object built containing the club information
+  * @return           the Club object built containing the club information
   */
   public static Club getClub(DatabaseClient dbClient, String clubId) {
     Struct row = 
@@ -143,7 +143,7 @@ public class StorageHandler {
   *
   * @param  dbClient    the database client
   * @param  clubId      the club ID string used to query
-  * @return persons     the list of Person objects
+  * @return             the list of Person objects
   */
   public static List<Person> getListOfMembers(DatabaseClient dbClient, String clubId) {
     List<Person> persons = new ArrayList<>();
@@ -177,7 +177,7 @@ public class StorageHandler {
   * @param  dbClient          the database client
   * @param  userId            the user ID string used to query and get a list of clubs
   * @param  membershipStatus  the enum specifying whether the user is a member or not
-  * @return clubs             the list of {@link Club}s
+  * @return                   the list of {@link Club}s
   */
   public static List<Club> getListOfClubs(DatabaseClient dbClient, String userId, MembershipConstants.MembershipStatus membershipStatus) {
     Statement statement;
@@ -215,13 +215,14 @@ public class StorageHandler {
 
   /**
   * Performs a transaction that adds a membership to the database.
-  * This method checks if a person is already a member of a club. If the person is
-  * already a member, it will throw an exception. Otherwise, it adds the row containing the
-  * user ID and club ID to the Memberships table.
+  * This method checks if a person is already a member of a club by calling a helper function.
+  * If the person does not exist, this method will buffer a single mutation that adds
+  * the membership. Otherwise, it will throw an exception indicating that the person
+  * is already a member of the club.
   *
   * @param  dbClient    the database client
-  * @param  userId      the user ID string used to query the membership table
-  * @param  clubId      the club ID string used to query the membership table
+  * @param  userId      the user ID string used to perform the transaction
+  * @param  clubId      the club ID string used to perform the transaction
   */
   public static void runAddMembershipTransaction(DatabaseClient dbClient, String userId, String clubId) {
     dbClient
@@ -243,12 +244,15 @@ public class StorageHandler {
   }
 
   /**
-  * Gets a transaction that deletes a membership from the database.
-  * This method checks if a person is already a member of a club by calling a read row transaction function
-  * from the StorageHandlerHelper class.
+  * Performs a transaction that deletes a membership from the database.
+  * This method checks if a person is already a member of a club by calling a helper function.
+  * If the person does exist, this method will bufferer a single mutation that deletes the
+  * membership. Otherwise, it will throw an exception indicating that the person is
+  * already not a member of the club.
   *
-  * @param  userId      the user ID string used to query the membership table
-  * @param  clubId      the club ID string used to query the membership table
+  * @param  dbClient    the database client
+  * @param  userId      the user ID string used to perform the transaction
+  * @param  clubId      the club ID string used to perform the transaction
   */
   public static void runDeleteMembershipTransaction(DatabaseClient dbClient, String userId, String clubId) {
     dbClient

@@ -36,7 +36,7 @@ public class StorageHandlerApi {
   * Fetches a person by ID from the database and returns a {@link Person}.
   *
   * @param  userId    the user ID string used to query the Persons table from the database
-  * @return person    a {@link Person} object containing information from the database
+  * @return           a {@link Person} object containing information from the database
   */
   public static Person fetchPersonFromId(String userId) {
     return StorageHandler.getPerson(dbClient, userId);
@@ -46,30 +46,26 @@ public class StorageHandlerApi {
   * Fetches a club by ID from the database and returns a {@link Club}.
   *
   * @param  clubId    the club ID string used to query the Clubs table from the database.
-  * @return club      a {@link Club} containing information from the database
+  * @return           a {@link Club} containing information from the database
   */
   public static Club fetchClubFromId(String clubId) {
     return StorageHandler.getClub(dbClient, clubId);
   }
 
   /**
-  * Performs a transaction that adds a membership to the database.
-  * This method checks if a person is already a member of a club. If the person is
-  * already a member, it will throw an exception. Otherwise, it adds the row containing the
-  * user ID and club ID to the Memberships table.
+  * Adds a membership to the database.
+  * This method calls a transacation that adds a membership to the table.
   *
-  * @param  userId      the user ID string used to perform the transaction
-  * @param  clubId      the club ID string used to perform the transaction
+  * @param  userId      the user ID string specifying the person who is being added as a member
+  * @param  clubId      the club ID string specifying the club a person is being added to
   */
   public static void addMembership(String userId, String clubId) {
     StorageHandler.runAddMembershipTransaction(dbClient, userId, clubId);
   }
 
   /**
-  * Performs a transaction that deletes a membership from the database.
-  * This method checks if a person is already a member of a club. If the person is
-  * not a member, it will throw an exception. Otherwise, it deletes the row
-  * containing the user ID and club ID from the Memberships table.
+  * Deletes a membership from the database.
+  * This method calls a transacation that deletes a membership to the table.
   *
   * @param  userId      the user ID string used to perform the transaction
   * @param  clubId      the club ID string used to perform the transaction
@@ -83,7 +79,7 @@ public class StorageHandlerApi {
   *
   * @param  userId            the user ID string used to query and get a list of clubs
   * @param  membershipStatus  the enum specifying whether the user is a member or not
-  * @return clubs             the list of {@link Club}s
+  * @return                   the list of {@link Club}s
   */
   public static List<Club> listClubsFromUserId(String userId, MembershipConstants.MembershipStatus membershipStatus) {
     return StorageHandler.getListOfClubs(dbClient, userId, membershipStatus);
