@@ -72,7 +72,7 @@ export function ClubList(props: ClubListProps) {
   const classes = useStyles();
   const clubsToDisplay = props.clubsToDisplay;
   const [leaveClubAlertOpen, setLeaveAlertOpen] =
-    React.useState<boolean>(/** closed */false);
+    React.useState<boolean>(/* closed */ false);
   const [nameOfClubAlert, setNameofClubAlert] =
     React.useState<string|undefined>(undefined);
 
@@ -90,7 +90,7 @@ export function ClubList(props: ClubListProps) {
     setLeaveAlertOpen(false);
   }
 
-  /** If clubs to display is not yet defined, or 'None' are chosen to display. */
+  /* If clubs to display is not yet defined, or 'None' are chosen to display. */
   if (clubsToDisplay !== undefined)  {
     return (
       <div className={classes.listedClubsContainer}>
