@@ -1,18 +1,14 @@
-import { BackendServiceInterface } from 
-  "../backend_service_interface/backend_service_interface";
-import { MockProfileBackendService } from 
-  "../mock_profile_backend/mock_profile_backend";
-import { PersonProps } from 
-  "../mock_profile_backend/mock_profile_backend";
+import { BackendProfileServiceInterface } from "../backend_service_interface/backend_service_interface";
+import { MockProfileBackendService, PersonProps } from "../mock_backend/mock_profile_backend";
 
-/** Error that occurs when Id does not exist */
+/** Error that occurs when Id does not exist. */
 export class NonExistentProfileError extends Error {
   constructor(readonly id: string) {
     super(`Profile ${id} does not exist`);
   }
 }
 
-/** Error that occurs if Id was unable to be updated */
+/** Error that occurs if Id was unable to be updated. */
 export class FailureToUpdateProfile extends Error {
   constructor(readonly id: string) {
     super(`Unable to update Profile ${id}`);
@@ -24,8 +20,8 @@ export class FailureToUpdateProfile extends Error {
  * backend database.
  */
 export class ProfileHandlerService {
-  /** Backend is responsible for holding all profile information */
-  constructor(private readonly backend: BackendServiceInterface) {}; 
+  /** Backend is responsible for holding all profile information. */
+  constructor(private readonly backend: BackendProfileServiceInterface) {};
 
   async getPerson(id: string) {
     try {
@@ -33,8 +29,8 @@ export class ProfileHandlerService {
       const person = JSON.parse(personJson);
       return person;
     /** 
-     * TODO: Add different types of errors based off of what failure occurs. 
-     * eg. NOT_FOUND
+     * TODO: Add different types of errors based off of what failure occurs,
+     * eg. NOT_FOUND.
      */
     } catch(err) {
       throw new NonExistentProfileError(id);
