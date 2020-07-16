@@ -71,8 +71,10 @@ interface ClubListProps {
 export function ClubList(props: ClubListProps) {
   const classes = useStyles();
   const clubsToDisplay = props.clubsToDisplay;
-  const [leaveClubAlertOpen, setLeaveAlertOpen] = React.useState<boolean>(/** closed */false);
-  const [nameOfClubAlert, setNameofClubAlert] = React.useState<string|undefined>(undefined);
+  const [leaveClubAlertOpen, setLeaveAlertOpen] =
+    React.useState<boolean>(/** closed */false);
+  const [nameOfClubAlert, setNameofClubAlert] =
+    React.useState<string|undefined>(undefined);
 
   const openAlertWindow = (clubId: string) => {
     setNameofClubAlert(clubId);
@@ -219,7 +221,9 @@ function LeaveClubAlertWindow(props: LeaveClubAlertWindowProps) {
             <Button onClick={props.handleAlertWindowClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={() => (props.handleLeaveClub(props.clubId))} color="primary">
+            <Button 
+              onClick={() => (props.handleLeaveClub(props.clubId))} color="primary"
+            >
               Confirm
             </Button>
           </DialogActions>
