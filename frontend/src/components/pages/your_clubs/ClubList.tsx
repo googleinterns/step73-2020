@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     clubTitle: {
       marginBottom: theme.spacing(0),
-      marginRight: theme.spacing(6), 
+      marginRight: theme.spacing(6),
     },
     listedClubsContainer: {
       alignItems: 'center',
@@ -85,7 +85,7 @@ export function ClubList(props: ClubListProps) {
 
   const handleLeaveClub = (clubId: string) => {
     props.handleLeaveClub(clubId);
-    //setLeaveAlertOpen(false);
+    setLeaveAlertOpen(false);
   }
 
   /** If clubs to display is not yet defined, or 'None' are chosen to display. */
@@ -121,7 +121,7 @@ export function ClubList(props: ClubListProps) {
                     Leave Club
                   </Button>
                 </div>
-                <LeaveClubAlertWindow 
+                <LeaveClubAlertWindow
                   clubId={item.name}
                   nameOfClubLeaving={nameOfClubAlert}
                   alertOpen={leaveClubAlertOpen}
@@ -199,7 +199,7 @@ function ContentWarnings(props) {
 interface LeaveClubAlertWindowProps {
   clubId: string,
   nameOfClubLeaving: string,
-  alertOpen: boolean, 
+  alertOpen: boolean,
   handleAlertWindowClose(): void,
   handleLeaveClub(clubId: string): void,
 }

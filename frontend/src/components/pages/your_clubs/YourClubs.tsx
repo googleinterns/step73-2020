@@ -61,7 +61,7 @@ export const YourClubs = () => {
   /** Re-renders Profile only when number of displayed clubs changes. */
   React.useEffect(() => {
     (async() => {
-      let numClubsToDisplay = numClubsDisplayed 
+      const numClubsToDisplay = numClubsDisplayed
         ? setNumClubsDisplayed(numClubsDisplayed)
         : setNumClubsDisplayed(DEFAULT_NUM_DISPLAYED)
       updateClubList();
@@ -74,14 +74,14 @@ export const YourClubs = () => {
 
   const updateClubList = () => {
     (async() => {
-      const listedClubsPromise = 
+      const listedClubsPromise =
         await yourClubsHandlerService.listClubs(numClubsDisplayed);
       setListedClubs(listedClubsPromise);
     })();
   }
 
-  /** 
-   * TODO: Currently using club name as ID; replace with actual ID upon 
+  /**
+   * TODO: Currently using club name as ID; replace with actual ID upon
    *       backend implementation.
    */
   const updateClubListAfterLeaving = (clubId: string) => {
