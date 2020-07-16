@@ -207,7 +207,7 @@ interface LeaveClubAlertWindowProps {
 function LeaveClubAlertWindow(props: LeaveClubAlertWindowProps) {
   return (
     <Dialog open={props.alertOpen && (props.clubId === props.nameOfClubLeaving)}>
-      <DialogTitle>{"Leave Club '" + props.clubId + "'?"}</DialogTitle>
+      <DialogTitle>Leave Club '{props.clubId}'?</DialogTitle>
       <DialogContent>
         <DialogContentText>
           By pressing 'Confirm', you will no longer be a member of Club
