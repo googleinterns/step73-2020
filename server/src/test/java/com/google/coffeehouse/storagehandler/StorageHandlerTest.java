@@ -49,7 +49,7 @@ public class StorageHandlerTest {
 
   @Test
   public void getAddMembershipTransaction() throws Exception {
-    StorageHandlerTestHelper.insertPerson();
+    StorageHandlerTestHelper.insertPerson("person");
     StorageHandler.runAddMembershipTransaction(dbClient, "person", "club");
     ReadContext readContext = dbClient.singleUse();
     Boolean actual = StorageHandlerHelper.checkMembership(readContext, "person", "club");
@@ -58,8 +58,8 @@ public class StorageHandlerTest {
 
   @Test
   public void getDeleteMembershipTransaction() throws Exception {
-    StorageHandlerTestHelper.insertPerson();
-    StorageHandlerTestHelper.insertMembership();
+    StorageHandlerTestHelper.insertPerson("person");
+    StorageHandlerTestHelper.insertMembership("person", "club");
     StorageHandler.runDeleteMembershipTransaction(dbClient, "person", "club");
     ReadContext readContext = dbClient.singleUse();
     Boolean actual = StorageHandlerHelper.checkMembership(readContext, "person", "club");

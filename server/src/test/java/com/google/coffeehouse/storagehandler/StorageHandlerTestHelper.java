@@ -53,12 +53,12 @@ public class StorageHandlerTestHelper {
     dbClient.write(mutations);
   }
 
-  public static void insertPerson() {
+  public static void insertPerson(String person_id) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertBuilder("Persons")
         .set("userId")
-        .to("person")
+        .to(person_id)
         .set("email")
         .to("person@test.com")
         .set("nickname")
@@ -69,12 +69,12 @@ public class StorageHandlerTestHelper {
     dbClient.write(mutations);
   }
 
-  public static void insertClub() {
+  public static void insertClub(String club_id) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Clubs")
         .set("clubId")
-        .to("club")
+        .to(club_id)
         .set("bookId")
         .to("book")
         .set("description")
@@ -89,14 +89,14 @@ public class StorageHandlerTestHelper {
     dbClient.write(mutations);
   }
 
-  public static void insertMembership() {
+  public static void insertMembership(String person_id, String club_id) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertBuilder("Memberships")
         .set("userId")
-        .to("person")
+        .to(person_id)
         .set("clubId")
-        .to("club")
+        .to(club_id)
         .set("membershipType")
         .to(MembershipConstants.MEMBER)
         .set("timestamp")
@@ -105,7 +105,7 @@ public class StorageHandlerTestHelper {
     dbClient.write(mutations);
   }
 
-  public static void insertBook() {
+  public static void insertBook(String book_id) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Books")
@@ -121,12 +121,12 @@ public class StorageHandlerTestHelper {
     dbClient.write(mutations);
   }
 
-    public void insertPersonWithPronouns() {
+  public void insertPersonWithPronouns(String person_id) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Persons")
         .set("userId")
-        .to("hasPronouns")
+        .to(person_id)
         .set("email")
         .to("pronouns@test.com")
         .set("nickname")
@@ -137,12 +137,12 @@ public class StorageHandlerTestHelper {
     dbClient.write(mutations);
   }
 
-  public void insertPersonWithNullPronouns() {
+  public void insertPersonWithNullPronouns(String person_id) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Persons")
         .set("userId")
-        .to("nullPronouns")
+        .to(person_id)
         .set("email")
         .to("null@test.com")
         .set("nickname")
@@ -151,12 +151,12 @@ public class StorageHandlerTestHelper {
     dbClient.write(mutations);
   }
 
-  public void insertPersonWithEmptyPronouns() {
+  public void insertPersonWithEmptyPronouns(String person_id) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Persons")
         .set("userId")
-        .to("emptyPronouns")
+        .to(person_id)
         .set("email")
         .to("empty@test.com")
         .set("nickname")

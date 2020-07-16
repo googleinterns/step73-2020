@@ -42,9 +42,9 @@ public class StorageHandlerHelperTest {
 
   @Test
   public void checkMembership_personInClub() throws Exception {
-    StorageHandlerTestHelper.insertPerson();
-    StorageHandlerTestHelper.insertClub();
-    StorageHandlerTestHelper.insertMembership();
+    StorageHandlerTestHelper.insertPerson("person");
+    StorageHandlerTestHelper.insertClub("club");
+    StorageHandlerTestHelper.insertMembership("person", "club");
     ReadContext readContext = dbClient.singleUse();
     Boolean actual = StorageHandlerHelper.checkMembership(readContext, "person", "club");
     assertTrue(actual);
@@ -52,7 +52,7 @@ public class StorageHandlerHelperTest {
 
   @Test
   public void checkMembership_personNotInClub() throws Exception {
-    StorageHandlerTestHelper.insertClub();
+    StorageHandlerTestHelper.insertClub("club");
     ReadContext readContext = dbClient.singleUse();
     Boolean actual = StorageHandlerHelper.checkMembership(readContext, "personNotInClub", "club");
     assertFalse(actual);
@@ -60,16 +60,16 @@ public class StorageHandlerHelperTest {
 
   @Test
   public void getMemberCount_oneMember() throws Exception {
-    StorageHandlerTestHelper.insertPerson();
-    StorageHandlerTestHelper.insertClub();
-    StorageHandlerTestHelper.insertMembership();
+    StorageHandlerTestHelper.insertPerson("person");
+    StorageHandlerTestHelper.insertClub("club");
+    StorageHandlerTestHelper.insertMembership("person", "club");
     long actual = StorageHandlerHelper.getMemberCount(dbClient, "club");
     assertEquals(1, actual);
   }
 
   @Test
   public void getMemberCount_noMember() throws Exception {
-    StorageHandlerTestHelper.insertClub();
+    StorageHandlerTestHelper.insertClub("club");
     long actual = StorageHandlerHelper.getMemberCount(dbClient, "club");
     assertEquals(0, actual);
   }
