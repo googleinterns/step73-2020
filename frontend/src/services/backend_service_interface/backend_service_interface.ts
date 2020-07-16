@@ -6,5 +6,5 @@ export interface BackendProfileServiceInterface {
 
 export interface BackendYourClubsServiceInterface {
   listClubs(numClubs: number): Promise<string>;
-  leaveClub(id: string): Promise<boolean>;
+  leaveClub(clubId: string): Promise<boolean>;
 }

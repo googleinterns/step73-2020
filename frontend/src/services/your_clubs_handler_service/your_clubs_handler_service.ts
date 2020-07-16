@@ -26,8 +26,8 @@ export class YourClubsHandlerService {
     }
   }
 
-  async leaveClub(id: string) {
-    const success = await this.backend.leaveClub(id);
+  async leaveClub(clubId: string) {
+    const success = await this.backend.leaveClub(clubId);
     return success;
   }
 }
