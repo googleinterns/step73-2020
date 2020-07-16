@@ -56,6 +56,8 @@ const useStyles = makeStyles((theme: Theme) =>
 interface ClubListProps {
   clubsToDisplay: ClubProps[],
   clubsHandlerService,
+  listClubs,
+  numberClubsDisplayed: number,
 }
 
 /**
@@ -74,6 +76,10 @@ export function ClubList(props: ClubListProps) {
   const handleLeaveClubs = (clubId) => {
     (async() => {
       const success = await yourClubsHandlerService.leaveClub(clubId);
+      if (success) {
+        const updatedClubs = await yourClubsHandlerService.listClubs(props.numberClubsDisplayed);
+        props.listClubs(updatedClubs);
+      }
     })();
   }
 
