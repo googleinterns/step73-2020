@@ -18,22 +18,15 @@ import static org.junit.Assert.*;
 
 import com.google.cloud.spanner.Database;
 import com.google.cloud.spanner.DatabaseClient;
-import com.google.cloud.spanner.Mutation;
 import com.google.cloud.spanner.ReadContext;
-import com.google.cloud.spanner.Spanner;
-import com.google.cloud.spanner.SpannerOptions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
-* The StorageHandlerTest class encompasses functions to set up the spanner service
-* and database client, insert data for each specific test, and delete the data
-* inserted from a previous test.
+* The StorageHandlerTest class runs tests to verify the results of transactions.
 */
 @RunWith(JUnit4.class)
 public class StorageHandlerTest {

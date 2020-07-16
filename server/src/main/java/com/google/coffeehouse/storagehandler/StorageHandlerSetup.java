@@ -21,7 +21,7 @@ import com.google.cloud.spanner.SpannerOptions;
 
 /**
 * The StorageHandlerSetup class creates and sets up the Spanner service and database
-* client needed in order to run queries in the database.
+* client needed in order to run transactions in the database.
 */
 public class StorageHandlerSetup {
 
@@ -33,7 +33,7 @@ public class StorageHandlerSetup {
   * This method creates a spanner service which is then returned and passed into
   * the creation and instantiation of a database client
   *
-  * @return     the spanner service
+  * @return   the spanner service
   */
   public static Spanner createSpannerService() {
     // Instantiates a client
@@ -44,11 +44,11 @@ public class StorageHandlerSetup {
 
   /**
   * Returns a database client that is used to query information.
-  * This method creates a database client, which is then returned for the purposes
-  * of querying the database given the functions in StorageHandler.java
+  * This method creates a database client, which is then returned in order to
+  * run transacations in the database.
   *
-  * @param spanner      the spanner service
-  * @return             the database client used to query the database
+  * @param spanner    the spanner service
+  * @return           the database client used to query the database
   */
   public static DatabaseClient createDbClient(Spanner spanner) {
     SpannerOptions options = spanner.getOptions();

@@ -33,30 +33,30 @@ public class StorageHandlerApi {
   private static final DatabaseClient dbClient = StorageHandlerSetup.createDbClient(spanner);
 
   /**
-  * Fetches a person by ID from the database and returns a {@link Person}.
+  * Returns a {@link Person} by fetching using the ID.
   *
   * @param  userId    the user ID string used to query the Persons table from the database
-  * @return           a {@link Person} object containing information from the database
+  * @return           a Person object containing information from the database
   */
   public static Person fetchPersonFromId(String userId) {
     return StorageHandler.getPerson(dbClient, userId);
   }
 
   /**
-  * Fetches a club by ID from the database and returns a {@link Club}.
+  * Returns a {@link Club} by fetching using the ID.
   *
   * @param  clubId    the club ID string used to query the Clubs table from the database.
-  * @return           a {@link Club} containing information from the database
+  * @return           a Club object containing information from the database
   */
   public static Club fetchClubFromId(String clubId) {
     return StorageHandler.getClub(dbClient, clubId);
   }
 
   /**
-  * Fetches members by club ID from the database and returns a list of {@link Persons}s.
+  * Returns a list of {@link Person}s by fetching from the Memberships table using the club ID.
   *
   * @param  clubId    the club ID used to retrieve a list of members
-  * @return           a list of {@link Persons} that are members of a club
+  * @return           a list of Person objects that are members of a club
   */
   public static List<Person> fetchMembersByClubId(String clubId) {
     return StorageHandler.getListOfMembers(dbClient, clubId);
@@ -77,17 +77,17 @@ public class StorageHandlerApi {
   * Deletes a membership from the database.
   * This method calls a transacation that deletes a membership to the table.
   *
-  * @param  userId      the user ID string used to perform the transaction
-  * @param  clubId      the club ID string used to perform the transaction
+  * @param  userId      the user ID string specifying the person who is leaving a club
+  * @param  clubId      the club ID string specifying the club a person is leaving
   */
   public static void deleteMembership(String userId, String clubId) {
     StorageHandler.runDeleteMembershipTransaction(dbClient, userId, clubId);
   }
 
   /**
-  * Creates and returns a list of {@link Club}s depending on the user's membership status.
+  * Returns a list of {@link Club}s depending on the user's membership status.
   *
-  * @param  userId            the user ID string used to query and get a list of clubs
+  * @param  userId            the user ID string specifying the person
   * @param  membershipStatus  the enum specifying whether the user is a member or not
   * @return                   the list of {@link Club}s
   */

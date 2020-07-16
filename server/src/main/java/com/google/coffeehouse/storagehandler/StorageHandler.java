@@ -30,13 +30,15 @@ import com.google.cloud.spanner.ResultSet;
 import com.google.cloud.spanner.Statement;
 import com.google.cloud.spanner.Struct;
 import com.google.cloud.spanner.TransactionContext;
-import com.google.cloud.spanner.Value;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
-* The StorageHandler class holds the query functions to get information from the database.
+* The StorageHandler class holds the functions that either get information from the
+* database and return the respective objects created with that information, or
+* perform transactions to the database.
+* .
 */
 public class StorageHandler {
   public static final String NO_PRONOUNS = "No pronouns";
@@ -171,7 +173,7 @@ public class StorageHandler {
   /**
   * Runs a transaction that deletes a membership from the database.
   * This method checks if a person is already a member of a club by calling a helper function.
-  * If the person does exist, this method will bufferer a single mutation that deletes the
+  * If the person does exist, this method will buffer a single mutation that deletes the
   * membership. Otherwise, it will throw an exception indicating that the person is
   * already not a member of the club.
   *
@@ -229,13 +231,13 @@ public class StorageHandler {
 
   /**
   * Creates and returns a list of {@link Club}s depending on the user's membership status.
-  * This method builds a {@link Club}  for each club that a user is either a member of
-  * or not a member of, Each {@link Club} is added to a list of clubs that gets returned.
+  * This method builds a {@link Club} for each club that a user is either a member of
+  * or not a member of. Each {@link Club} is added to a list that gets returned.
   *
   * @param  dbClient          the database client
   * @param  userId            the user ID string used to query and get a list of clubs
   * @param  membershipStatus  the enum specifying whether the user is a member or not
-  * @return                   the list of {@link Club}s
+  * @return                   the list of Clubs objects
   */
   public static List<Club> getListOfClubs(DatabaseClient dbClient, String userId, MembershipConstants.MembershipStatus membershipStatus) {
     ResultSet resultSet;

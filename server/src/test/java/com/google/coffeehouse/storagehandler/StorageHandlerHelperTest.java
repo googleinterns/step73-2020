@@ -16,7 +16,6 @@ package com.google.coffeehouse.storagehandler;
 
 import static org.junit.Assert.*;
 
-import com.google.cloud.spanner.Database;
 import com.google.cloud.spanner.DatabaseClient;
 import com.google.cloud.spanner.ReadContext;
 import org.junit.After;
@@ -26,8 +25,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /**
-* The StorageHandlerHelpTest class encompasses functions to set up the spanner service
-* and database client, insert data for each specific test, and then deletes the data in tearDown().
+* The StorageHandlerHelpTest class runs tests on the helper functions for the StorageHandler
 */
 @RunWith(JUnit4.class)
 public class StorageHandlerHelperTest {

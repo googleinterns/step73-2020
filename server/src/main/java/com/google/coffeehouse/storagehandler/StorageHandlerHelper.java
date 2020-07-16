@@ -14,8 +14,6 @@
 
 package com.google.coffeehouse.storagehandler;
 
-import com.google.coffeehouse.common.MembershipConstants;
-import com.google.cloud.spanner.DatabaseClient;
 import com.google.cloud.spanner.Key;
 import com.google.cloud.spanner.ReadContext;
 import com.google.cloud.spanner.ResultSet;

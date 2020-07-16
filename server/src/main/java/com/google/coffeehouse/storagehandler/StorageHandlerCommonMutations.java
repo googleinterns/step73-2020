@@ -19,18 +19,14 @@ import com.google.cloud.spanner.Key;
 import com.google.cloud.spanner.KeySet;
 import com.google.cloud.spanner.Mutation;
 import com.google.cloud.spanner.Value;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
-* The StorageHandler class holds the functions that add mutations in order to
-* query from the database.
+* The StorageHandler class holds the functions that add mutations in order to either
+* insert or delete informationg from the database.
 */
 public class StorageHandlerCommonMutations {
   /**
   * Returns a single Mutation that can add a membership to the database.
-  * This method checks if a person is already a member of a club. If the person is
-  * already a member, it will throw an exception. Otherwise, it adss the row containing the user ID and club ID to the Memberships table.
   *
   * @param  userId      the user ID string used to insert the membership into the table
   * @param  clubId      the club ID string used to insert the membership into the table
@@ -51,8 +47,6 @@ public class StorageHandlerCommonMutations {
 
   /**
   * Returns a single Mutation that can delete a membership from the database.
-  * This method checks if a person is already a member of a club. If the person is not a member, it will throw
-  * an exception. Otherwise, it deletes the row containing the user ID and club ID from the Memberships table.
   *
   * @param  userId      the user ID string used to query the membership table
   * @param  clubId      the club ID string used to query the membership table
