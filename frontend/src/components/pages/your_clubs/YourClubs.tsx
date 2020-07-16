@@ -106,7 +106,7 @@ export const YourClubs = () => {
           Create Club
         </Button>
       </div>
-      <ClubList clubsToDisplay={listedClubs} />
+      <ClubList clubsHandlerService={yourClubsHandlerService} clubsToDisplay={listedClubs} />
     </div>
   );
 }

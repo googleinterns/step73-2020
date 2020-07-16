@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface ClubListProps {
   clubsToDisplay: ClubProps[],
+  clubsHandlerService,
 }
 
 /**
@@ -64,14 +65,25 @@ interface ClubListProps {
 export function ClubList(props: ClubListProps) {
   const classes = useStyles();
   const clubsToDisplay = props.clubsToDisplay;
+  const yourClubsHandlerService = props.clubsHandlerService;
+
+  /** 
+   * TODO: Currently using club name as ID; replace with actual ID upon 
+   *       backend implementation.
+   */
+  const handleLeaveClubs = (clubId) => {
+    (async() => {
+      const success = await yourClubsHandlerService.leaveClub(clubId);
+    })();
+  }
 
   /** If clubs to display is not yet defined, or 'None' are chosen to display. */
   if (clubsToDisplay !== undefined)  {
     return (
       <div className={classes.listedClubsContainer}>
         {clubsToDisplay.map((item, index) => (
-          <div className={classes.club} key={item.name}>
-            <Box border={1} borderColor="text.primary" borderRadius={16}>
+          <div className={classes.club}>
+            <Box border={1} borderColor="text.primary" borderRadius={16} key={item.name}>
               <div className={classes.clubContent}>
                 <h2 className={classes.clubTitle}>{item.name}</h2>
                 <LibraryBooksRoundedIcon className={classes.clubPhoto} />
@@ -92,6 +104,7 @@ export function ClubList(props: ClubListProps) {
                     className={classes.button}
                     color="secondary"
                     endIcon={<HighlightOffIcon />}
+                    onClick={() => handleLeaveClubs(item.name)}
                     variant="contained"
                   >
                     Leave Club
