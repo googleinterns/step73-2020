@@ -229,9 +229,8 @@ public class StorageHandler {
 
   /**
   * Creates and returns a list of {@link Club}s depending on the user's membership status.
-  * This method builds a {@link Club} with a club's ID, book ID, description, name, and ownerID
-  * for each club that a user is either a member of or not a member of, and appends each club
-  * to a list of clubs that gets returned.
+  * This method builds a {@link Club}  for each club that a user is either a member of
+  * or not a member of, Each {@link Club} is added to a list of clubs that gets returned.
   *
   * @param  dbClient          the database client
   * @param  userId            the user ID string used to query and get a list of clubs
@@ -239,35 +238,32 @@ public class StorageHandler {
   * @return                   the list of {@link Club}s
   */
   public static List<Club> getListOfClubs(DatabaseClient dbClient, String userId, MembershipConstants.MembershipStatus membershipStatus) {
-    Statement statement;
+    ResultSet resultSet;
     List<Club> clubs = new ArrayList<>();
+    ReadOnlyTransaction transaction = dbClient.readOnlyTransaction();
     if (membershipStatus == MembershipConstants.MembershipStatus.MEMBER) {
-      statement = 
-        Statement.newBuilder(
-                "SELECT userId, clubId "
-                  + "FROM Memberships "
-                  + "WHERE userId = @userId")
-            .bind("userId")
-            .to(userId)
-            .build();
+      resultSet = 
+          transaction
+              .read(
+                "Memberships",
+                KeySet.range(KeyRange.prefix(Key.of(userId))),
+                Arrays.asList("clubId"));
     } else {
-      statement = 
+      Statement statement = 
         Statement.newBuilder(
                 "SELECT clubId "
                   + "FROM Clubs "
-                  + "WHERE NOT EXISTS ("
-                  + "SELECT userId, clubId "
+                  + "WHERE clubId NOT IN ("
+                  + "SELECT clubId "
                   + "FROM Memberships "
                   + "WHERE userId = @userId)")
             .bind("userId")
             .to(userId)
             .build();
+      resultSet = dbClient.singleUse().executeQuery(statement);
     }
-    try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
-      while (resultSet.next()) {
-        String clubId = resultSet.getString("clubId");
-        clubs.add(getClub(dbClient, clubId));
-      }
+    while (resultSet.next()) {
+      clubs.add(getClub(dbClient, resultSet.getString(/**clubIdIndex=**/0)));
     }
     return clubs;
   }

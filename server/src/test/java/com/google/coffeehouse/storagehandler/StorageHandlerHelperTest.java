@@ -19,6 +19,7 @@ import static org.junit.Assert.*;
 import com.google.cloud.spanner.Database;
 import com.google.cloud.spanner.DatabaseClient;
 import com.google.cloud.spanner.ReadContext;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +34,11 @@ public class StorageHandlerHelperTest {
   static DatabaseClient dbClient;
   private static final String INSTANCE_ID = "coffeehouse-instance-test";
   private static final String DATABASE_ID = "coffeehouse-db-test";
+
+  @After
+  public void tearDown() {
+    StorageHandlerTestHelper.setUpClearDb();
+  }
 
   @Before
   public void setUp() {
