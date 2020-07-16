@@ -72,25 +72,21 @@ export const YourClubs = () => {
     setNumClubsDisplayed(Number(event.target.value));
   }
 
-  const updateClubList = () => {
-    (async() => {
-      const listedClubsPromise =
-        await yourClubsHandlerService.listClubs(numClubsDisplayed);
-      setListedClubs(listedClubsPromise);
-    })();
+  const updateClubList = async () => {
+    const listedClubsPromise =
+      await yourClubsHandlerService.listClubs(numClubsDisplayed);
+    setListedClubs(listedClubsPromise);
   }
 
   /**
    * TODO: Currently using club name as ID; replace with actual ID upon
    *       backend implementation.
    */
-  const updateClubListAfterLeaving = (clubId: string) => {
-    (async() => {
-      const success = await yourClubsHandlerService.leaveClub(clubId);
-      if (success) {
-        updateClubList();
-      }
-    })();
+  const updateClubListAfterLeaving = async (clubId: string) => {
+    const success = await yourClubsHandlerService.leaveClub(clubId);
+    if (success) {
+      updateClubList();
+    }
   }
 
   return (
