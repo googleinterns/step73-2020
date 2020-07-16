@@ -42,8 +42,13 @@ export class MockYourClubsBackendService {
     return Promise.resolve(listedClubsJson);
   }
 
-  leaveClub(id: string): Promise<boolean> {
-    /** TODO: Add functionality for user to leave club. */
-    return Promise.resolve(true);
+  leaveClub(clubId: string): Promise<boolean> {
+    for (let i = 0; i < this.mockClubs.length; i++) {
+      if (this.mockClubs[i].name === clubId) {
+        this.mockClubs.splice(i, /** This index only. */ 1);
+        return Promise.resolve(true); /** Successfully left club. */
+      }
+    }
+    return Promise.resolve(false); /** Did not leave club succcessfully. */
   }
 }
