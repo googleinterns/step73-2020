@@ -53,6 +53,16 @@ public class StorageHandlerApi {
   }
 
   /**
+  * Fetches members by club ID from the database and returns a list of {@link Persons}s.
+  *
+  * @param  clubId    the club ID used to retrieve a list of members
+  * @return           a list of {@link Persons} that are members of a club
+  */
+  public static List<Person> fetchMembersByClubId(String clubId) {
+    return StorageHandler.getListOfMembers(dbClient, clubId);
+  }
+
+  /**
   * Adds a membership to the database.
   * This method calls a transacation that adds a membership to the table.
   *

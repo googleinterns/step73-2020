@@ -54,11 +54,11 @@ public class StorageHandlerHelper {
   /**
   * Returns a long that is the number of members in a club, including the owner.
   *
-  * @param  dbClient  the database client
-  * @param  userId    the user ID string used to query and get how many users have that key
-  * @return           the long representing the number of results from the query
+  * @param  readContext  the context for an attempt to perform a transaction
+  * @param  userId       the club ID string used to get number of members
+  * @return              the long representing the number of members in the club
   */
-  public static long getMemberCount(DatabaseClient dbClient, String clubId) {
+  public static long getMemberCount(ReadContext readContext, String clubId) {
     long count = 0;
     Statement statement = 
         Statement.newBuilder(
@@ -68,7 +68,7 @@ public class StorageHandlerHelper {
               .bind("clubId")
               .to(clubId)
               .build();
-    try (ResultSet resultSet = dbClient.singleUse().executeQuery(statement)) {
+    try (ResultSet resultSet = readContext.executeQuery(statement)) {
       while (resultSet.next()) {
         count = resultSet.getLong("count");
       }

@@ -63,14 +63,16 @@ public class StorageHandlerHelperTest {
     StorageHandlerTestHelper.insertPerson("person");
     StorageHandlerTestHelper.insertClub("club");
     StorageHandlerTestHelper.insertMembership("person", "club");
-    long actual = StorageHandlerHelper.getMemberCount(dbClient, "club");
+    ReadContext readContext = dbClient.singleUse();
+    long actual = StorageHandlerHelper.getMemberCount(readContext, "club");
     assertEquals(1, actual);
   }
 
   @Test
   public void getMemberCount_noMember() throws Exception {
     StorageHandlerTestHelper.insertClub("club");
-    long actual = StorageHandlerHelper.getMemberCount(dbClient, "club");
+    ReadContext readContext = dbClient.singleUse();
+    long actual = StorageHandlerHelper.getMemberCount(readContext, "club");
     assertEquals(0, actual);
   }
 }
