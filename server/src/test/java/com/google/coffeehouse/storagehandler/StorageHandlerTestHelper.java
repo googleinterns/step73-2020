@@ -166,134 +166,134 @@ public class StorageHandlerTestHelper {
     dbClient.write(mutations);
   }
 
-  public void insertBookWithAuthorAndIsbn() {
+  public void insertBookWithAuthorAndIsbn(String book_id, String author, String isbn, String title) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Books")
         .set("bookId")
-        .to("bookWithAuthorAndIsbn")
+        .to(book_id)
         .set("author")
-        .to("bell hooks")
+        .to(author)
         .set("isbn")
-        .to("9780060959470")
+        .to(isbn)
         .set("title")
-        .to("all about love: new visions")
+        .to(title)
         .build());
     dbClient.write(mutations);
   }
 
-  public void insertBookWithNullAuthor() {
+  public void insertBookWithNullAuthor(String book_id, String isbn, String title) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Books")
         .set("bookId")
-        .to("bookWithNullAuthor")
+        .to(book_id)
         .set("isbn")
-        .to("9780060959470")
+        .to(isbn)
         .set("title")
-        .to("all about love: new visions")
+        .to(title)
         .build());
     dbClient.write(mutations);
   }
 
-  public void insertBookWithNullIsbn() {
+  public void insertBookWithNullIsbn(String book_id, String author, String title) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Books")
         .set("bookId")
-        .to("bookWithNullIsbn")
+        .to(book_id)
         .set("author")
-        .to("bell hooks")
+        .to(author)
         .set("title")
-        .to("all about love: new visions")
+        .to(title)
         .build());
     dbClient.write(mutations);
   }
 
-  public void insertBookWithNullAuthorAndNullIsbn() {
+  public void insertBookWithNullAuthorAndNullIsbn(String book_id, String title) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Books")
         .set("bookId")
-        .to("bookWithNullAuthorAndNullIsbn")
+        .to(book_id)
         .set("title")
-        .to("anonymous book about love")
+        .to(title)
         .build());
     dbClient.write(mutations);
   }
 
-  public void insertBookWithEmptyAuthor() {
+  public void insertBookWithEmptyAuthor(String book_id, String isbn, String title) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Books")
         .set("bookId")
-        .to("bookWithEmptyAuthor")
-        .set("author")
-        .to("")
-        .set("isbn")
-        .to("9780060959470")
-        .set("title")
-        .to("all about love: new visions")
-        .build());
-    dbClient.write(mutations);
-  }
-
-  public void insertBookWithEmptyIsbn() {
-    List<Mutation> mutations = new ArrayList<>();
-    mutations.add(
-      Mutation.newInsertOrUpdateBuilder("Books")
-        .set("bookId")
-        .to("bookWithEmptyIsbn")
-        .set("author")
-        .to("bell hooks")
-        .set("isbn")
-        .to("")
-        .set("title")
-        .to("all about love: new visions")
-        .build());
-    dbClient.write(mutations);
-  }
-
-  public void insertBookWithEmptyAuthorAndEmptyIsbn() {
-    List<Mutation> mutations = new ArrayList<>();
-    mutations.add(
-      Mutation.newInsertOrUpdateBuilder("Books")
-        .set("bookId")
-        .to("bookWithEmptyAuthorAndEmptyIsbn")
+        .to(book_id)
         .set("author")
         .to("")
         .set("isbn")
-        .to("")
+        .to(isbn)
         .set("title")
-        .to("anonymous book about love")
+        .to(title)
         .build());
     dbClient.write(mutations);
   }
 
-  public void insertBookWithEmptyAuthorAndNullIsbn() {
+  public void insertBookWithEmptyIsbn(String book_id, String author, String title) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Books")
         .set("bookId")
-        .to("bookWithEmptyAuthorAndNullIsbn")
+        .to(book_id)
         .set("author")
-        .to("")
-        .set("title")
-        .to("anonymous book about love")
-        .build());
-    dbClient.write(mutations);
-  }
-
-  public void insertBookWithNullAuthorAndEmptyIsbn() {
-    List<Mutation> mutations = new ArrayList<>();
-    mutations.add(
-      Mutation.newInsertOrUpdateBuilder("Books")
-        .set("bookId")
-        .to("bookWithNullAuthorAndEmptyIsbn")
+        .to(author)
         .set("isbn")
         .to("")
         .set("title")
-        .to("anonymous book about love")
+        .to(title)
+        .build());
+    dbClient.write(mutations);
+  }
+
+  public void insertBookWithEmptyAuthorAndEmptyIsbn(String book_id, String title) {
+    List<Mutation> mutations = new ArrayList<>();
+    mutations.add(
+      Mutation.newInsertOrUpdateBuilder("Books")
+        .set("bookId")
+        .to(book_id)
+        .set("author")
+        .to("")
+        .set("isbn")
+        .to("")
+        .set("title")
+        .to(title)
+        .build());
+    dbClient.write(mutations);
+  }
+
+  public void insertBookWithEmptyAuthorAndNullIsbn(String book_id, String title) {
+    List<Mutation> mutations = new ArrayList<>();
+    mutations.add(
+      Mutation.newInsertOrUpdateBuilder("Books")
+        .set("bookId")
+        .to(book_id)
+        .set("author")
+        .to("")
+        .set("title")
+        .to(title)
+        .build());
+    dbClient.write(mutations);
+  }
+
+  public void insertBookWithNullAuthorAndEmptyIsbn(String book_id, String title) {
+    List<Mutation> mutations = new ArrayList<>();
+    mutations.add(
+      Mutation.newInsertOrUpdateBuilder("Books")
+        .set("bookId")
+        .to(book_id)
+        .set("isbn")
+        .to("")
+        .set("title")
+        .to(title)
         .build());
     dbClient.write(mutations);
   }
