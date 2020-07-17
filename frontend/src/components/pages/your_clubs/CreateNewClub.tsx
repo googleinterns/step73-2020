@@ -8,6 +8,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { makeStyles } from "@material-ui/core/styles";
+import { ServiceContext } from "../../contexts/contexts";
 import TextField from '@material-ui/core/TextField';
 import { Theme } from "@material-ui/core/styles";
 
@@ -29,7 +30,11 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
   const classes = useStyles();
   const [club, setClub] = React.useState<ClubProps|undefined>(undefined);
   const [book, setBook] = React.useState<BookProps|undefined>(undefined);
+  const [missingField, setMissingField] = React.useState<boolean>(false);
   const [contentWarningsDisplay, setContentWarningsDisplay] = React.useState<string|undefined>(undefined);
+
+  const contextServices = React.useContext(ServiceContext);
+  const yourClubsHandlerService = contextServices.yourClubsHandlerService;
 
   const handleClubNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setClub({...club, name: event.target.value});
@@ -48,18 +53,29 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
 
   const handleBookTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setBook({...book, title: event.target.value});
+    setClub({...club, currentBook: book});
   }
 
   const handleBookAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setBook({...book, author: event.target.value});
+    setClub({...club, currentBook: book});
   }
 
   const handleBookIsbnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setBook({...book, isbn: event.target.value});
+    setClub({...club, currentBook: book});
   }
 
   const handleClubSubmission = async () => {
-    return;
+    if (club.name === "" || club.description === "" ||book.title === "" || book.author === "") {
+      setMissingField(true);
+      return
+    }
+    setMissingField(false);
+    const success = yourClubsHandlerService.createClub(club);
+    if (success) {
+      props.closeWindow();
+    }
   }
 
   return (
