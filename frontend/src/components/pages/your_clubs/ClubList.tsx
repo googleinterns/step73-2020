@@ -10,6 +10,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import { Theme } from "@material-ui/core/styles";
 
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     break : {
@@ -39,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     clubTitle: {
       marginBottom: theme.spacing(0),
-      marginRight: theme.spacing(6), 
+      marginRight: theme.spacing(6),
     },
     listedClubsContainer: {
       alignItems: 'center',
@@ -55,6 +61,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface ClubListProps {
   clubsToDisplay: ClubProps[],
+  handleLeaveClub(clubId: string): void,
 }
 
 /**
@@ -64,8 +71,26 @@ interface ClubListProps {
 export function ClubList(props: ClubListProps) {
   const classes = useStyles();
   const clubsToDisplay = props.clubsToDisplay;
+  const [leaveClubAlertOpen, setLeaveAlertOpen] =
+    React.useState<boolean>(/* closed */ false);
+  const [nameOfClubAlert, setNameofClubAlert] =
+    React.useState<string|undefined>(undefined);
 
-  /** If clubs to display is not yet defined, or 'None' are chosen to display. */
+  const openAlertWindow = (clubId: string) => {
+    setNameofClubAlert(clubId);
+    setLeaveAlertOpen(true);
+  }
+
+  const closeAlertWindow = () => {
+    setLeaveAlertOpen(false);
+  }
+
+  const handleLeaveClub = (clubId: string) => {
+    props.handleLeaveClub(clubId);
+    setLeaveAlertOpen(false);
+  }
+
+  /* If clubs to display is not yet defined, or 'None' are chosen to display. */
   if (clubsToDisplay !== undefined)  {
     return (
       <div className={classes.listedClubsContainer}>
@@ -92,11 +117,19 @@ export function ClubList(props: ClubListProps) {
                     className={classes.button}
                     color="secondary"
                     endIcon={<HighlightOffIcon />}
+                    onClick={() => (openAlertWindow(item.name))}
                     variant="contained"
                   >
                     Leave Club
                   </Button>
                 </div>
+                <LeaveClubAlertWindow
+                  clubId={item.name}
+                  nameOfClubLeaving={nameOfClubAlert}
+                  alertOpen={leaveClubAlertOpen}
+                  handleAlertWindowClose={closeAlertWindow}
+                  handleLeaveClub={handleLeaveClub}
+                />
               </div>
             </Box>
           </div>
@@ -109,7 +142,7 @@ export function ClubList(props: ClubListProps) {
 }
 
 interface ClubDescriptionProps {
-  description: string;
+  description: string,
 };
 
 /** Displays the club's description. */
@@ -152,15 +185,46 @@ function ContentWarnings(props) {
   const contentWarnings = props.contentWarnings;
 
   return (
-    <>
-      <p className={classes.textElement}>
-        <b>Content Warnings:</b>
-        {contentWarnings.map((item, index) => (
-          <div>
-            - <b>{item}<br/></b>
-          </div>
-        ))}
-      </p>
-    </>
+    <p className={classes.textElement}>
+      <b>Content Warnings:</b>
+      {contentWarnings.map((item, index) => (
+        <>
+          - <b>{item}<br/></b>
+        </>
+      ))}
+    </p>
+  );
+}
+
+interface LeaveClubAlertWindowProps {
+  clubId: string,
+  nameOfClubLeaving: string,
+  alertOpen: boolean,
+  handleAlertWindowClose(): void,
+  handleLeaveClub(clubId: string): void,
+}
+
+function LeaveClubAlertWindow(props: LeaveClubAlertWindowProps) {
+  return (
+    <Dialog open={props.alertOpen && (props.clubId === props.nameOfClubLeaving)}>
+      <DialogTitle>Leave Club '{props.clubId}'?</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          By pressing 'Confirm', you will no longer be a member of Club
+          '{props.clubId}'. This means that you will no longer have access
+          to its content, including discussion forums and material.
+        </DialogContentText>
+        <DialogActions>
+          <Button onClick={props.handleAlertWindowClose} color="primary">
+            Cancel
+          </Button>
+          <Button 
+            onClick={() => (props.handleLeaveClub(props.clubId))} color="primary"
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </DialogContent>
+    </Dialog>
   );
 }

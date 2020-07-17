@@ -58,20 +58,35 @@ export const YourClubs = () => {
   const [numClubsDisplayed, setNumClubsDisplayed] =
     React.useState<number|undefined>(DEFAULT_NUM_DISPLAYED);
 
-  /** Re-renders Profile only when number of displayed clubs changes. */
+  /* Re-renders Profile only when number of displayed clubs changes. */
   React.useEffect(() => {
     (async() => {
-      let numClubsToDisplay = numClubsDisplayed 
-        ? numClubsDisplayed 
-        : DEFAULT_NUM_DISPLAYED;
-      const listedClubsPromise =
-        await yourClubsHandlerService.listClubs(numClubsToDisplay);
-      setListedClubs(listedClubsPromise);
+      const numClubsToDisplay = numClubsDisplayed
+        ? setNumClubsDisplayed(numClubsDisplayed)
+        : setNumClubsDisplayed(DEFAULT_NUM_DISPLAYED)
+      updateClubList();
     })();
   }, [numClubsDisplayed]);
 
   const handleNumClubsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNumClubsDisplayed(Number(event.target.value));
+  }
+
+  const updateClubList = async () => {
+    const listedClubsPromise =
+      await yourClubsHandlerService.listClubs(numClubsDisplayed);
+    setListedClubs(listedClubsPromise);
+  }
+
+  /**
+   * TODO: Currently using club name as ID; replace with actual ID upon
+   *       backend implementation.
+   */
+  const updateClubListAfterLeaving = async (clubId: string) => {
+    const success = await yourClubsHandlerService.leaveClub(clubId);
+    if (success) {
+      updateClubList();
+    }
   }
 
   return (
@@ -106,7 +121,10 @@ export const YourClubs = () => {
           Create Club
         </Button>
       </div>
-      <ClubList clubsToDisplay={listedClubs} />
+      <ClubList
+        clubsToDisplay={listedClubs}
+        handleLeaveClub={updateClubListAfterLeaving}
+      />
     </div>
   );
 }
