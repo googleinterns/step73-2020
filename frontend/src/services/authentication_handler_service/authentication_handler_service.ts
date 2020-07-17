@@ -3,7 +3,7 @@ import { CLIENT_ID } from "./authentication_constants";
 
 /**
  * Communicates with gapi to retrieve auth code from user.
- * Exchanges auth code and redirect Uri for ID token from backend.
+ * Exchanges auth code and redirect URI for ID token from backend.
  */
 export class AuthenticationHandlerService {
   /** Backend is responsible for retrieving the ID token. */
