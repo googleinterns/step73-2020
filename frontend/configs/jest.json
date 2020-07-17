@@ -19,7 +19,7 @@
   "transformIgnorePatterns": [
     "/node_modules/"
   ],
-  "testRegex": "/tests/.*\\.(ts|tsx)$",
+  "testRegex": "/src/.*\\.spec.(ts|tsx)$",
   "moduleDirectories": [
     "node_modules"
   ],

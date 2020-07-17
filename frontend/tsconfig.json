@@ -11,6 +11,9 @@
     "include": [
         "./src/**/*"
     ],
+    "exclude": [
+        "**/*.spec.ts*"
+    ],
     "awesomeTypescriptLoaderOptions": {
         "reportFiles": [
             "./src/**/*"
