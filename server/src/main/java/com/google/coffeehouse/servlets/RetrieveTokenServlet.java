@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 public class RetrieveTokenServlet extends HttpServlet {
   /** 
    * The error string sent by the response object in doPost when the body of the 
-   * POST request cannot be parsed into JSON and a code/redirectUri retrieved.
+   * POST request cannot be parsed into JSON and a code/redirect URI retrieved.
    */
   public static final String BODY_ERROR = "- unable to parse body.";
   /** The logged error string when an error parsing the body of the POST request is encountered. */
