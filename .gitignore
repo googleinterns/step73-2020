@@ -2,6 +2,8 @@ target/
 .idea
 
 node_modules/
+__coverage__/
+__mocks__/
 package-lock.json
 
 server.log
