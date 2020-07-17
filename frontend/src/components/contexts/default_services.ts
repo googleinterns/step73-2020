@@ -1,5 +1,5 @@
 import { AuthenticationHandlerService } from "../../services/authentication_handler_service/authentication_handler_service";
-import { AuthenticationBackendService } from "../../services/actual_backend/actual_authentication_backend"
+import { AuthenticationBackendService } from "../../services/actual_backend/actual_authentication_backend";
 import { MockProfileBackendService } from "../../services/mock_backend/mock_profile_backend";
 import { MockYourClubsBackendService } from "../../services/mock_backend/mock_your_clubs_backend";
 import { NUM_PROFILES } from "../../utils/temporary_testing_consts";
