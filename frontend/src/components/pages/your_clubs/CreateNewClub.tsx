@@ -1,6 +1,6 @@
 import * as React from "react";
+import { BookProps, ClubProps } from "../../../services/mock_backend/mock_your_clubs_backend";
 import Button from "@material-ui/core/Button";
-import { ClubProps } from "../../../services/mock_backend/mock_your_clubs_backend";
 import { createStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -28,6 +28,8 @@ interface CreateNewClubWindowProps {
 export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
   const classes = useStyles();
   const [club, setClub] = React.useState<ClubProps|undefined>(undefined);
+  const [book, setBook] = React.useState<BookProps|undefined>(undefined);
+  const [contentWarningsDisplay, setContentWarningsDisplay] = React.useState<string|undefined>(undefined);
 
   const handleClubNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setClub({...club, name: event.target.value});
@@ -38,8 +40,26 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
   }
 
   const handleClubContentWarningsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const contentWarningsArray = [event.target.value];
+    /* User should see newline chars, but for array the string must be split. */
+    setContentWarningsDisplay(event.target.value);
+    const contentWarningsArray = (event.target.value).split('\n');
     setClub({...club, contentWarnings: contentWarningsArray});
+  }
+
+  const handleBookTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setBook({...book, title: event.target.value});
+  }
+
+  const handleBookAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setBook({...book, author: event.target.value});
+  }
+
+  const handleBookIsbnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setBook({...book, isbn: event.target.value});
+  }
+
+  const handleClubSubmission = async () => {
+    return;
   }
 
   return (
@@ -89,30 +109,48 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
             <TextField
               fullWidth
               helperText = {"Content Warnings that are relevant to any reading \
-                            material or discussions that occur in the club."}
+                            material or discussions that occur in the club. \
+                            Please put each on a new line."}
               id="description"
               InputLabelProps={{
                 shrink: true,
               }}
               label="Club Content Warnings"
               margin="normal"
+              multiline
               onChange={handleClubContentWarningsChange}
               placeholder="Content Warnings"
               required
-              value={club ? club.contentWarnings: ""}
+              rows={4}
+              value={contentWarningsDisplay ? contentWarningsDisplay : ""}
               variant="outlined" 
             />
             <div>
-              <TextField label="Book Name" className={classes.bookField} />
-              <TextField label="Book Author" className={classes.bookField} /> 
-              <TextField label="Book ISBN" className={classes.bookField} /> 
+              <TextField 
+                className={classes.bookField}
+                label="Book Title"
+                onChange={handleBookTitleChange}
+                value={book ? book.title : ""}
+              />
+              <TextField 
+                className={classes.bookField}
+                label="Book Author"
+                onChange={handleBookAuthorChange}
+                value={book ? book.author : ""}
+              /> 
+              <TextField  
+                className={classes.bookField}
+                label="Book ISBN"
+                onChange={handleBookIsbnChange}
+                value={book? book.isbn : ""}
+              /> 
             </div>
           </form>
           <DialogActions>
             <Button onClick={props.closeWindow} color="primary">
               Cancel
             </Button>
-            <Button onClick={props.closeWindow} color="primary">
+            <Button onClick={handleClubSubmission} color="primary">
               Submit
             </Button>
           </DialogActions>
