@@ -2,7 +2,6 @@ import * as React from "react";
 import Button from "@material-ui/core/Button";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { createStyles } from "@material-ui/core/styles";
-import { defaultServices } from "../../contexts/contexts";
 import ErrorIcon from '@material-ui/icons/Error';
 import FilledInput from "@material-ui/core/FilledInput";
 import FormControl from "@material-ui/core/FormControl";
