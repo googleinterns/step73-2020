@@ -142,7 +142,7 @@ export function ClubList(props: ClubListProps) {
 }
 
 interface ClubDescriptionProps {
-  description: string;
+  description: string,
 };
 
 /** Displays the club's description. */
