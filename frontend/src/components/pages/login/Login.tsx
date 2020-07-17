@@ -1,5 +1,5 @@
 import * as React from "react";
-import GoogleSignInButton from "../../sign_in/GoogleSignInButton"
+import GoogleSignInButton from "../../sign_in/GoogleSignInButton";
 
 export const Login = () => {
   const tokenConsumer = (token: string) => {

@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as TestUtils from "react-dom/test-utils";
-import GoogleSignInButton from "./GoogleSignInButton"
+import GoogleSignInButton from "./GoogleSignInButton";
 import { ServiceContext } from "../contexts/contexts";
 
 const EXPECTED_SCOPES = "profile email openid";
