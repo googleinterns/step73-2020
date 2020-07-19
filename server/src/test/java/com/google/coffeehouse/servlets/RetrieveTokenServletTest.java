@@ -81,7 +81,7 @@ public class RetrieveTokenServletTest {
     when(response.getWriter()).thenReturn(new PrintWriter(stringWriter));
 
     tokenRequest = mock(GoogleAuthorizationCodeTokenRequest.class);
-    tokenResponse= mock(GoogleTokenResponse.class);
+    tokenResponse = mock(GoogleTokenResponse.class);
     when(tokenRequest.setCode(any(String.class))).thenReturn(tokenRequest);
     when(tokenRequest.setRedirectUri(any(String.class))).thenReturn(tokenRequest);
     when(tokenRequest.execute()).thenReturn(tokenResponse);
