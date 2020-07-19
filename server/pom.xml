@@ -54,7 +54,7 @@
 
     <dependency>
       <groupId>com.google.api-client</groupId>
-      <artifactId>google-api-client</artifactId>
+      <artifactId>google-api-client-gson</artifactId>
       <version>1.30.10</version>
     </dependency>
 

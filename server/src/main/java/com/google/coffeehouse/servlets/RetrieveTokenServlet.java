@@ -19,8 +19,8 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.cloud.secretmanager.v1.AccessSecretVersionResponse;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
 import com.google.cloud.secretmanager.v1.SecretVersionName;
@@ -65,7 +65,7 @@ public class RetrieveTokenServlet extends HttpServlet {
 
   private static final Gson gson = new Gson();
   private static final HttpTransport transport = new NetHttpTransport();
-  private static final JacksonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+  private static final GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
   private GoogleIdTokenVerifier verifier =
       new GoogleIdTokenVerifier.Builder(transport, jsonFactory).build();
   private static final String CLIENT_SECRET = getSecret();
