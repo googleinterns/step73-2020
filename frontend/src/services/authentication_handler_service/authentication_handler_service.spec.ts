@@ -1,4 +1,4 @@
-import { AuthenticationHandlerService } from "./authentication_handler_service";
+import { AuthenticationHandlerService, FailureToSignIn } from "./authentication_handler_service";
 
 // load these objects to overwrite gapi calls.
 let authInstance = {};
@@ -6,7 +6,7 @@ window.gapi = {
   load: jest.fn(),
   auth2: {
     getAuthInstance: jest.fn().mockReturnValue(authInstance),
-  };
+  },
 };
 
 const EXPECTED_SCOPES = "profile email openid";
@@ -15,51 +15,47 @@ const authService = new AuthenticationHandlerService({
   retrieveToken: jest.fn().mockReturnValue(TOKEN),
 });
 const failingAuthService = new AuthenticationHandlerService({
-  retrieveToken: jest.fn().mockImplementation(() => throw new Error()),
+  retrieveToken: jest.fn().mockImplementation(() => {throw new Error()}),
 });
 const successfulGrantOffileAccess = jest.fn().mockReturnValue({code: "123"});
 
-it("calls the token consumer function if successful", async () => {
+it("returns the correct string if successful", async () => {
   authInstance.grantOfflineAccess = successfulGrantOffileAccess;
 
-  let expectedConsumer = jest.fn();
-  await authService.signIn(EXPECTED_SCOPES, expectedConsumer, jest.fn());
+  let token = await authService.signIn(EXPECTED_SCOPES);
 
-  expect(expectedConsumer).toHaveBeenCalledWith(TOKEN);
+  expect(token).toBe(TOKEN);
 });
 
-it("calls failure if grantOffileAccess returns undefined", async () => {
+it("throws error if grantOffileAccess returns undefined", async () => {
   authInstance.grantOfflineAccess = jest.fn().mockReturnValue(undefined);
 
-  const expectedFailure = jest.fn();
-  await authService.signIn(EXPECTED_SCOPES, jest.fn(), expectedFailure);
-
-  expect(expectedFailure).toHaveBeenCalled();
+  await expect(authService.signIn(EXPECTED_SCOPES))
+  .rejects
+  .toThrow(FailureToSignIn);
 });
 
-it("calls failure if grantOffileAccess throws error", async () => {
+it("throws error if grantOffileAccess throws error", async () => {
   authInstance.grantOfflineAccess = jest.fn().mockImplementation(() => {
     throw new Error();
   });
 
-  const expectedFailure = jest.fn();
-  await authService.signIn(EXPECTED_SCOPES, jest.fn(), expectedFailure);
-
-  expect(expectedFailure).toHaveBeenCalled();
+  await expect(authService.signIn(EXPECTED_SCOPES))
+  .rejects
+  .toThrow(FailureToSignIn);
 });
 
-it("calls failure if backend API throws error", async () => {
+it("throws error if backend API throws error", async () => {
   authInstance.grantOfflineAccess = successfulGrantOffileAccess;
 
-  const expectedFailure = jest.fn();
-  await failingAuthService.signIn(EXPECTED_SCOPES, jest.fn(), expectedFailure);
-
-  expect(expectedFailure).toHaveBeenCalled();
+  await expect(failingAuthService.signIn(EXPECTED_SCOPES))
+  .rejects
+  .toThrow(FailureToSignIn);
 });
 
 it("signs out the user", async () => {
   authInstance.grantOfflineAccess = successfulGrantOffileAccess;
-  await authService.signIn(EXPECTED_SCOPES, jest.fn(), jest.fn());
+  await authService.signIn(EXPECTED_SCOPES);
 
   authService.signOut().then(success => {
     expect(success).toBe(true);

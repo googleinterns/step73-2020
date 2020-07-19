@@ -1,6 +1,16 @@
 import { BackendAuthenticationInterface } from "../backend_service_interface/backend_service_interface";
 import { CLIENT_ID } from "./authentication_constants";
 
+/** Error that occurs if sign in fails. */
+export class FailureToSignIn extends Error {
+  constructor() {
+    super("Sign in has failed");
+
+    // Explicitly set prototype to allow expect().toThrow() testing.
+    Object.setPrototypeOf(this, FailureToSignIn.prototype);
+  }
+}
+
 /**
  * Communicates with gapi to retrieve auth code from user.
  * Exchanges auth code and redirect URI for ID token from backend.
@@ -20,23 +30,18 @@ export class AuthenticationHandlerService {
   /**
    * Signs the user in, retrieving a token from the backend.
    * @param scopes the scopes our app requests for oauth
-   * @param tokenConsumer a function that is called once our token is generated
-   * @param onFailure a function that is called if we fail to get a token/code
+   * @return the string of the JWT token retrieved by the backend
+   * @throws FailureToSignIn if sign in fails
    */
-  async signIn(
-      scopes: string,
-      tokenConsumer: (token: string) => void,
-      onFailure: () => void): Promise<void> {
+  async signIn(scopes: string): Promise<string> {
     let code: string | undefined = await this.getAuthCode({scope: scopes});
     if (code === undefined) {
-      return onFailure();
+      throw new FailureToSignIn();
     }
     try {
-      let idToken: string = 
-        await this.backend.retrieveToken(code, window.location.origin);
-      tokenConsumer(idToken);
+      return await this.backend.retrieveToken(code, window.location.origin);
     } catch (err) {
-      onFailure();
+      throw new FailureToSignIn();
     }
   }
 
@@ -63,5 +68,4 @@ export class AuthenticationHandlerService {
       return;
     }
   }
-
 }
