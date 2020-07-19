@@ -17,17 +17,6 @@ export class AuthenticationHandlerService {
     });
   }
 
-  private async getAuthCode(
-      opt?: gapi.auth2.OfflineAccessOptions): Promise<string | undefined> {
-    const authInstance = window.gapi.auth2.getAuthInstance();
-    try {
-      const { code } = await authInstance.grantOfflineAccess(opt);
-      return code;
-    } catch (err) {
-      return;
-    }
-  }
-
   /**
    * Signs the user in, retrieving a token from the backend.
    * @param scopes the scopes our app requests for oauth
@@ -63,4 +52,16 @@ export class AuthenticationHandlerService {
     await authInstance.signOut();
     return true;
   }
+
+  private async getAuthCode(
+      opt?: gapi.auth2.OfflineAccessOptions): Promise<string | undefined> {
+    const authInstance = window.gapi.auth2.getAuthInstance();
+    try {
+      const { code } = await authInstance.grantOfflineAccess(opt);
+      return code;
+    } catch (err) {
+      return;
+    }
+  }
+
 }

@@ -93,18 +93,6 @@ public class RetrieveTokenServlet extends HttpServlet {
     super();
   }
 
-  private static String getSecret() {
-    try {
-      SecretManagerServiceClient client = SecretManagerServiceClient.create();
-      SecretVersionName secretVersionName = SecretVersionName.of(
-            "coffeehouse-step2020", "GoogleOauthClientSecret", "1");
-      AccessSecretVersionResponse response = client.accessSecretVersion(secretVersionName);
-      return response.getPayload().getData().toStringUtf8();
-    } catch (Exception e) {
-      throw new RuntimeException("Unable to get Oauth client secret");
-    }
-  }
-
   /** 
    * Exchanges an auth code for an ID/auth/refresh token. Returns the ID token in JSON format.
    * @param request the POST request that must have a JSON body with a valid auth code and 
@@ -152,5 +140,17 @@ public class RetrieveTokenServlet extends HttpServlet {
     
     response.setContentType("application/json;");
     response.getWriter().println(gson.toJson(idToken));
+  }
+
+  private static String getSecret() {
+    try {
+      SecretManagerServiceClient client = SecretManagerServiceClient.create();
+      SecretVersionName secretVersionName = SecretVersionName.of(
+            "coffeehouse-step2020", "GoogleOauthClientSecret", "1");
+      AccessSecretVersionResponse response = client.accessSecretVersion(secretVersionName);
+      return response.getPayload().getData().toStringUtf8();
+    } catch (Exception e) {
+      throw new RuntimeException("Unable to get Oauth client secret");
+    }
   }
 }
