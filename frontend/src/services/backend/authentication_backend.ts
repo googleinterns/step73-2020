@@ -5,9 +5,14 @@
 export class AuthenticationBackendService {
   /** Returns the ID token given an auth code and redirect URI. */
   async retrieveToken(code: string, redirectUri: string): Promise<string> {
+    let bodyContents = {
+      code: code,
+      redirectUri: redirectUri,
+    }
+
     return fetch("/api/retrieve-token", { 
       method: "POST",
-      body: `{code: "${code}", redirectUri: "${redirectUri}"}`,
+      body: JSON.stringify(bodyContents),
     }).then(response => response.json());
   }
 }
