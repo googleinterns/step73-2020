@@ -39,6 +39,10 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/api/retrieve-token")
 public class RetrieveTokenServlet extends HttpServlet {
+  /** The name of the key to be associated with the auth code in the JSON. */
+  public static final String CODE_KEY_NAME = "code";
+  /** The name of the key to be associated with the redirect URI in the JSON. */
+  public static final String REDIRECTURI_KEY_NAME = "redirectUri";
   /** 
    * The error string sent by the response object in doPost when the body of the 
    * POST request cannot be parsed into JSON and a code/redirect URI retrieved.
@@ -47,10 +51,6 @@ public class RetrieveTokenServlet extends HttpServlet {
   /** The logged error string when an error parsing the body of the POST request is encountered. */
   public static final String LOG_BODY_ERROR_MESSAGE = 
       "Body unable to be parsed in RetrieveTokenServlet: ";
-  /** The name of the key to be associated with the auth code in the JSON. */
-  public static final String CODE_KEY_NAME = "code";
-  /** The name of the key to be associated with the redirect URI in the JSON. */
-  public static final String REDIRECTURI_KEY_NAME = "redirectUri";
   /** Message of the exception thrown when unable to find a valid code/redirect URI in body. */
   public static final String NO_CODE_REDIRECTURI = 
       "Unable to find 'code' or 'redirectUri'";
