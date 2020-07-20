@@ -4,17 +4,23 @@ import * as TestUtils from "react-dom/test-utils";
 import GoogleSignInButton from "./GoogleSignInButton";
 import { ServiceContext } from "../contexts/contexts";
 
-const EXPECTED_SCOPES = "profile email openid";
 const expectedFailure = jest.fn();
 const expectedConsumer = jest.fn();
+const EXPECTED_SCOPES = "profile email openid";
 const EXPECTED_TEXT = "Sign in with Google";
+const TOKEN = "Test token";
 
-const signInMock= jest.fn();
-const mockedAuthHandlerService = {
-  signIn: signInMock,
-};
+const signInMockSuccessful= jest.fn().mockReturnValue(
+  new Promise((resolve, reject) => resolve(TOKEN));
+);
+const signInMockFailure= jest.fn().mockReturnValue(
+  new Promise((resolve, reject) => {throw new Error()});
+);
 
-it("calls the correct function on click", () => {
+it("calls the correct function if successful", async () => {
+  const mockedAuthHandlerService = {
+    signIn: signInMockSuccessful,
+  };
   const div = TestUtils.renderIntoDocument(
     <div>
       <ServiceContext.Provider
@@ -24,27 +30,51 @@ it("calls the correct function on click", () => {
           onFailure={expectedFailure}
           scope={EXPECTED_SCOPES}
           text={EXPECTED_TEXT}
-          tokenConsumer={expectedConsumer} 
+          tokenConsumer={expectedConsumer}
         />
       </ServiceContext.Provider>
     </div>
   );
   TestUtils.Simulate.click(div.querySelector("button"));
-  expect(signInMock).toHaveBeenCalledWith(
-        EXPECTED_SCOPES, expectedConsumer, expectedFailure);
+  await expect(signInMockSuccessful).toHaveBeenCalledWith(EXPECTED_SCOPES);
+  expect(expectedConsumer).toHaveBeenCalledWith(TOKEN);
 });
 
-it("displays the right text", () => {
+it("calls the correct function if failed", async () => {
+  const mockedAuthHandlerService = {
+    signIn: signInMockFailure,
+  };
   const div = TestUtils.renderIntoDocument(
     <div>
-      <ServiceContext.Provider 
+      <ServiceContext.Provider
         value={{authenticationHandlerService: mockedAuthHandlerService}}
       >
         <GoogleSignInButton
           onFailure={expectedFailure}
           scope={EXPECTED_SCOPES}
           text={EXPECTED_TEXT}
-          tokenConsumer={expectedConsumer} 
+          tokenConsumer={expectedConsumer}
+        />
+      </ServiceContext.Provider>
+    </div>
+  );
+  TestUtils.Simulate.click(div.querySelector("button"));
+  await expect(signInMockSuccessful).toHaveBeenCalledWith(EXPECTED_SCOPES);
+  expect(expectedFailure).toHaveBeenCalled();
+});
+
+it("displays the right text", () => {
+  const mockedAuthHandlerService = {};
+  const div = TestUtils.renderIntoDocument(
+    <div>
+      <ServiceContext.Provider
+        value={{authenticationHandlerService: mockedAuthHandlerService}}
+      >
+        <GoogleSignInButton
+          onFailure={expectedFailure}
+          scope={EXPECTED_SCOPES}
+          text={EXPECTED_TEXT}
+          tokenConsumer={expectedConsumer}
         />
       </ServiceContext.Provider>
     </div>

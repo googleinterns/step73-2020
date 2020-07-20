@@ -14,11 +14,13 @@ const GoogleSignInButton = (props: GoogleSignInButtonProps) => {
   const authenticationHandlerService = 
       contextServices.authenticationHandlerService;
   
-  const wrappedSignIn = () => {
-    authenticationHandlerService.signIn(
-        props.scope,
-        props.tokenConsumer,
-        props.onFailure);
+  const wrappedSignIn = async () => {
+    try {
+      let token = await authenticationHandlerService.signIn(props.scope);
+      props.tokenConsumer(token);
+    } catch (err) {
+      props.onFailure();
+    }
   }
 
   return (
