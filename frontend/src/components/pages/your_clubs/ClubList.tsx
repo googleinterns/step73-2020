@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     club : {
       marginTop: theme.spacing(3),
-      maxWidth: '900px',
+      width: '900px',
     },
     clubContent: {
       display: 'flex',
@@ -100,6 +100,7 @@ export function ClubList(props: ClubListProps) {
                 <h2 className={classes.clubTitle}>{item.name}</h2>
                 <LibraryBooksRoundedIcon className={classes.clubPhoto} />
                 <ClubDescription description={item.description} />
+                <div className={classes.break}></div>
                 <BookInfo book={item.currentBook} />
                 <ContentWarnings contentWarnings={item.contentWarnings} />
                 <div className={classes.break}></div>
@@ -185,7 +186,7 @@ function ContentWarnings(props) {
 
   return (
     <p className={classes.textElement}>
-      <b>Content Warnings:</b>
+      <b>Content Warnings:</b><br/>
       {contentWarnings.map((item, index) => (
         <>
           - <b>{item}<br/></b>

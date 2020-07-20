@@ -67,16 +67,22 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
   }
 
   const handleClubSubmission = async () => {
-    if (club.name === "" || club.description === "" ||book.title === "" || book.author === "") {
+    if (!(club.name && club.description && book.title && book.author)){
       setMissingField(true);
-      return
-    }
-    setMissingField(false);
-    const success = yourClubsHandlerService.createClub(club);
-    if (success) {
-      props.closeWindow();
+    } else {
+      setMissingField(false);
+      const success = yourClubsHandlerService.createClub(club);
+      if (success) {
+        props.closeWindow();
+      }
     }
   }
+
+  React.useEffect(
+    () =>{ 
+      console.log(missingField);
+    }, [missingField]
+  )
 
   return (
     <div>
@@ -89,9 +95,15 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
           </DialogContentText>
           <form>
             <TextField
+              error = {missingField ? (club.name ? false : true) : false}
               fullWidth
-              helperText = {"Name of the club to be displayed publically to \
-                            all subsequent users who view it."}
+              helperText = {missingField 
+                ? (club.name 
+                    ? "Name of the club to be displayed publically to \
+                       all subsequent users who view it."
+                    : "Club Name is a required field.")
+                : "Name of the club to be displayed publically to \
+                   all subsequent users who view it."}
               id="clubName"
               InputLabelProps={{
                 shrink: true,
@@ -105,9 +117,15 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
               variant="outlined" 
             />
             <TextField
+              error = {missingField ? (club.description ? false : true) : false}
               fullWidth
-              helperText = {"Description of the club to be displayed publically \
-                            to all subsequent users who view it."}
+              helperText = {missingField 
+                ? (club.description 
+                    ? "Description of the club to be displayed publically \
+                       to all subsequent users who view it."
+                    : "Club Description is a required field.")
+                : "Description of the club to be displayed publically \
+                   to all subsequent users who view it."}
               id="description"
               InputLabelProps={{
                 shrink: true,
@@ -136,7 +154,6 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
               multiline
               onChange={handleClubContentWarningsChange}
               placeholder="Content Warnings"
-              required
               rows={4}
               value={contentWarningsDisplay ? contentWarningsDisplay : ""}
               variant="outlined" 
@@ -144,14 +161,32 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
             <div>
               <TextField 
                 className={classes.bookField}
+                error = {missingField ? (book.title ? false : true) : false}
+                helperText = {missingField 
+                  ? (book.title
+                      ? "Title of the current book that the club will be \
+                         discussing."
+                      : "Book Title is a required field.")
+                  : "Title of the current book that the club will be \
+                     discussing."}
                 label="Book Title"
                 onChange={handleBookTitleChange}
+                required
                 value={book ? book.title : ""}
               />
               <TextField 
                 className={classes.bookField}
+                error = {missingField ? (book.author ? false : true) : false}
+                helperText = {missingField 
+                  ? (book.author
+                      ? "Author of the current book that the club will be \
+                         discussing."
+                      : "Book Author is a required field.")
+                  : "Author of the current book that the club will be \
+                     discussing."}
                 label="Book Author"
                 onChange={handleBookAuthorChange}
+                required
                 value={book ? book.author : ""}
               /> 
               <TextField  
