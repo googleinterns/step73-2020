@@ -10,9 +10,11 @@ export class AuthenticationBackendService {
       redirectUri: redirectUri,
     }
 
-    return fetch("/api/retrieve-token", { 
+    let response = await fetch("/api/retrieve-token", { 
       method: "POST",
       body: JSON.stringify(bodyContents),
-    }).then(response => response.text());
+    });
+
+    return response.text();
   }
 }
