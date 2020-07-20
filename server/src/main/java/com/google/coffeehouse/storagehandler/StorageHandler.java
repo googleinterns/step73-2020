@@ -67,9 +67,11 @@ public class StorageHandler {
               Key.of(userId),
               Arrays.asList("email", "nickname", "pronouns"));
     if (row != null) {
-      Person.Builder personBuilder = Person.newBuilder(row.getString(/*emailIndex=*/0),
-                                                       row.getString(/*nicknameIndex=*/1));
-      // TODO: implement setting the userId field @JosephBushagour
+      Person.Builder personBuilder = Person.newBuilder()
+                                           .setEmail(row.getString(/*emailIndex=*/0))
+                                           .setNickname(row.getString(/*nicknameIndex=*/1))
+                                           .setUserId(userId);
+
       if (!row.isNull(/*index=*/2) || !row.getString(/*index=*/2).isEmpty()) {
         personBuilder.setPronouns(row.getString(/*pronounsIndex=*/2));
       }
