@@ -104,9 +104,8 @@ public class RetrieveTokenServletTest {
 
     retrieveTokenServlet = new RetrieveTokenServlet(verifier, tokenRequest);
     retrieveTokenServlet.doPost(request, response);
-    String result = stringWriter.toString();
-    String actual = gson.fromJson(result, String.class);
-    assertEquals(ID_TOKEN, actual);
+    String actual = stringWriter.toString();
+    assertEquals(ID_TOKEN + "\n", actual);
   }
 
   @Test

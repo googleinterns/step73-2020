@@ -21,9 +21,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.google.cloud.secretmanager.v1.AccessSecretVersionResponse;
-import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
-import com.google.cloud.secretmanager.v1.SecretVersionName;
+import com.google.coffeehouse.util.AuthenticationConstants;
 import com.google.gson.Gson;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -68,14 +66,16 @@ public class RetrieveTokenServlet extends HttpServlet {
   private static final GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
   private GoogleIdTokenVerifier verifier =
       new GoogleIdTokenVerifier.Builder(transport, jsonFactory).build();
-  private static final String CLIENT_SECRET = getSecret();
-  private static final String CLIENT_ID =
-      "893627513276-o7p1m433c9l828svolutrbaibqqvmt8q.apps.googleusercontent.com";
   
   // Empty code and redirectUri will be overwritten before executing request.
   private GoogleAuthorizationCodeTokenRequest tokenRequest =
       new GoogleAuthorizationCodeTokenRequest(
-          transport, jsonFactory, CLIENT_ID, CLIENT_SECRET, /* code= */ "", /* redirectUri= */ "");
+          transport,
+          jsonFactory,
+          AuthenticationConstants.CLIENT_ID,
+          AuthenticationConstants.CLIENT_SECRET,
+          /* code= */ "",
+          /* redirectUri= */ "");
 
   /** 
    * Overloaded constructor for dependency injection.
@@ -138,19 +138,7 @@ public class RetrieveTokenServlet extends HttpServlet {
       return;
     }
     
-    response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(idToken));
-  }
-
-  private static String getSecret() {
-    try {
-      SecretManagerServiceClient client = SecretManagerServiceClient.create();
-      SecretVersionName secretVersionName = SecretVersionName.of(
-            "coffeehouse-step2020", "GoogleOauthClientSecret", "1");
-      AccessSecretVersionResponse response = client.accessSecretVersion(secretVersionName);
-      return response.getPayload().getData().toStringUtf8();
-    } catch (Exception e) {
-      throw new RuntimeException("Unable to get Oauth client secret");
-    }
+    response.setContentType("text/plain;");
+    response.getWriter().println(idToken);
   }
 }

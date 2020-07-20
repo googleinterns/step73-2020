@@ -13,6 +13,6 @@ export class AuthenticationBackendService {
     return fetch("/api/retrieve-token", { 
       method: "POST",
       body: JSON.stringify(bodyContents),
-    }).then(response => response.json());
+    }).then(response => response.text());
   }
 }
