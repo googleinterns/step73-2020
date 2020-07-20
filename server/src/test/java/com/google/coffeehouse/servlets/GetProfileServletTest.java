@@ -38,7 +38,7 @@ import org.mockito.Mock;
 /**
  * Unit tests for {@link GetProfileServlet}.
  */
-public class getProfileServletTest {
+public class GetProfileServletTest {
   // TODO: Change field name to be appropriate
   private static final String USER_ID = "predetermined-identification-string";
   private static final String JSON = String.join("\n", 
