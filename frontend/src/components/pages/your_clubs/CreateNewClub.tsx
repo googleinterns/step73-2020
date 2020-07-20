@@ -37,7 +37,8 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
   const [book, setBook] = React.useState<BookProps|undefined>(undefined);
   const [missingField, setMissingField] = React.useState<boolean>(false);
   const [submitSuccess, setSubmitSuccess] = React.useState<boolean>(false);
-  const [contentWarningsDisplay, setContentWarningsDisplay] = React.useState<string|undefined>(undefined);
+  const [contentWarningsDisplay, setContentWarningsDisplay] =
+    React.useState<string|undefined>(undefined);
 
   const contextServices = React.useContext(ServiceContext);
   const yourClubsHandlerService = contextServices.yourClubsHandlerService;
@@ -51,7 +52,10 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
   }
 
   const handleClubContentWarningsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    /* User should see newline chars, but for array the string must be split. */
+    /*
+     * User should see newline characters in their repsonse,
+     * but backend must be stored as a list of strings.
+     */
     setContentWarningsDisplay(event.target.value);
     const contentWarningsArray = (event.target.value).split('\n');
     setClub({...club, contentWarnings: contentWarningsArray});
@@ -82,7 +86,9 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
   }
 
   const handleClubSubmission = async () => {
-    if (club && book ? !(club.name && club.description && book.title && book.author) : true){
+    if (club && book
+          ? !(club.name && club.description && book.title && book.author)
+          : true) {
       setMissingField(true);
       setSubmitSuccess(false);
     } else {
@@ -102,12 +108,16 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
           <DialogContentText>
             {submitSuccess
               ? <b>Submission successful.</b>
-              : "By filling out the below fields and clicking 'Submit', a club of \
-                 which you have administrative rights over will be created." }
+              : "By filling out the below fields and clicking 'Submit', a club \
+                 of which you have administrative rights over will be created." }
           </DialogContentText>
           <form>
             <TextField
-              error = {missingField ? (club ? (club.name ? false : true) : true) : false}
+              error = {
+                missingField
+                  ? (club ? (club.name ? false : true) : true)
+                  : false
+              }
               fullWidth
               helperText = {missingField
                 ? club
@@ -132,7 +142,11 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
               variant="outlined"
             />
             <TextField
-              error = {missingField ? (club ? (club.description ? false : true) : true) : false}
+              error = {
+                missingField
+                  ? (club ? (club.description ? false : true) : true)
+                  : false
+              }
               fullWidth
               helperText = {missingField
                 ? club
@@ -178,7 +192,11 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
             <div>
               <TextField
                 className={classes.bookField}
-                error = {missingField ? (book ? (book.title ? false : true) : true) : false}
+                error = {
+                  missingField
+                    ? (book ? (book.title ? false : true) : true)
+                    : false
+                }
                 helperText = {missingField
                   ? book
                     ? (book.title
@@ -195,7 +213,11 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
               />
               <TextField
                 className={classes.bookField}
-                error = {missingField ? (book ? (book.author ? false : true) : true) : false}
+                error = {
+                  missingField
+                    ? (book ? (book.author ? false : true) : true)
+                    : false
+                }
                 helperText = {missingField
                   ? book
                     ? (book.author
@@ -222,7 +244,9 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
           </form>
           <DialogActions>
             <div hidden={submitSuccess}>
-              <Button onClick={() => (handleCloseCreate(submitSuccess))} color="primary">
+              <Button color="primary"
+                      onClick={() => (handleCloseCreate(submitSuccess))}
+              >
                 Cancel
               </Button>
               <Button onClick={handleClubSubmission} color="primary">
@@ -231,7 +255,10 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
             </div>
             <div hidden={!submitSuccess}>
               <CheckCircleIcon />
-              <Button onClick={() => (handleCloseCreate(submitSuccess))} color="primary" className={classes.successButton}>
+              <Button className={classes.successButton}
+                      color="primary"
+                      onClick={() => (handleCloseCreate(submitSuccess))}
+              >
                 Close
               </Button>
             </div>

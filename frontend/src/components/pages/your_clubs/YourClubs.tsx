@@ -139,7 +139,10 @@ export const YourClubs = () => {
         clubsToDisplay={listedClubs}
         handleLeaveClub={updateClubListAfterLeaving}
       />
-      <CreateNewClubWindow isCreatingNewClub={createNewClub} closeWindow={closeCreateClubWindow} />
+      <CreateNewClubWindow
+        closeWindow={closeCreateClubWindow}
+        isCreatingNewClub={createNewClub}
+      />
     </div>
   );
 }
