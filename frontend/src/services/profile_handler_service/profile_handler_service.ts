@@ -28,7 +28,7 @@ export class ProfileHandlerService {
       const personJson = await this.backend.loadProfile(id);
       const person = JSON.parse(personJson);
       return person;
-    /** 
+    /**
      * TODO: Add different types of errors based off of what failure occurs,
      * eg. NOT_FOUND.
      */

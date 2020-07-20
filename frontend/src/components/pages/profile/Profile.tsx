@@ -11,12 +11,12 @@ import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import { makeStyles } from "@material-ui/core/styles";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
-import { PersonProps } from 
+import { PersonProps } from
   "../../../services/mock_backend/mock_profile_backend";
 import { USER_ID } from "../../../utils/temporary_testing_consts";
-import { ProfileHandlerService } from 
+import { ProfileHandlerService } from
   "../../../services/profile_handler_service/profile_handler_service";
-import { MockProfileBackendService } from 
+import { MockProfileBackendService } from
   "../../../services/mock_backend/mock_profile_backend";
 import { ServiceContext } from "../../contexts/contexts";
 import { Theme } from "@material-ui/core/styles";
@@ -50,17 +50,17 @@ export default function Profile() {
 
   const classes = useStyles();
 
-  /** 
+  /**
    * ServiceHandlers is an object containing various TS Handlers and provides
    * functionality to communicate data from the frontend to the backend
    */
   const contextServices = React.useContext(ServiceContext);
   const profileHandlerService = contextServices.profileHandlerService;
-  
+
   const [person, setPerson] = React.useState<PersonProps|undefined>(undefined);
   const [profileId, setProfileId] = React.useState<string>(undefined);
-  const [submitSuccess, setSubmitSuccess] = React.useState<Boolean|undefined>(undefined);
-  
+  const [submitSuccess, setSubmitSuccess] = React.useState<boolean|undefined>(undefined);
+
   React.useEffect(() => {
     (async() => {
       const personPromise = await profileHandlerService.getPerson(USER_ID);
@@ -99,9 +99,9 @@ export default function Profile() {
           <TextField
             error={person ? person.nickname === "" : false }
             fullWidth
-            helperText = {person 
-              ? (person.nickname === "" 
-                ? "Nickname is a required field." 
+            helperText = {person
+              ? (person.nickname === ""
+                ? "Nickname is a required field."
                 : "Preferred nickname to be displayed on your public profile.")
               : "Nickname is a required field."}
             id="nickname"
@@ -118,7 +118,7 @@ export default function Profile() {
           />
           <TextField
             fullWidth
-            helperText="Preferred pronouns (eg. 'they/them') to be displayed 
+            helperText="Preferred pronouns (eg. 'they/them') to be displayed
                         on your public profile."
             id="pronouns"
             InputLabelProps={{
@@ -134,10 +134,10 @@ export default function Profile() {
           <TextField
             error={person ? person.email === "" : false }
             fullWidth
-            helperText = {person 
-              ? (person.email === "" 
-                ? "Email is a required field." 
-                : "Preferred email that opted-in club updates will be sent to.") 
+            helperText = {person
+              ? (person.email === ""
+                ? "Email is a required field."
+                : "Preferred email that opted-in club updates will be sent to.")
               : "Email is a required field."}
             id="email"
             InputLabelProps={{
@@ -148,15 +148,15 @@ export default function Profile() {
             onChange={handleEmailChange}
             placeholder="Email"
             required
-            value={person ? person.email : ""}      
+            value={person ? person.email : ""}
             variant="outlined"
           />
         </div>
         <div>
-          <Button 
-            color="primary" 
+          <Button
+            color="primary"
             onClick={handleSubmit}
-            variant="contained" 
+            variant="contained"
           >
             Submit
           </Button>
@@ -168,13 +168,13 @@ export default function Profile() {
 }
 
 interface DisplaySubmitStatusProps {
-  success: Boolean;
+  success: boolean;
   personProps: PersonProps;
 }
 
 /**
- * Displays success or failure message to the user after they submit  
- * a profile change. 
+ * Displays success or failure message to the user after they submit
+ * a profile change.
  */
 function DisplaySubmitStatus(props: DisplaySubmitStatusProps) {
   const classes = useStyles();
@@ -191,7 +191,7 @@ function DisplaySubmitStatus(props: DisplaySubmitStatusProps) {
           <p style={{ color: 'green' }}>
             Profile successfully updated.
           </p>
-          
+
         </div>
       );
     } else {

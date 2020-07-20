@@ -6,7 +6,7 @@ import { pickRandom } from "../../utils/random_data";
 export interface PersonProps {
   email: string;
   nickname: string;
-  pronouns?: string; 
+  pronouns?: string;
   userId: string;
 }
 
@@ -14,8 +14,8 @@ export interface PersonProps {
 export class InvalidUserIdError extends Error {}
 
 /**
- * Mimics the functionality of a Java Servlet that fetches user information 
- * from a database based on a specified ID. 
+ * Mimics the functionality of a Java Servlet that fetches user information
+ * from a database based on a specified ID.
  */
 export class MockProfileBackendService {
   private mockProfiles: PersonProps[] = [];
@@ -30,12 +30,12 @@ export class MockProfileBackendService {
       });
     }
   }
-  
+
   loadProfile(id: string): Promise<string> {
     const matched = this.mockProfiles.find((mockProfile) => mockProfile.userId === id);
-    if (matched) { 
+    if (matched) {
       const person = JSON.stringify(matched);
-      return Promise.resolve(person); 
+      return Promise.resolve(person);
     }
     throw new InvalidUserIdError();
   }

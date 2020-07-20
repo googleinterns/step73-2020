@@ -218,7 +218,7 @@ function LeaveClubAlertWindow(props: LeaveClubAlertWindowProps) {
           <Button onClick={props.handleAlertWindowClose} color="primary">
             Cancel
           </Button>
-          <Button 
+          <Button
             onClick={() => (props.handleLeaveClub(props.clubId))} color="primary"
           >
             Confirm
