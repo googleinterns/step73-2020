@@ -36,5 +36,5 @@ public class AuthenticationConstants {
     }
   }
   // Private constructor to enforce that it should not be instantiated.
-  private AuthenticationConstants() {};
+  private AuthenticationConstants() {}
 }
