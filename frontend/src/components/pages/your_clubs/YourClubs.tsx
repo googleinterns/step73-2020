@@ -95,8 +95,11 @@ export const YourClubs = () => {
     setCreateNewClub(true);
   }
 
-  const closeCreateClubWindow = () => {
+  const closeCreateClubWindow = (successfulCreation: boolean) => {
     setCreateNewClub(false);
+    if (successfulCreation) {
+      updateClubList();
+    }
   }
 
   return (

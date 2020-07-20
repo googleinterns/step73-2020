@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface CreateNewClubWindowProps {
   isCreatingNewClub: boolean,
-  closeWindow(): void,
+  closeWindow(successfulCreation: boolean): void,
 }
 
 export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
@@ -72,13 +72,13 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
     setClub({...club, currentBook: book});
   }
 
-  const handleCloseCreate = () => {
+  const handleCloseCreate = (successfulCreation: boolean) => {
     setClub(undefined);
     setBook(undefined);
     setContentWarningsDisplay(undefined);
     setMissingField(false);
     setSubmitSuccess(false);
-    props.closeWindow();
+    props.closeWindow(successfulCreation);
   }
 
   const handleClubSubmission = async () => {
@@ -222,7 +222,7 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
           </form>
           <DialogActions>
             <div hidden={submitSuccess}>
-              <Button onClick={handleCloseCreate} color="primary">
+              <Button onClick={() => (handleCloseCreate(submitSuccess))} color="primary">
                 Cancel
               </Button>
               <Button onClick={handleClubSubmission} color="primary">
@@ -231,7 +231,7 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
             </div>
             <div hidden={!submitSuccess}>
               <CheckCircleIcon />
-              <Button onClick={handleCloseCreate} color="primary" className={classes.successButton}>
+              <Button onClick={() => (handleCloseCreate(submitSuccess))} color="primary" className={classes.successButton}>
                 Close
               </Button>
             </div>
