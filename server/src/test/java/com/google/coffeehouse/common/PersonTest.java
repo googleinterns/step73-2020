@@ -38,7 +38,7 @@ public final class PersonTest {
   private static final String ALT_EMAIL = "New Email";
   private static final String PRONOUNS = "she/her";
   private static final String ALT_PRONOUNS = "New Pronouns";
-  private static final String USERID = "predetermined-identification-string";
+  private static final String USER_ID = "predetermined-identification-string";
   private Person.Builder personBuilder;
   private Map personInfo;
   
@@ -46,7 +46,7 @@ public final class PersonTest {
   public void setUp() {
     personInfo = new HashMap<String, String>();
 
-    personBuilder = Person.newBuilder().setEmail(EMAIL).setNickname(NICKNAME).setUserId(USERID);
+    personBuilder = Person.newBuilder().setEmail(EMAIL).setNickname(NICKNAME).setUserId(USER_ID);
   }
 
   @Test
@@ -64,7 +64,7 @@ public final class PersonTest {
   @Test
   public void getUserId_exists() {
     Person p = personBuilder.build();
-    assertEquals(USERID, p.getUserId());
+    assertEquals(USER_ID, p.getUserId());
   }
 
   @Test
@@ -114,11 +114,11 @@ public final class PersonTest {
   public void fromMap_minimumValidInput() {
     personInfo.put(Person.NICKNAME_FIELD_NAME, NICKNAME);
     personInfo.put(Person.EMAIL_FIELD_NAME, EMAIL);
-    personInfo.put(Person.USERID_FIELD_NAME, USERID);
+    personInfo.put(Person.USER_ID_FIELD_NAME, USER_ID);
     Person p = Person.fromMap(personInfo);
     assertEquals(NICKNAME, p.getNickname());
     assertEquals(EMAIL, p.getEmail());
-    assertEquals(USERID, p.getUserId());
+    assertEquals(USER_ID, p.getUserId());
     assertFalse(p.getPronouns().isPresent());
   }
 
@@ -127,11 +127,11 @@ public final class PersonTest {
     personInfo.put(Person.NICKNAME_FIELD_NAME, NICKNAME);
     personInfo.put(Person.EMAIL_FIELD_NAME, EMAIL);
     personInfo.put(Person.PRONOUNS_FIELD_NAME, PRONOUNS);
-    personInfo.put(Person.USERID_FIELD_NAME, USERID);
+    personInfo.put(Person.USER_ID_FIELD_NAME, USER_ID);
     Person p = Person.fromMap(personInfo);
     assertEquals(NICKNAME, p.getNickname());
     assertEquals(EMAIL, p.getEmail());
-    assertEquals(USERID, p.getUserId());
+    assertEquals(USER_ID, p.getUserId());
     assertTrue(p.getPronouns().isPresent());
     assertEquals(PRONOUNS, p.getPronouns().get());
   }

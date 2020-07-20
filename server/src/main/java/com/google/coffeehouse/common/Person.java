@@ -31,7 +31,7 @@ public class Person implements Saveable {
   /** The name of the pronouns field in the map in fromMap. */
   public static final String PRONOUNS_FIELD_NAME = "pronouns";
   /** The name of the userId field in the map in fromMap. */
-  public static final String USERID_FIELD_NAME = "userId";
+  public static final String USER_ID_FIELD_NAME = "userId";
   
   private String nickname;
   private String email;
@@ -66,8 +66,8 @@ public class Person implements Saveable {
     if (personInfo.containsKey(EMAIL_FIELD_NAME)) {
       personBuilder.setEmail((String) personInfo.get(EMAIL_FIELD_NAME));
     }
-    if (personInfo.containsKey(USERID_FIELD_NAME)) {
-      personBuilder.setUserId((String) personInfo.get(USERID_FIELD_NAME));
+    if (personInfo.containsKey(USER_ID_FIELD_NAME)) {
+      personBuilder.setUserId((String) personInfo.get(USER_ID_FIELD_NAME));
     }
     if (personInfo.containsKey(PRONOUNS_FIELD_NAME)) {
       personBuilder.setPronouns((String) personInfo.get(PRONOUNS_FIELD_NAME));

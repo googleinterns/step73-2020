@@ -41,19 +41,19 @@ public class CreatePersonServletTest {
   private static final String NICKNAME = "Tim";
   private static final String EMAIL = "test@fake.fake";
   private static final String PRONOUNS = "he/him";
-  private static final String USERID = "predetermined-identification-string";
+  private static final String USER_ID = "predetermined-identification-string";
   private static final String MINIMUM_JSON = String.join("\n", 
       "{",
       "  \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + NICKNAME + "\",",
       "  \"" + Person.EMAIL_FIELD_NAME + "\" : \"" + EMAIL + "\",",
-      "  \"" + Person.USERID_FIELD_NAME + "\" : \"" + USERID + "\"",
+      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\"",
       "}");
   private static final String MAXIMUM_JSON = String.join("\n", 
       "{",
       "  \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + NICKNAME + "\",",
       "  \"" + Person.PRONOUNS_FIELD_NAME + "\" : \"" + PRONOUNS + "\",",
       "  \"" + Person.EMAIL_FIELD_NAME + "\" : \"" + EMAIL + "\",",
-      "  \"" + Person.USERID_FIELD_NAME + "\" : \"" + USERID + "\"",
+      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\"",
       "}");
   private static final String NO_NICKNAME_JSON = String.join("\n", 
       "{",
@@ -65,7 +65,7 @@ public class CreatePersonServletTest {
       "  \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + NICKNAME + "\",",
       "  \"" + Person.PRONOUNS_FIELD_NAME + "\" : \"" + PRONOUNS + "\"",
       "}");
-  private static final String NO_USERID_JSON = String.join("\n", 
+  private static final String NO_USER_ID_JSON = String.join("\n", 
       "{",
       "  \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + NICKNAME + "\",",
       "  \"" + Person.PRONOUNS_FIELD_NAME + "\" : \"" + PRONOUNS + "\",",
@@ -110,7 +110,7 @@ public class CreatePersonServletTest {
 
     assertEquals(NICKNAME, p.getNickname());
     assertEquals(EMAIL, p.getEmail());
-    assertEquals(USERID, p.getUserId());
+    assertEquals(USER_ID, p.getUserId());
     assertFalse(p.getPronouns().isPresent());
   }
 
@@ -127,7 +127,7 @@ public class CreatePersonServletTest {
 
     assertEquals(NICKNAME, p.getNickname());
     assertEquals(EMAIL, p.getEmail());
-    assertEquals(USERID, p.getUserId());
+    assertEquals(USER_ID, p.getUserId());
     assertTrue(p.getPronouns().isPresent());
     assertEquals(PRONOUNS, p.getPronouns().get());
   }
@@ -155,7 +155,7 @@ public class CreatePersonServletTest {
   @Test
   public void doPost_noUserIdSpecified() throws IOException {
     when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(NO_USERID_JSON)));
+          new BufferedReader(new StringReader(NO_USER_ID_JSON)));
     CreatePersonServlet.doPost(request, response);
     
     verify(response).sendError(
