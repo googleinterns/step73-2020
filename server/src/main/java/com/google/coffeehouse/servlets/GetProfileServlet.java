@@ -39,7 +39,7 @@ public class GetProfileServlet extends HttpServlet {
 
   /** The logged error string when an error parsing the body of the GET request is encountered */
   public static final String LOG_BODY_ERROR_MESSAGE = 
-      "LOGGING: Body unable to be parsed in GetProfileServlet: ";
+      "Body unable to be parsed in GetProfileServlet: ";
   private static final Gson gson = new Gson();
   
   /** 

@@ -40,14 +40,13 @@ import org.mockito.Mock;
  */
 public class getProfileServletTest {
   // TODO: Change field name to be appropriate
-  private static final String USER_ID_FIELD_NAME = "userId";
-  private static final String USER_ID_STRING = "predetermined-identification-string";
+  private static final String USER_ID = "predetermined-identification-string";
   private static final String JSON = String.join("\n", 
       "{",
-      "  \"" + USER_ID_FIELD_NAME + "\" : \"" + USER_ID_STRING + "\"",
+      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\"",
       "}");
   private static final String SYNTACTICALLY_INCORRECT_JSON = 
-      "{\"" + USER_ID_FIELD_NAME + "\"";
+      "{\"" + Person.USER_ID_FIELD_NAME + "\"";
 
   private GetProfileServlet GetProfileServlet;
   private final LocalServiceTestHelper helper = new LocalServiceTestHelper();
@@ -59,7 +58,7 @@ public class getProfileServletTest {
   @Before
   public void setUp() throws IOException {
     helper.setUp();
-    GetProfileServlet = new getProfileServlet();
+    GetProfileServlet = new GetProfileServlet();
 
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
@@ -82,7 +81,7 @@ public class getProfileServletTest {
     Gson gson = new Gson();
     Person p = gson.fromJson(result, Person.class);
 
-    assertEquals(USER_ID_STRING, p.getUserId());
+    assertEquals(USER_ID, p.getUserId());
   }
 
   @Test
