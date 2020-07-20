@@ -15,7 +15,7 @@
 package com.google.coffeehouse.servlets;
 
 import com.google.coffeehouse.common.Person;
-import com.google.coffeehouse.StorageHandler.StorageHandlerApi;
+import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.Map;
@@ -58,7 +58,7 @@ public class GetProfileServlet extends HttpServlet {
     try {
       Map userInfo = gson.fromJson(request.getReader(), Map.class);
       // TODO: Change to actual oauth parameter from json that is passed in @JoeyBushagour
-      String userId = userInfo.get("userId");
+      String userId = userInfo.get("userId").toString();
       person = StorageHandlerApi.fetchPersonFromId(userId);
     } catch (Exception e) {
       System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());
