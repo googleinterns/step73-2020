@@ -1,4 +1,5 @@
 target/
+frontend/tests/__coverage__/
 .idea
 
 node_modules/
