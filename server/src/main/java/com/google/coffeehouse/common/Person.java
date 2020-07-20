@@ -14,8 +14,6 @@
 
 package com.google.coffeehouse.common;
 
-import com.google.coffeehouse.util.IdentifierGenerator;
-import com.google.coffeehouse.util.UuidWrapper;
 import java.util.Map;
 import java.util.Optional; 
 
@@ -26,14 +24,14 @@ import java.util.Optional;
  * in the database.
  */
 public class Person implements Saveable {
-  /** The names of each possible field in the map in fromMap */
+  /** The name of the nickname field in the map in fromMap. */
   public static final String NICKNAME_FIELD_NAME = "nickname";
+  /** The name of the email field in the map in fromMap. */
   public static final String EMAIL_FIELD_NAME = "email";
+  /** The name of the pronouns field in the map in fromMap. */
   public static final String PRONOUNS_FIELD_NAME = "pronouns";
-
-  /** The message on the IllegalArgumentException when there is no valid name or book key */
-  public static final String NO_VALID_NICKNAME_EMAIL_FROM_MAP = 
-      "No valid \"" + NICKNAME_FIELD_NAME + "\" or \"" + EMAIL_FIELD_NAME + "\" key defined.";
+  /** The name of the userId field in the map in fromMap. */
+  public static final String USERID_FIELD_NAME = "userId";
   
   private String nickname;
   private String email;
@@ -43,41 +41,30 @@ public class Person implements Saveable {
   private Person(Builder builder) {
     this.nickname = builder.nickname;
     this.email = builder.email;
+    this.userId = builder.userId;
     this.pronouns = builder.pronouns;
-    this.userId = builder.idGenerator.generateId();
-  }
-
-  /** Overloaded static factory, calls other fromMap with null IdentifierGenerator. */
-  public static Person fromMap(Map personInfo) {
-    return Person.fromMap(personInfo, null);
   }
 
   /** 
    * Creates a {@link Person} object from a Map with the relevant parameters as keys.
    * @param personInfo the Map that contains the information used to construct the Person. At a
    *     minimum this includes an {@code "email"} key that is mapped to a String that describes
-   *     the email of the Person to be created, as well as a {@code "nickname"} key that is mapped
-   *     to a String that describes the name of the Person to be created. A {@code "pronouns"} key
-   *     that is mapped to a String describing the pronouns of the Person can optionally be added.
-   * @param idGen the {@link IdentifierGenerator} used when constructing the Person. If
-   *     null, the default generator will be used
+   *     the email of the Person to be created, a {@code "nickname"} key that is mapped
+   *     to a String that describes the name of the Person to be created, as well as a
+   *     {@code "userId"} key that is mapped to the userId of the person to be created.
+   *     A {@code "pronouns"} key that is mapped to a String describing the pronouns of the Person
+   *     can optionally be added
    * @return the created Person
    * @throws IllegalArgumentException if no valid {@code "email"} key or 
-   *     {@code "nickname"} key is defined
+   *     {@code "nickname"} key or {@code "userId"} key is defined
    */
-  public static Person fromMap(Map personInfo, IdentifierGenerator idGen) {
-    String email = (String) personInfo.getOrDefault(EMAIL_FIELD_NAME, null);
-    String nickname = (String) personInfo.getOrDefault(NICKNAME_FIELD_NAME, null);
-    if (email == null || nickname == null) {
-      throw new IllegalArgumentException(NO_VALID_NICKNAME_EMAIL_FROM_MAP);
-    }
-
-    Person.Builder personBuilder = Person.newBuilder(email, nickname);
+  public static Person fromMap(Map personInfo) {
+    Person.Builder personBuilder = Person.newBuilder();
+    personBuilder.setNickname((String) personInfo.getOrDefault(NICKNAME_FIELD_NAME, null));
+    personBuilder.setEmail((String) personInfo.getOrDefault(EMAIL_FIELD_NAME, null));
+    personBuilder.setUserId((String) personInfo.getOrDefault(USERID_FIELD_NAME, null));
     if (personInfo.containsKey(PRONOUNS_FIELD_NAME)) {
       personBuilder.setPronouns((String) personInfo.get(PRONOUNS_FIELD_NAME));
-    }
-    if (idGen != null) {
-      personBuilder.setIdGenerator(idGen);
     }
     return personBuilder.build();
   }
@@ -112,8 +99,8 @@ public class Person implements Saveable {
   }
 
   /** Starts the building process of a new Person object. */
-  public static Builder newBuilder(String email, String nickname) {
-    return new Builder(email, nickname);
+  public static Builder newBuilder() {
+    return new Builder();
   }
 
   public String toString() {
@@ -128,14 +115,24 @@ public class Person implements Saveable {
 
   /** A builder class to create a Person object. */
   public static class Builder {
-    private String email;
-    private String nickname;
+    private String email = null;
+    private String nickname = null;
     private String pronouns = null;
-    private IdentifierGenerator idGenerator = new UuidWrapper();
+    private String userId = null;
 
-    private Builder(String email, String nickname) {
-      this.email = email;
+    public Builder setNickname(String nickname) {
       this.nickname = nickname;
+      return this;
+    }
+
+    public Builder setEmail(String email) {
+      this.email = email;
+      return this;
+    }
+
+    public Builder setUserId(String userId) {
+      this.userId = userId;
+      return this;
     }
 
     public Builder setPronouns(String pronouns) {
@@ -143,17 +140,16 @@ public class Person implements Saveable {
       return this;
     }
 
-    /**
-     * Used for injecting a non-default {@link IdentifierGenerator} to generate the {@code userId}.
-     * @param idGenerator the object that generates the ID for the user
-     * @return the builder that was modified by this method
-     */
-    public Builder setIdGenerator(IdentifierGenerator idGenerator) {
-      this.idGenerator = idGenerator;
-      return this;
-    }
-
     public Person build() {
+      if (email == null) {
+        throw new RuntimeException("Person must be instantiated with a non-null email");
+      }
+      if (nickname == null) {
+        throw new RuntimeException("Person must be instantiated with a non-null nickname");
+      }
+      if (userId == null) {
+        throw new RuntimeException("Person must be instantiated with a non-null userId");
+      }
       return new Person(this);
     }
   }
