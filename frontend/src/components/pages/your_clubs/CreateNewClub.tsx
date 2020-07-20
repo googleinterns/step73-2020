@@ -66,6 +66,13 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
     setClub({...club, currentBook: book});
   }
 
+  const handleCancelCreate = () => {
+    setClub(undefined);
+    setBook(undefined);
+    setMissingField(false);
+    props.closeWindow();
+  }
+
   const handleClubSubmission = async () => {
     if (!(club.name && club.description && book.title && book.author)){
       setMissingField(true);
@@ -198,7 +205,7 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
             </div>
           </form>
           <DialogActions>
-            <Button onClick={props.closeWindow} color="primary">
+            <Button onClick={handleCancelCreate} color="primary">
               Cancel
             </Button>
             <Button onClick={handleClubSubmission} color="primary">
