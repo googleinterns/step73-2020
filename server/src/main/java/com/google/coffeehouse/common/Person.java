@@ -60,9 +60,15 @@ public class Person implements Saveable {
    */
   public static Person fromMap(Map personInfo) {
     Person.Builder personBuilder = Person.newBuilder();
-    personBuilder.setNickname((String) personInfo.getOrDefault(NICKNAME_FIELD_NAME, null));
-    personBuilder.setEmail((String) personInfo.getOrDefault(EMAIL_FIELD_NAME, null));
-    personBuilder.setUserId((String) personInfo.getOrDefault(USERID_FIELD_NAME, null));
+    if (personInfo.containsKey(NICKNAME_FIELD_NAME)) {
+      personBuilder.setNickname((String) personInfo.get(NICKNAME_FIELD_NAME));
+    }
+    if (personInfo.containsKey(EMAIL_FIELD_NAME)) {
+      personBuilder.setEmail((String) personInfo.get(EMAIL_FIELD_NAME));
+    }
+    if (personInfo.containsKey(USERID_FIELD_NAME)) {
+      personBuilder.setUserId((String) personInfo.get(USERID_FIELD_NAME));
+    }
     if (personInfo.containsKey(PRONOUNS_FIELD_NAME)) {
       personBuilder.setPronouns((String) personInfo.get(PRONOUNS_FIELD_NAME));
     }
