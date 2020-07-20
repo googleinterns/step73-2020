@@ -1,4 +1,4 @@
-import { AuthenticationHandlerService, FailureToSignIn } from "./authentication_handler_service";
+import { AuthenticationHandlerService, FailureToSignInError } from "./authentication_handler_service";
 
 // load these objects to overwrite gapi calls.
 let authInstance = {};
@@ -32,7 +32,7 @@ it("throws error if grantOffileAccess returns undefined", async () => {
 
   await expect(authService.signIn(EXPECTED_SCOPES))
   .rejects
-  .toThrow(FailureToSignIn);
+  .toThrow(FailureToSignInError);
 });
 
 it("throws error if grantOffileAccess throws error", async () => {
@@ -42,7 +42,7 @@ it("throws error if grantOffileAccess throws error", async () => {
 
   await expect(authService.signIn(EXPECTED_SCOPES))
   .rejects
-  .toThrow(FailureToSignIn);
+  .toThrow(FailureToSignInError);
 });
 
 it("throws error if backend API throws error", async () => {
@@ -50,7 +50,7 @@ it("throws error if backend API throws error", async () => {
 
   await expect(failingAuthService.signIn(EXPECTED_SCOPES))
   .rejects
-  .toThrow(FailureToSignIn);
+  .toThrow(FailureToSignInError);
 });
 
 it("signs out the user", async () => {

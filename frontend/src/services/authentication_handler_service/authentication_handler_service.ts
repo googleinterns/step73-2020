@@ -2,12 +2,12 @@ import { BackendAuthenticationInterface } from "../backend_service_interface/bac
 import { CLIENT_ID } from "./authentication_constants";
 
 /** Error that occurs if sign in fails. */
-export class FailureToSignIn extends Error {
+export class FailureToSignInError extends Error {
   constructor() {
     super("Sign in has failed");
 
     // Explicitly set prototype to allow expect().toThrow() testing.
-    Object.setPrototypeOf(this, FailureToSignIn.prototype);
+    Object.setPrototypeOf(this, FailureToSignInError.prototype);
   }
 }
 
@@ -31,17 +31,17 @@ export class AuthenticationHandlerService {
    * Signs the user in, retrieving a token from the backend.
    * @param scopes the scopes our app requests for oauth
    * @return the string of the JWT token retrieved by the backend
-   * @throws FailureToSignIn if sign in fails
+   * @throws FailureToSignInError if sign in fails
    */
   async signIn(scopes: string): Promise<string> {
     let code: string | undefined = await this.getAuthCode({scope: scopes});
     if (code === undefined) {
-      throw new FailureToSignIn();
+      throw new FailureToSignInError();
     }
     try {
       return await this.backend.retrieveToken(code, window.location.origin);
     } catch (err) {
-      throw new FailureToSignIn();
+      throw new FailureToSignInError();
     }
   }
 
