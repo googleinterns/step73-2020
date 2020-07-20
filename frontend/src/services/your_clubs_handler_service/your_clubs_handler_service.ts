@@ -8,7 +8,7 @@ export class ErrorLoadingClubs extends Error {
   }
 }
 
-/* Error that occurs when an attempt to create a club fails. */
+/** Error that occurs when an attempt to create a club fails. */
 export class ErrorCreatingClub extends Error {
   constructor(readonly club: ClubProps) {
     super(`Error occurred while creating '${club.name}' club.`);
