@@ -59,7 +59,7 @@ it("calls the correct function if failed", async () => {
     </div>
   );
   TestUtils.Simulate.click(div.querySelector("button"));
-  await expect(signInMockSuccessful).toHaveBeenCalledWith(EXPECTED_SCOPES);
+  await expect(signInMockFailure).toHaveBeenCalledWith(EXPECTED_SCOPES);
   expect(expectedFailure).toHaveBeenCalled();
 });
 
