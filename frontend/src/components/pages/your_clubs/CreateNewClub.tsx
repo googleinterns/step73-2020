@@ -86,9 +86,7 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
   }
 
   const handleClubSubmission = async () => {
-    if (club && book
-          ? !(club.name && club.description && book.title && book.author)
-          : true) {
+    if (!(club?.name && club?.description && book?.title && book?.author)) {
       setMissingField(true);
       setSubmitSuccess(false);
     } else {
