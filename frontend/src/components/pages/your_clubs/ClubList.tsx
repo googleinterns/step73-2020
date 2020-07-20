@@ -89,7 +89,7 @@ export function ClubList(props: ClubListProps) {
     setLeaveAlertOpen(false);
   }
 
-  /* If clubs to display is not yet defined, or 'None' are chosen to display. */
+  /* If clubs to display is not yet defined. */
   if (clubsToDisplay !== undefined)  {
     return (
       <div className={classes.listedClubsContainer}>
@@ -218,7 +218,7 @@ function LeaveClubAlertWindow(props: LeaveClubAlertWindowProps) {
           <Button onClick={props.handleAlertWindowClose} color="primary">
             Cancel
           </Button>
-          <Button 
+          <Button
             onClick={() => (props.handleLeaveClub(props.clubId))} color="primary"
           >
             Confirm

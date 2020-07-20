@@ -2,15 +2,15 @@ import { CLUBS } from "../../utils/mock_club_data";
 import { MAX_NUM_CLUBS } from "../../utils/temporary_testing_consts";
 
 export interface BookProps {
-  title: string, 
-  author: string, 
-  isbn: string, 
+  title: string,
+  author: string,
+  isbn: string,
 }
 
 export interface ClubProps {
   name: string,
   description: string,
-  contentWarnings: Array<string>, 
+  contentWarnings: Array<string>,
   currentBook: BookProps,
 }
 

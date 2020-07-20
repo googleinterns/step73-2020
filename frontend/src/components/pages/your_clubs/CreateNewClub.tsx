@@ -100,8 +100,8 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
         <DialogTitle>Create New Club</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {submitSuccess 
-              ? <b>Submission successful.</b> 
+            {submitSuccess
+              ? <b>Submission successful.</b>
               : "By filling out the below fields and clicking 'Submit', a club of \
                  which you have administrative rights over will be created." }
           </DialogContentText>
@@ -110,8 +110,8 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
               error = {missingField ? (club ? (club.name ? false : true) : true) : false}
               fullWidth
               helperText = {missingField
-                ? club 
-                  ? (club.name 
+                ? club
+                  ? (club.name
                     ? "Name of the club to be displayed publically to \
                        all subsequent users who view it."
                     : "Club Name is a required field.")
@@ -129,13 +129,13 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
               placeholder="Club Name"
               required
               value={club ? club.name : ""}
-              variant="outlined" 
+              variant="outlined"
             />
             <TextField
               error = {missingField ? (club ? (club.description ? false : true) : true) : false}
               fullWidth
               helperText = {missingField
-                ? club 
+                ? club
                   ? (club.description
                     ? "Description of the club to be displayed publically \
                        to all subsequent users who view it."
@@ -155,7 +155,7 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
               required
               rows={4}
               value={club ? club.description: ""}
-              variant="outlined" 
+              variant="outlined"
             />
             <TextField
               fullWidth
@@ -173,14 +173,14 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
               placeholder="Content Warnings"
               rows={4}
               value={contentWarningsDisplay ? contentWarningsDisplay : ""}
-              variant="outlined" 
+              variant="outlined"
             />
             <div>
-              <TextField 
+              <TextField
                 className={classes.bookField}
                 error = {missingField ? (book ? (book.title ? false : true) : true) : false}
                 helperText = {missingField
-                  ? book 
+                  ? book
                     ? (book.title
                       ? "Title of the current book that the club will be \
                          discussing."
@@ -193,11 +193,11 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
                 required
                 value={book ? book.title : ""}
               />
-              <TextField 
+              <TextField
                 className={classes.bookField}
                 error = {missingField ? (book ? (book.author ? false : true) : true) : false}
                 helperText = {missingField
-                  ? book 
+                  ? book
                     ? (book.author
                       ? "Author of the current book that the club will be \
                          discussing."
@@ -209,15 +209,15 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
                 onChange={handleBookAuthorChange}
                 required
                 value={book ? book.author : ""}
-              /> 
-              <TextField  
+              />
+              <TextField
                 className={classes.bookField}
                 helperText = {"ISBN of the current book thaty the club will \
                                be discussing."}
                 label="Book ISBN"
                 onChange={handleBookIsbnChange}
                 value={book? book.isbn : ""}
-              /> 
+              />
             </div>
           </form>
           <DialogActions>
