@@ -66,9 +66,10 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
     setClub({...club, currentBook: book});
   }
 
-  const handleCancelCreate = () => {
+  const handleCloseCreate = () => {
     setClub(undefined);
     setBook(undefined);
+    setContentWarningsDisplay(undefined);
     setMissingField(false);
     props.closeWindow();
   }
@@ -76,20 +77,15 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
   const handleClubSubmission = async () => {
     if (!(club.name && club.description && book.title && book.author)){
       setMissingField(true);
+
     } else {
       setMissingField(false);
       const success = yourClubsHandlerService.createClub(club);
       if (success) {
-        props.closeWindow();
+        handleCloseCreate();
       }
     }
   }
-
-  React.useEffect(
-    () =>{ 
-      console.log(missingField);
-    }, [missingField]
-  )
 
   return (
     <div>
@@ -102,15 +98,18 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
           </DialogContentText>
           <form>
             <TextField
-              error = {missingField ? (club.name ? false : true) : false}
+              error = {missingField ? (club ? (club.name ? false : true) : true) : false}
               fullWidth
-              helperText = {missingField 
-                ? (club.name 
+              helperText = {missingField
+                ? club 
+                  ? (club.name 
                     ? "Name of the club to be displayed publically to \
                        all subsequent users who view it."
                     : "Club Name is a required field.")
+                  : "Club Name is a required field."
                 : "Name of the club to be displayed publically to \
                    all subsequent users who view it."}
+
               id="clubName"
               InputLabelProps={{
                 shrink: true,
@@ -124,13 +123,15 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
               variant="outlined" 
             />
             <TextField
-              error = {missingField ? (club.description ? false : true) : false}
+              error = {missingField ? (club ? (club.description ? false : true) : true) : false}
               fullWidth
-              helperText = {missingField 
-                ? (club.description 
+              helperText = {missingField
+                ? club 
+                  ? (club.description
                     ? "Description of the club to be displayed publically \
                        to all subsequent users who view it."
                     : "Club Description is a required field.")
+                  : "Club Description is a required field."
                 : "Description of the club to be displayed publically \
                    to all subsequent users who view it."}
               id="description"
@@ -168,12 +169,14 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
             <div>
               <TextField 
                 className={classes.bookField}
-                error = {missingField ? (book.title ? false : true) : false}
-                helperText = {missingField 
-                  ? (book.title
+                error = {missingField ? (book ? (book.title ? false : true) : true) : false}
+                helperText = {missingField
+                  ? book 
+                    ? (book.title
                       ? "Title of the current book that the club will be \
                          discussing."
                       : "Book Title is a required field.")
+                    : "Book Title is a required field."
                   : "Title of the current book that the club will be \
                      discussing."}
                 label="Book Title"
@@ -183,12 +186,14 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
               />
               <TextField 
                 className={classes.bookField}
-                error = {missingField ? (book.author ? false : true) : false}
-                helperText = {missingField 
-                  ? (book.author
+                error = {missingField ? (book ? (book.author ? false : true) : true) : false}
+                helperText = {missingField
+                  ? book 
+                    ? (book.author
                       ? "Author of the current book that the club will be \
                          discussing."
                       : "Book Author is a required field.")
+                    : "Book Author is a required field."
                   : "Author of the current book that the club will be \
                      discussing."}
                 label="Book Author"
@@ -198,6 +203,8 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
               /> 
               <TextField  
                 className={classes.bookField}
+                helperText = {"ISBN of the current book thaty the club will \
+                               be discussing."}
                 label="Book ISBN"
                 onChange={handleBookIsbnChange}
                 value={book? book.isbn : ""}
@@ -205,7 +212,7 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
             </div>
           </form>
           <DialogActions>
-            <Button onClick={handleCancelCreate} color="primary">
+            <Button onClick={handleCloseCreate} color="primary">
               Cancel
             </Button>
             <Button onClick={handleClubSubmission} color="primary">
