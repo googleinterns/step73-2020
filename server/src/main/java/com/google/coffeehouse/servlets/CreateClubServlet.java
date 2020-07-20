@@ -41,7 +41,7 @@ public class CreateClubServlet extends HttpServlet {
 
   /** The logged error string when an error parsing the body of the POST request is encoutered */
   public static final String LOG_BODY_ERROR_MESSAGE = 
-      "LOGGING: Body unable to be parsed in CreateClubServlet: ";
+      "Body unable to be parsed in CreateClubServlet: ";
   private IdentifierGenerator idGen = null;
   private static final Gson gson = new Gson();
 

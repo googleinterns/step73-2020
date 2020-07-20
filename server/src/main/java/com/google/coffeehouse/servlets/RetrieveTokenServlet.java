@@ -46,7 +46,7 @@ public class RetrieveTokenServlet extends HttpServlet {
   public static final String BODY_ERROR = "- unable to parse body.";
   /** The logged error string when an error parsing the body of the POST request is encountered. */
   public static final String LOG_BODY_ERROR_MESSAGE = 
-      "LOGGING: Body unable to be parsed in RetrieveTokenServlet: ";
+      "Body unable to be parsed in RetrieveTokenServlet: ";
   /** The name of the key to be associated with the auth code in the JSON. */
   public static final String CODE_KEY_NAME = "code";
   /** The name of the key to be associated with the redirect URI in the JSON. */
@@ -61,7 +61,7 @@ public class RetrieveTokenServlet extends HttpServlet {
   public static final String INVALID_ID_TOKEN = "- invalid ID token.";
   /** The logged error string when an an ID token fails verification. */
   public static final String LOG_INVALID_ID_TOKEN_MESSAGE = 
-      "LOGGING: ID token failed verification: ";
+      "ID token failed verification: ";
 
   private static final Gson gson = new Gson();
   private static final HttpTransport transport = new NetHttpTransport();
