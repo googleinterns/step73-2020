@@ -55,7 +55,7 @@ public class Person implements Saveable {
    *     A {@code "pronouns"} key that is mapped to a String describing the pronouns of the Person
    *     can optionally be added
    * @return the created Person
-   * @throws IllegalArgumentException if no valid {@code "email"} key or 
+   * @throws RuntimeException if no valid {@code "email"} key or 
    *     {@code "nickname"} key or {@code "userId"} key is defined
    */
   public static Person fromMap(Map personInfo) {
