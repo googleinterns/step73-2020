@@ -1,6 +1,7 @@
 import * as React from "react";
 import { BookProps, ClubProps } from "../../../services/mock_backend/mock_your_clubs_backend";
 import Button from "@material-ui/core/Button";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { createStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -17,7 +18,11 @@ const useStyles = makeStyles((theme: Theme) =>
     bookField: {
       justifyContent: 'center',
       margin: theme.spacing(2),
-    }
+    },
+    successButton: {
+      marginLeft: theme.spacing(2),
+      marginBottom: theme.spacing(2),
+    },
   }),
 );
 
@@ -31,6 +36,7 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
   const [club, setClub] = React.useState<ClubProps|undefined>(undefined);
   const [book, setBook] = React.useState<BookProps|undefined>(undefined);
   const [missingField, setMissingField] = React.useState<boolean>(false);
+  const [submitSuccess, setSubmitSuccess] = React.useState<boolean>(false);
   const [contentWarningsDisplay, setContentWarningsDisplay] = React.useState<string|undefined>(undefined);
 
   const contextServices = React.useContext(ServiceContext);
@@ -71,17 +77,19 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
     setBook(undefined);
     setContentWarningsDisplay(undefined);
     setMissingField(false);
+    setSubmitSuccess(false);
     props.closeWindow();
   }
 
   const handleClubSubmission = async () => {
     if (club && book ? !(club.name && club.description && book.title && book.author) : true){
       setMissingField(true);
+      setSubmitSuccess(false);
     } else {
       setMissingField(false);
       const success = yourClubsHandlerService.createClub(club);
       if (success) {
-        handleCloseCreate();
+        setSubmitSuccess(true);
       }
     }
   }
@@ -92,8 +100,10 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
         <DialogTitle>Create New Club</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            By filling out the below fields and clicking 'Submit', a club of
-            which you have administrative rights over will be created. 
+            {submitSuccess 
+              ? <b>Submission successful.</b> 
+              : "By filling out the below fields and clicking 'Submit', a club of \
+                 which you have administrative rights over will be created." }
           </DialogContentText>
           <form>
             <TextField
@@ -211,12 +221,20 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
             </div>
           </form>
           <DialogActions>
-            <Button onClick={handleCloseCreate} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleClubSubmission} color="primary">
-              Submit
-            </Button>
+            <div hidden={submitSuccess}>
+              <Button onClick={handleCloseCreate} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleClubSubmission} color="primary">
+                Submit
+              </Button>
+            </div>
+            <div hidden={!submitSuccess}>
+              <CheckCircleIcon />
+              <Button onClick={handleCloseCreate} color="primary" className={classes.successButton}>
+                Close
+              </Button>
+            </div>
           </DialogActions>
         </DialogContent>
       </Dialog>
