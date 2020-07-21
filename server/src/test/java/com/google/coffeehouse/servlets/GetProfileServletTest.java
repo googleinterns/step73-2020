@@ -23,6 +23,7 @@ import static org.mockito.Mockito.verify;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.coffeehouse.common.Person;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
+import com.google.coffeehouse.storagehandler.StorageHandler;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -44,33 +45,47 @@ public class GetProfileServletTest {
   private static final String USER_ID = "predetermined-identification-string";
   private static final String EMAIL = "email@test.com";
   private static final String NICKNAME = "test";
+  private static final String PRONOUNS = "they";
   private static final String JSON = String.join("\n",
       "{",
       "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\"",
       "}");
-  private static final String SYNTACTICALLY_INCORRECT_JSON = 
-      "{\"" + Person.USER_ID_FIELD_NAME + "\"";
+  private static final String NO_USER_ID_JSON = "{}";
+  private static final String PROFILE_NOT_FOUND_JSON = String.join("\n",
+      "{",
+      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"\"",
+      "}");
+  private static final String SYNTACTICALLY_INCORRECT_JSON = "{\"" + Person.USER_ID_FIELD_NAME + "\"";
 
   private Person testPerson = Person.newBuilder()
                                     .setEmail(EMAIL)
                                     .setNickname(NICKNAME)
                                     .setUserId(USER_ID)
+                                    .setPronouns(PRONOUNS)
                                     .build();
   private GetProfileServlet getProfileServlet;
+  private GetProfileServlet failingGetProfileServlet;
   private final LocalServiceTestHelper helper = new LocalServiceTestHelper();
   private StringWriter stringWriter = new StringWriter();
 
   @Mock private HttpServletRequest request;
   @Mock private HttpServletResponse response;
-  @Mock private StorageHandlerApi handler;
+  @Mock private StorageHandlerApi successfulHandler;
+  @Mock private StorageHandlerApi failingHandler;
   
   @Before
   public void setUp() throws IOException {
     helper.setUp();
 
-    handler = mock(StorageHandlerApi.class);
-    when(handler.fetchPersonFromId(anyString())).thenReturn(testPerson);
-    getProfileServlet = new GetProfileServlet(handler);
+    successfulHandler = mock(StorageHandlerApi.class);
+    when(successfulHandler.fetchPersonFromId(anyString())).thenReturn(testPerson);
+    getProfileServlet = new GetProfileServlet(successfulHandler);
+
+    failingHandler = mock(StorageHandlerApi.class);
+    when(failingHandler.fetchPersonFromId(anyString()))
+                       .thenThrow(new IllegalArgumentException(StorageHandler.PERSON_DOES_NOT_EXIST))
+                       .thenReturn(null);
+    failingGetProfileServlet = new GetProfileServlet(failingHandler);
 
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
@@ -91,8 +106,31 @@ public class GetProfileServletTest {
     String result = stringWriter.toString();
 
     Gson gson = new Gson();
+    Person p = gson.fromJson(result, Person.class);
 
-    assertEquals(USER_ID, testPerson.getUserId());
+    assertEquals(USER_ID, p.getUserId());
+  }
+
+  @Test
+  public void doGet_noUserId() throws IOException {
+    when(request.getReader()).thenReturn(
+          new BufferedReader(new StringReader(NO_USER_ID_JSON)));
+    getProfileServlet.doGet(request, response);
+    
+    verify(response).sendError(
+        HttpServletResponse.SC_BAD_REQUEST,
+        GetProfileServlet.LOG_INPUT_ERROR_MESSAGE);
+  }
+
+  @Test
+  public void doGet_noProfileFound() throws IOException {
+    when(request.getReader()).thenReturn(
+          new BufferedReader(new StringReader(PROFILE_NOT_FOUND_JSON)));
+    failingGetProfileServlet.doGet(request, response);
+    
+    verify(response).sendError(
+        HttpServletResponse.SC_BAD_REQUEST,
+        StorageHandler.PERSON_DOES_NOT_EXIST);
   }
 
   @Test
@@ -102,6 +140,7 @@ public class GetProfileServletTest {
     getProfileServlet.doGet(request, response);
     
     verify(response).sendError(
-        HttpServletResponse.SC_BAD_REQUEST, GetProfileServlet.BODY_ERROR);
+        HttpServletResponse.SC_BAD_REQUEST,
+        GetProfileServlet.BODY_ERROR);
   }
 }

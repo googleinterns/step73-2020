@@ -41,8 +41,13 @@ public class GetProfileServlet extends HttpServlet {
   /** The logged error string when an error parsing the body of the GET request is encountered */
   public static final String LOG_BODY_ERROR_MESSAGE = 
       "Body unable to be parsed in GetProfileServlet: ";
+
+  /** Message to be logged when the body of the POST request does not have required fields. */
+  public static final String LOG_INPUT_ERROR_MESSAGE =
+      "Error with JSON input in GetProfileServlet: No \"userId\" found in JSON.";
+
   private static final Gson gson = new Gson();
-  private StorageHandlerApi storageHandler = new StorageHandlerApi();
+  private final StorageHandlerApi storageHandler;
 
   /**
    * Overloaded constructor for dependency injection.
@@ -50,7 +55,7 @@ public class GetProfileServlet extends HttpServlet {
    */
   public GetProfileServlet(StorageHandlerApi storageHandler) {
     super();
-    this.storageHandler = storageHandler;
+    this.storageHandler = new StorageHandlerApi();
   }
 
   /**
@@ -58,6 +63,7 @@ public class GetProfileServlet extends HttpServlet {
    */
   public GetProfileServlet() {
     super();
+    this.storageHandler = new StorageHandlerApi();
   }
   
   /** 
@@ -76,8 +82,15 @@ public class GetProfileServlet extends HttpServlet {
     try {
       Map userInfo = gson.fromJson(request.getReader(), Map.class);
       // TODO: Change to actual oauth parameter from json that is passed in @JoeyBushagour
-      String userId = userInfo.get("userId").toString();
+      String userId = (String) userInfo.get(Person.USER_ID_FIELD_NAME);
+      if (userId == null) {
+        throw new IllegalArgumentException(LOG_INPUT_ERROR_MESSAGE);
+      }
       person = storageHandler.fetchPersonFromId(userId);
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+      return;
     } catch (Exception e) {
       System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, BODY_ERROR);
