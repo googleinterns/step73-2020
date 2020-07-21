@@ -41,6 +41,23 @@ public class JoinClubServlet extends HttpServlet {
   public static final String LOG_BODY_ERROR_MESSAGE = 
       "Body unable to be parsed in JoinClubServlet: ";
   private static final Gson gson = new Gson();
+  private StorageHandlerApi storageHandler = new StorageHandlerApi();
+
+  /**
+   * Overloaded constructor for dependency injection.
+   * @param storageHandler the {@link StorageHandlerApi} that is used when fetching the Person
+   */
+  public JoinClubServlet(StorageHandlerApi storageHandler) {
+    super();
+    this.storageHandler = storageHandler;
+  }
+
+  /**
+   * Explicity default constructor used for instantiating the servlet when not testing.
+   */
+  public JoinClubServlet() {
+    super();
+  }
 
   /** 
    * Adds a membership to the database using user and club ID.
@@ -59,12 +76,10 @@ public class JoinClubServlet extends HttpServlet {
       String clubId = clubAndUserInfo.get("clubId").toString();
       String userId = clubAndUserInfo.get("userId").toString();
       StorageHandlerApi.addMembership(userId, clubId);
+      response.setStatus(200);
     } catch (Exception e) {
       System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, BODY_ERROR);
-      return;
     }
-    response.setContentType("text/plain;");
-    response.getWriter().println("You have successfully joined this club!");
   }
 }
