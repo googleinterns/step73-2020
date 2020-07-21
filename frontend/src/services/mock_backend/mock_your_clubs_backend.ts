@@ -32,6 +32,12 @@ export class MockYourClubsBackendService {
     }
   }
 
+  createClub(clubJson: string): Promise<boolean> {
+    const club = JSON.parse(clubJson);
+    this.mockClubs.push(club);
+    return Promise.resolve(true);
+  }
+
   /** TODO: Update parameters to include Membership status, user Id, page. */
   listClubs(numClubs: number): Promise<string> {
     const listedClubs: ClubProps[] = [];
