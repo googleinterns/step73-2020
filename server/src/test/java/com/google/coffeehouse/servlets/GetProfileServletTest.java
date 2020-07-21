@@ -41,7 +41,9 @@ import org.mockito.Mock;
 public class GetProfileServletTest {
   // TODO: Change field name to be appropriate
   private static final String USER_ID = "predetermined-identification-string";
-  private static final String JSON = String.join("\n", 
+  private static final String EMAIL = "email@test.com";
+  private static final String NICKNAME = "test";
+  private static final String JSON = String.join("\n",
       "{",
       "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\"",
       "}");
@@ -79,7 +81,11 @@ public class GetProfileServletTest {
     String result = stringWriter.toString();
 
     Gson gson = new Gson();
-    Person p = gson.fromJson(result, Person.class);
+    Person.Builder personBuilder = Person.newBuilder()
+                                         .setEmail(EMAIL)
+                                         .setNickname(NICKNAME)
+                                         .setUserId(USER_ID);
+    Person p = personBuilder.build();
 
     assertEquals(USER_ID, p.getUserId());
   }
