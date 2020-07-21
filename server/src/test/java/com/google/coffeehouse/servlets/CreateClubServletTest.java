@@ -169,7 +169,7 @@ public class CreateClubServletTest {
     CreateClubServlet.doPost(request, response);
 
     verify(response).sendError(
-        HttpServletResponse.SC_BAD_REQUEST, CreateClubServlet.BODY_ERROR);
+        HttpServletResponse.SC_BAD_REQUEST, CreateClubServlet.NO_CURRENT_BOOK_ERROR);
   }
 
   @Test
