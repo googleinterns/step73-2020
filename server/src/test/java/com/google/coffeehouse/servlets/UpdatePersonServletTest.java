@@ -186,7 +186,8 @@ public class UpdatePersonServletTest {
     updatePersonServlet.doPost(request, response);
     
     verify(response).sendError(
-        HttpServletResponse.SC_BAD_REQUEST, updatePersonServlet.NO_USER_ID_ERROR);
+        HttpServletResponse.SC_BAD_REQUEST,
+        String.format(updatePersonServlet.NO_FIELD_ERROR, Person.USER_ID_FIELD_NAME));
   }
 
   @Test
@@ -196,7 +197,8 @@ public class UpdatePersonServletTest {
     updatePersonServlet.doPost(request, response);
     
     verify(response).sendError(
-        HttpServletResponse.SC_BAD_REQUEST, updatePersonServlet.NO_PERSON_ERROR);
+        HttpServletResponse.SC_BAD_REQUEST,
+        String.format(updatePersonServlet.NO_FIELD_ERROR, updatePersonServlet.PERSON_FIELD_NAME));
   }
   
   @Test

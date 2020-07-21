@@ -42,14 +42,9 @@ public class UpdatePersonServlet extends HttpServlet {
       "Body unable to be parsed in UpdatePersonServlet: ";
   /** 
    * The error string sent by the response object in doPost when the body of the 
-   * POST request does not have a "person" field.
+   * POST request does not have a required field.
    */
-  public static final String NO_PERSON_ERROR = "No \"person\" found in JSON.";
-  /** 
-   * The error string sent by the response object in doPost when the body of the 
-   * POST request does not have a "userId" field in its "person" field.
-   */
-  public static final String NO_USER_ID_ERROR = "No \"userId\" found in JSON.";
+  public static final String NO_FIELD_ERROR = "No \"%s\" found in JSON.";
   /** Message to be logged when the body of the POST request does not have required fields. */
   public static final String LOG_INPUT_ERROR_MESSAGE =
       "Error with JSON input in UpdatePersonServlet: ";
@@ -101,14 +96,15 @@ public class UpdatePersonServlet extends HttpServlet {
       Map mappedRequest = gson.fromJson(request.getReader(), Map.class);
       Map personInfo = (Map) mappedRequest.getOrDefault(PERSON_FIELD_NAME, null);
       if (personInfo == null) {
-        throw new IllegalArgumentException(NO_PERSON_ERROR);
+        throw new IllegalArgumentException(String.format(NO_FIELD_ERROR, PERSON_FIELD_NAME));
       }
       String rawUpdateMask = (String) mappedRequest.getOrDefault(UPDATE_MASK_FIELD_NAME, null);
 
       // Get the Person from the database and convert it to JSON for easy manipulation.
       String userId = (String) personInfo.getOrDefault(Person.USER_ID_FIELD_NAME, null);
       if (userId == null) {
-        throw new IllegalArgumentException(NO_USER_ID_ERROR);
+        throw new IllegalArgumentException(
+            String.format(NO_FIELD_ERROR, Person.USER_ID_FIELD_NAME));
       }
       personToUpdate = storageHandler.fetchPersonFromId(userId);
       JsonObject personToUpdateJson = gson.toJsonTree(personToUpdate).getAsJsonObject();
