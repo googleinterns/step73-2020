@@ -15,6 +15,7 @@
 package com.google.coffeehouse.servlets;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
@@ -50,17 +51,26 @@ public class GetProfileServletTest {
   private static final String SYNTACTICALLY_INCORRECT_JSON = 
       "{\"" + Person.USER_ID_FIELD_NAME + "\"";
 
-  private GetProfileServlet GetProfileServlet;
+  private Person testPerson = Person.newBuilder()
+                                    .setEmail(EMAIL)
+                                    .setNickname(NICKNAME)
+                                    .setUserId(USER_ID)
+                                    .build();
+  private GetProfileServlet getProfileServlet;
   private final LocalServiceTestHelper helper = new LocalServiceTestHelper();
   private StringWriter stringWriter = new StringWriter();
 
   @Mock private HttpServletRequest request;
   @Mock private HttpServletResponse response;
+  @Mock private StorageHandlerApi handler;
   
   @Before
   public void setUp() throws IOException {
     helper.setUp();
-    GetProfileServlet = new GetProfileServlet();
+
+    handler = mock(StorageHandlerApi.class);
+    when(handler.fetchPersonFromId(anyString())).thenReturn(testPerson);
+    getProfileServlet = new GetProfileServlet(handler);
 
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
@@ -77,24 +87,19 @@ public class GetProfileServletTest {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(JSON)));
 
-    GetProfileServlet.doGet(request, response);
+    getProfileServlet.doGet(request, response);
     String result = stringWriter.toString();
 
     Gson gson = new Gson();
-    Person.Builder personBuilder = Person.newBuilder()
-                                         .setEmail(EMAIL)
-                                         .setNickname(NICKNAME)
-                                         .setUserId(USER_ID);
-    Person p = personBuilder.build();
 
-    assertEquals(USER_ID, p.getUserId());
+    assertEquals(USER_ID, testPerson.getUserId());
   }
 
   @Test
   public void doGet_syntacticallyIncorrectInput() throws IOException {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(SYNTACTICALLY_INCORRECT_JSON)));
-    GetProfileServlet.doGet(request, response);
+    getProfileServlet.doGet(request, response);
     
     verify(response).sendError(
         HttpServletResponse.SC_BAD_REQUEST, GetProfileServlet.BODY_ERROR);

@@ -42,6 +42,23 @@ public class GetProfileServlet extends HttpServlet {
   public static final String LOG_BODY_ERROR_MESSAGE = 
       "Body unable to be parsed in GetProfileServlet: ";
   private static final Gson gson = new Gson();
+  private StorageHandlerApi storageHandler = new StorageHandlerApi();
+
+  /**
+   * Overloaded constructor for dependency injection.
+   * @param storageHandler the {@link StorageHandlerApi} that is used when fetching the Person
+   */
+  public GetProfileServlet(StorageHandlerApi storageHandler) {
+    super();
+    this.storageHandler = storageHandler;
+  }
+
+  /**
+   * Explicity default constructor used for instantiating the servlet when not testing.
+   */
+  public GetProfileServlet() {
+    super();
+  }
   
   /** 
    * Returns a {@link Person} object in JSON format from information in the database.
@@ -60,7 +77,7 @@ public class GetProfileServlet extends HttpServlet {
       Map userInfo = gson.fromJson(request.getReader(), Map.class);
       // TODO: Change to actual oauth parameter from json that is passed in @JoeyBushagour
       String userId = userInfo.get("userId").toString();
-      person = StorageHandlerApi.fetchPersonFromId(userId);
+      person = storageHandler.fetchPersonFromId(userId);
     } catch (Exception e) {
       System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, BODY_ERROR);
