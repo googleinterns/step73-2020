@@ -184,16 +184,24 @@ function ContentWarnings(props) {
   const classes = useStyles();
   const contentWarnings = props.contentWarnings;
 
-  return (
-    <p className={classes.textElement}>
-      <b>Content Warnings:</b><br/>
-      {contentWarnings.map((item, index) => (
-        <>
-          - <b>{item}<br/></b>
-        </>
-      ))}
-    </p>
-  );
+  if (contentWarnings) {
+    return (
+      <p className={classes.textElement}>
+        <b>Content Warnings:</b><br/>
+        {contentWarnings.map((item, index) => (
+          <>
+            - <b>{item}<br/></b>
+          </>
+        ))}
+      </p>
+    );
+  } else {
+    return (
+      <p className={classes.textElement}>
+        <b>No Content Warnings</b>
+      </p>
+    );
+  }
 }
 
 interface LeaveClubAlertWindowProps {
