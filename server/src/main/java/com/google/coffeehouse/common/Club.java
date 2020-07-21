@@ -150,7 +150,7 @@ public class Club implements Saveable {
     private String description = null;
     private String clubId = null;
     private String ownerId = null;
-    private List<String> contentWarnings = new ArrayList<>();;
+    private List<String> contentWarnings = new ArrayList<>();
     private static final String DEFAULT_DESCRIPTION = "A book club about %s.";
         
     public Builder setCurrentBook(Book currenBook) {
