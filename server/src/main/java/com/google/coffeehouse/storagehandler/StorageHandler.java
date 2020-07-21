@@ -125,15 +125,18 @@ public class StorageHandler {
           .readRow(
             "Books",
             Key.of(clubId),
-            Arrays.asList("bookId", "name", "description", "ownerId"));
+            Arrays.asList("bookId", "name", "description", "ownerId", "contentWarning"));
     if (row != null) {
       Book book = getBook(dbClient, row.getString(/* bookIdIndex= */ 0));
       Club.Builder clubBuilder = Club.newBuilder()
                                      .setCurrentBook(book)
                                      .setName(row.getString(/* nameIndex= */ 1))
                                      .setClubId(clubId)
-                                     .setOwnerId(row.getString(/* owerIdIndex= */ 3))
-                                     .setDescription(row.getString(/* descriptionIndex= */ 2));
+                                     .setDescription(row.getString(/* descriptionIndex= */ 2))
+                                     .setOwnerId(row.getString(/* owerIdIndex= */ 3));
+      if (!row.isNull(/* index= */ 4) || !row.getString(/* index= */ 4).isEmpty()) {
+        bookBuilder.setContentWarnings(row.getString(/* contentWarningIndex =*/ 4));
+      }
       return clubBuilder.build();
     } else {
       throw new IllegalArgumentException(CLUB_DOES_NOT_EXIST);
