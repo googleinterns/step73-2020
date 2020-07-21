@@ -2,7 +2,7 @@
  * Communicates with the backend to load, update, and delete user profiles.
  */
 export class ProfileBackendService {
-  
+
   loadProfile(id: string): Promise<string> {
     /** TODO: Upon OAuth and GetProfile being implemented, fetch /get-profile. */
     const returnMessage = "TODO: Implement loadProfile upon OAuth being implemented.";

@@ -7,7 +7,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "./drawer/Drawer";
 import { Explore } from "./pages/explore/Explore";
 import { hot } from "react-hot-loader";
-import { Login } from "./pages/login/Login"; 
+import { Login } from "./pages/login/Login";
 import Profile from "./pages/profile/Profile";
 import { Route } from "react-router-dom";
 import { Switch } from "react-router-dom";
@@ -46,11 +46,11 @@ class App extends React.Component<AppProps, AppState> {
       <BrowserRouter>
         <ServiceContext.Provider value={defaultServices}>
           <CssBaseline />
-          <AppBar 
+          <AppBar
             navigationDrawerOpen={this.state.navigationDrawerOpen}
             handleDrawerOpen={this.handleDrawerOpen}
           />
-          <Drawer 
+          <Drawer
             navigationDrawerOpen={this.state.navigationDrawerOpen}
             handleDrawerClose={this.handleDrawerClose}
           />

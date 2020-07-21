@@ -1,11 +1,14 @@
 # Runs both dev servers at the same time, can be ended at the same time with ctrl+C
 echo "Preview on http://localhost:9000"
 
+PROJECT="coffeehouse-step2020"
+
 if [[ $* == *-s* ]]
 then
-  (cd frontend; npm install) &&
-  gcloud config set project coffeehouse-step2020 &&
+  (cd frontend; npm install)
   sudo sysctl -w fs.inotify.max_user_watches=100000
+  gcloud config set project $PROJECT
+  export GOOGLE_CLOUD_PROJECT=$PROJECT
 fi
 
 trap "kill %1" SIGINT

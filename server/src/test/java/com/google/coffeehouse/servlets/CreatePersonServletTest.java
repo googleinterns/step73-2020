@@ -21,7 +21,6 @@ import static org.mockito.Mockito.verify;
 
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.coffeehouse.common.Person;
-import com.google.coffeehouse.util.IdentifierGenerator;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,17 +41,19 @@ public class CreatePersonServletTest {
   private static final String NICKNAME = "Tim";
   private static final String EMAIL = "test@fake.fake";
   private static final String PRONOUNS = "he/him";
-  private static final String IDENTIFICATION_STRING = "predetermined-identification-string";
+  private static final String USER_ID = "predetermined-identification-string";
   private static final String MINIMUM_JSON = String.join("\n", 
       "{",
       "  \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + NICKNAME + "\",",
-      "  \"" + Person.EMAIL_FIELD_NAME + "\" : \"" + EMAIL + "\"",
+      "  \"" + Person.EMAIL_FIELD_NAME + "\" : \"" + EMAIL + "\",",
+      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\"",
       "}");
   private static final String MAXIMUM_JSON = String.join("\n", 
       "{",
       "  \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + NICKNAME + "\",",
       "  \"" + Person.PRONOUNS_FIELD_NAME + "\" : \"" + PRONOUNS + "\",",
-      "  \"" + Person.EMAIL_FIELD_NAME + "\" : \"" + EMAIL + "\"",
+      "  \"" + Person.EMAIL_FIELD_NAME + "\" : \"" + EMAIL + "\",",
+      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\"",
       "}");
   private static final String NO_NICKNAME_JSON = String.join("\n", 
       "{",
@@ -63,6 +64,12 @@ public class CreatePersonServletTest {
       "{",
       "  \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + NICKNAME + "\",",
       "  \"" + Person.PRONOUNS_FIELD_NAME + "\" : \"" + PRONOUNS + "\"",
+      "}");
+  private static final String NO_USER_ID_JSON = String.join("\n", 
+      "{",
+      "  \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + NICKNAME + "\",",
+      "  \"" + Person.PRONOUNS_FIELD_NAME + "\" : \"" + PRONOUNS + "\",",
+      "  \"" + Person.EMAIL_FIELD_NAME + "\" : \"" + EMAIL + "\"",
       "}");
   private static final String SYNTACTICALLY_INCORRECT_JSON = 
       "{\"" + Person.NICKNAME_FIELD_NAME + "\"";
@@ -78,9 +85,7 @@ public class CreatePersonServletTest {
   public void setUp() throws IOException {
     helper.setUp();
 
-    IdentifierGenerator idGen = mock(IdentifierGenerator.class);
-    when(idGen.generateId()).thenReturn(IDENTIFICATION_STRING);
-    CreatePersonServlet = new CreatePersonServlet(idGen);
+    CreatePersonServlet = new CreatePersonServlet();
 
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
@@ -105,6 +110,7 @@ public class CreatePersonServletTest {
 
     assertEquals(NICKNAME, p.getNickname());
     assertEquals(EMAIL, p.getEmail());
+    assertEquals(USER_ID, p.getUserId());
     assertFalse(p.getPronouns().isPresent());
   }
 
@@ -121,6 +127,7 @@ public class CreatePersonServletTest {
 
     assertEquals(NICKNAME, p.getNickname());
     assertEquals(EMAIL, p.getEmail());
+    assertEquals(USER_ID, p.getUserId());
     assertTrue(p.getPronouns().isPresent());
     assertEquals(PRONOUNS, p.getPronouns().get());
   }
@@ -139,6 +146,16 @@ public class CreatePersonServletTest {
   public void doPost_noNicknameSpecified() throws IOException {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(NO_NICKNAME_JSON)));
+    CreatePersonServlet.doPost(request, response);
+    
+    verify(response).sendError(
+        HttpServletResponse.SC_BAD_REQUEST, CreatePersonServlet.BODY_ERROR);
+  }
+
+  @Test
+  public void doPost_noUserIdSpecified() throws IOException {
+    when(request.getReader()).thenReturn(
+          new BufferedReader(new StringReader(NO_USER_ID_JSON)));
     CreatePersonServlet.doPost(request, response);
     
     verify(response).sendError(

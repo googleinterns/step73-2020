@@ -18,7 +18,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.google.coffeehouse.util.IdentifierGenerator;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Before;
@@ -39,20 +38,15 @@ public final class PersonTest {
   private static final String ALT_EMAIL = "New Email";
   private static final String PRONOUNS = "she/her";
   private static final String ALT_PRONOUNS = "New Pronouns";
-  private static final String IDENTIFICATION_STRING = "predetermined-identification-string";
+  private static final String USER_ID = "predetermined-identification-string";
   private Person.Builder personBuilder;
   private Map personInfo;
   
-  @Mock private IdentifierGenerator idGen;
-
   @Before
   public void setUp() {
     personInfo = new HashMap<String, String>();
 
-    idGen = mock(IdentifierGenerator.class);
-    when(idGen.generateId()).thenReturn(IDENTIFICATION_STRING);
-
-    personBuilder = Person.newBuilder(EMAIL, NICKNAME);
+    personBuilder = Person.newBuilder().setEmail(EMAIL).setNickname(NICKNAME).setUserId(USER_ID);
   }
 
   @Test
@@ -69,8 +63,8 @@ public final class PersonTest {
 
   @Test
   public void getUserId_exists() {
-    Person p = personBuilder.setIdGenerator(idGen).build();
-    assertEquals(IDENTIFICATION_STRING, p.getUserId());
+    Person p = personBuilder.build();
+    assertEquals(USER_ID, p.getUserId());
   }
 
   @Test
@@ -111,7 +105,7 @@ public final class PersonTest {
   @Test 
   public void fromMap_invalidInput() {
     personInfo.put(Person.NICKNAME_FIELD_NAME, NICKNAME);
-    assertThrows(IllegalArgumentException.class, () -> {
+    assertThrows(RuntimeException.class, () -> {
         Person.fromMap(personInfo);
     });
   }
@@ -120,9 +114,11 @@ public final class PersonTest {
   public void fromMap_minimumValidInput() {
     personInfo.put(Person.NICKNAME_FIELD_NAME, NICKNAME);
     personInfo.put(Person.EMAIL_FIELD_NAME, EMAIL);
+    personInfo.put(Person.USER_ID_FIELD_NAME, USER_ID);
     Person p = Person.fromMap(personInfo);
     assertEquals(NICKNAME, p.getNickname());
     assertEquals(EMAIL, p.getEmail());
+    assertEquals(USER_ID, p.getUserId());
     assertFalse(p.getPronouns().isPresent());
   }
 
@@ -131,9 +127,11 @@ public final class PersonTest {
     personInfo.put(Person.NICKNAME_FIELD_NAME, NICKNAME);
     personInfo.put(Person.EMAIL_FIELD_NAME, EMAIL);
     personInfo.put(Person.PRONOUNS_FIELD_NAME, PRONOUNS);
+    personInfo.put(Person.USER_ID_FIELD_NAME, USER_ID);
     Person p = Person.fromMap(personInfo);
     assertEquals(NICKNAME, p.getNickname());
     assertEquals(EMAIL, p.getEmail());
+    assertEquals(USER_ID, p.getUserId());
     assertTrue(p.getPronouns().isPresent());
     assertEquals(PRONOUNS, p.getPronouns().get());
   }
