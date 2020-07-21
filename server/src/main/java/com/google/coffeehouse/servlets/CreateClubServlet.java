@@ -44,9 +44,9 @@ public class CreateClubServlet extends HttpServlet {
       "LOGGING: Body unable to be parsed in CreateClubServlet: ";
   /** 
    * The error string sent by the response object in doPost when the body of the 
-   * POST request does not have a "currentBook" field.
+   * POST request does not have a required field.
    */
-  public static final String NO_CURRENT_BOOK_ERROR = "No \"currentBook\" found in JSON.";
+  public static final String NO_FIELD_ERROR = "No \"%s\" found in JSON.";
   /** Message to be logged when the body of the POST request does not have required fields. */
   public static final String LOG_INPUT_ERROR_MESSAGE =
       "Error with JSON input in CreateClubServlet: ";
@@ -87,7 +87,8 @@ public class CreateClubServlet extends HttpServlet {
       Map clubInfo = gson.fromJson(request.getReader(), Map.class);
       Map bookInfo = (Map) clubInfo.getOrDefault(Club.CURRENT_BOOK_FIELD_NAME, null);
       if (bookInfo == null) {
-        throw new IllegalArgumentException(NO_CURRENT_BOOK_ERROR);
+        throw new IllegalArgumentException(
+            String.format(NO_FIELD_ERROR, Club.CURRENT_BOOK_FIELD_NAME));
       }
 
       // Generate IDs for the club and the book.
