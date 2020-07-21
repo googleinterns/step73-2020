@@ -18,7 +18,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.google.coffeehouse.util.IdentifierGenerator;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Before;
@@ -38,20 +37,14 @@ public final class BookTest {
   private static final String ALT_AUTHOR = "Alternate Book Author";
   private static final String ISBN = "978-3-16-148410-0";
   private static final String ALT_ISBN = "111-1-11-111111-1";
-  private static final String IDENTIFICATION_STRING = "predetermined-identification-string";
+  private static final String BOOK_ID = "predetermined-identification-string";
   private Book.Builder bookBuilder;
   private Map bookInfo;
-
-  @Mock private IdentifierGenerator idGen;
 
   @Before
   public void setUp() {
     bookInfo = new HashMap<String, String>();
-
-    idGen = mock(IdentifierGenerator.class);
-    when(idGen.generateId()).thenReturn(IDENTIFICATION_STRING);
-
-    bookBuilder = Book.newBuilder(TITLE);
+    bookBuilder = Book.newBuilder().setTitle(TITLE).setBookId(BOOK_ID);
   }
 
   @Test
@@ -62,8 +55,8 @@ public final class BookTest {
 
   @Test
   public void getBookId_exists() {
-    Book b = bookBuilder.setIdGenerator(idGen).build();
-    assertEquals(IDENTIFICATION_STRING, b.getBookId());
+    Book b = bookBuilder.build();
+    assertEquals(BOOK_ID, b.getBookId());
   }
 
   @Test
@@ -118,7 +111,7 @@ public final class BookTest {
   @Test 
   public void fromMap_invalidInput() {
     bookInfo.put(Book.ISBN_FIELD_NAME, ISBN);
-    assertThrows(IllegalArgumentException.class, () -> {
+    assertThrows(IllegalStateException.class, () -> {
         Book.fromMap(bookInfo);
     });
   }
@@ -126,8 +119,10 @@ public final class BookTest {
   @Test 
   public void fromMap_minimumValidMap() {
     bookInfo.put(Book.TITLE_FIELD_NAME, TITLE);
+    bookInfo.put(Book.BOOK_ID_FIELD_NAME, BOOK_ID);
     Book b = Book.fromMap(bookInfo);
     assertEquals(TITLE, b.getTitle());
+    assertEquals(BOOK_ID, b.getBookId());
     assertFalse(b.getIsbn().isPresent());
     assertFalse(b.getAuthor().isPresent());
   }
@@ -137,13 +132,14 @@ public final class BookTest {
     bookInfo.put(Book.TITLE_FIELD_NAME, TITLE);
     bookInfo.put(Book.ISBN_FIELD_NAME, ISBN);
     bookInfo.put(Book.AUTHOR_FIELD_NAME, AUTHOR);
-    Book b = Book.fromMap(bookInfo, idGen);
+    bookInfo.put(Book.BOOK_ID_FIELD_NAME, BOOK_ID);
+    Book b = Book.fromMap(bookInfo);
     assertEquals(TITLE, b.getTitle());
     assertTrue(b.getIsbn().isPresent());
     assertEquals(ISBN, b.getIsbn().get());
     assertTrue(b.getAuthor().isPresent());
     assertEquals(AUTHOR, b.getAuthor().get());
-    assertEquals(IDENTIFICATION_STRING, b.getBookId());
+    assertEquals(BOOK_ID, b.getBookId());
   }
 
   // TODO: test saving @linamontes10
