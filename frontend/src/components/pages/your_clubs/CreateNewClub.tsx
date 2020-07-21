@@ -111,22 +111,13 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
           </DialogContentText>
           <form>
             <TextField
-              error = {
-                missingField
-                  ? (club ? (club.name ? false : true) : true)
-                  : false
-              }
+              error = {missingField && !club?.name}
               fullWidth
-              helperText = {missingField
-                ? club
-                  ? (club.name
-                    ? "Name of the club to be displayed publically to \
-                       all subsequent users who view it."
-                    : "Club Name is a required field.")
-                  : "Club Name is a required field."
+              helperText = {missingField && !club?.name
+                ? "Club Name is a required field."
                 : "Name of the club to be displayed publically to \
-                   all subsequent users who view it."}
-
+                   all subsequent users who view it."
+              }
               id="clubName"
               InputLabelProps={{
                 shrink: true,
@@ -140,7 +131,7 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
               variant="outlined"
             />
             <TextField
-              error = {missingField && !club?.description ? true : false}
+              error = {missingField && !club?.description}
               fullWidth
               helperText = {missingField && !club?.description
                 ? "Club Description is a required field."
@@ -182,7 +173,7 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
             <div>
               <TextField
                 className={classes.bookField}
-                error = {missingField && !book?.title ? true : false}
+                error = {missingField && !book?.title}
                 helperText = {missingField && !book?.title
                   ? "Book Title is a required field."
                   : "Title of the current book that the club will be discussing."
@@ -194,7 +185,7 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
               />
               <TextField
                 className={classes.bookField}
-                error = {missingField && !book?.author ? true : false}
+                error = {missingField && !book?.author}
                 helperText = {missingField && !book?.author
                   ? "Book Author is a required field."
                   : "Author of the current book that the club will be discussing."
