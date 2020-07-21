@@ -28,6 +28,9 @@ export class YourClubsHandlerService {
    */
   async createClub(club: ClubProps) {
     try {
+      if (!club?.contentWarnings) {
+        club.contentWarnings = [];
+      }
       const clubJson = JSON.stringify(club);
       const success = await this.backend.createClub(clubJson);
       return success;
