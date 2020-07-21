@@ -135,7 +135,7 @@ public class StorageHandler {
                                      .setDescription(row.getString(/* descriptionIndex= */ 2))
                                      .setOwnerId(row.getString(/* owerIdIndex= */ 3));
       if (!row.isNull(/* index= */ 4) || !row.getString(/* index= */ 4).isEmpty()) {
-        bookBuilder.setContentWarnings(row.getString(/* contentWarningIndex =*/ 4));
+        clubBuilder.setContentWarnings(row.getString(/* contentWarningIndex =*/ 4));
       }
       return clubBuilder.build();
     } else {
