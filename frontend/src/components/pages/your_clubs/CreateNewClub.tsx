@@ -91,7 +91,7 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
       setSubmitSuccess(false);
     } else {
       setMissingField(false);
-      const success = yourClubsHandlerService.createClub(club);
+      const success = await yourClubsHandlerService.createClub(club);
       if (success) {
         setSubmitSuccess(true);
       }
