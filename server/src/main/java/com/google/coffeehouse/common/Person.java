@@ -55,7 +55,7 @@ public class Person implements Saveable {
    *     A {@code "pronouns"} key that is mapped to a String describing the pronouns of the Person
    *     can optionally be added
    * @return the created Person
-   * @throws RuntimeException if no valid {@code "email"} key or 
+   * @throws IllegalStateException if no valid {@code "email"} key or 
    *     {@code "nickname"} key or {@code "userId"} key is defined
    */
   public static Person fromMap(Map personInfo) {
@@ -148,13 +148,13 @@ public class Person implements Saveable {
 
     public Person build() {
       if (email == null) {
-        throw new RuntimeException("Person must be instantiated with a non-null email");
+        throw new IllegalStateException("Person must be instantiated with a non-null email");
       }
       if (nickname == null) {
-        throw new RuntimeException("Person must be instantiated with a non-null nickname");
+        throw new IllegalStateException("Person must be instantiated with a non-null nickname");
       }
       if (userId == null) {
-        throw new RuntimeException("Person must be instantiated with a non-null userId");
+        throw new IllegalStateException("Person must be instantiated with a non-null userId");
       }
       return new Person(this);
     }
