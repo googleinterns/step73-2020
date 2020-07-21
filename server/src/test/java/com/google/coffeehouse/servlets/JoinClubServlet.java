@@ -41,7 +41,7 @@ public class JoinClubServlet extends HttpServlet {
   public static final String LOG_BODY_ERROR_MESSAGE = 
       "Body unable to be parsed in JoinClubServlet: ";
   private static final Gson gson = new Gson();
-  private StorageHandlerApi storageHandler = new StorageHandlerApi();
+  private static StorageHandlerApi storageHandler;
 
   /**
    * Overloaded constructor for dependency injection.
@@ -57,6 +57,7 @@ public class JoinClubServlet extends HttpServlet {
    */
   public JoinClubServlet() {
     super();
+    this.storageHandler = new StorageHandlerApi();
   }
 
   /** 
@@ -64,9 +65,9 @@ public class JoinClubServlet extends HttpServlet {
    * @param request the POST request that must have a valid JSON representation of the userId and clubID
    *     to be passed in order to add a membership to the Mmeberships table in the database. If this is
    *     not the case the response will send a "400 Bad Request error"
-   * @param response the response from this method, will contain the object in JSON format.
-   *     If the request object does not have a valid JSON body that describes the Person, this object
-   *     will send a "400 Bad Request error"
+   * @param response the response from this method, will set the status to 200 (OK).
+   *     If the request object does not have a valid JSON body representation of the userId and clubID,
+   *     the response will send a "400 Bad Request error"
    * @throws IOException if an input or output error is detected when the servlet handles the request
    */
   @Override
