@@ -14,8 +14,6 @@
 
 package com.google.coffeehouse.common;
 
-import com.google.coffeehouse.util.IdentifierGenerator;
-import com.google.coffeehouse.util.UuidWrapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,73 +27,74 @@ import java.util.Map;
 public class Club implements Saveable {
   /** The names of each possible field in the map in fromMap */
   public static final String NAME_FIELD_NAME = "name";
-  public static final String CURRENTBOOK_FIELD_NAME = "currentBook";
-  public static final String CONTENTWARNINGS_FIELD_NAME = "contentWarnings";
+  public static final String CURRENT_BOOK_FIELD_NAME = "currentBook";
+  public static final String CONTENT_WARNINGS_FIELD_NAME = "contentWarnings";
   public static final String DESCRIPTION_FIELD_NAME = "description";
-
-  /** The message on the IllegalArgumentException when there is no valid name or book key */
-  public static final String NO_VALID_NAME_BOOK_FROM_MAP = 
-      "No valid \"" + NAME_FIELD_NAME + "\" or \"" + CURRENTBOOK_FIELD_NAME + "\" key defined.";
+  public static final String CLUB_ID_FIELD_NAME = "clubId";
+  public static final String OWNER_ID_FIELD_NAME = "ownerId";
 
   private String name;
   private Book currentBook;
   private String clubId;
+  private String ownerId;
   private String description;
   private List<String> contentWarnings;
 
   private Club(Builder builder) {
     this.name = builder.name;
     this.currentBook = builder.currentBook;
-    this.clubId = builder.idGenerator.generateId();
+    this.clubId = builder.clubId;
     this.description = builder.description;
     this.contentWarnings = builder.contentWarnings;
-  }
-
-  /** Overloaded static factory, calls other fromMap with null IdentifierGenerator. */
-  public static Club fromMap(Map clubInfo) {
-    return Club.fromMap(clubInfo, null);
+    this.ownerId = builder.ownerId;
   }
 
   /** 
    * Creates a {@link Club} object from a Map with the relevant parameters as keys.
-   * @param clubInfo the Map that contains the information used to construct the Club. At a 
+   * @param clubInfo the Map that contains the information used to construct the Club. At a
    *     minimum this includes a {@code "name"} key that corresponds to the String describing the
-   *     name of the club, as well as a {@code "currentBook"} key that is mapped to another Map
-   *     that follows the format described in {@link Book#fromMap(Map, IdentifierGenerator)}.
-   *     Optional keys include a {@code "description"} key that maps to a String describing the 
-   *     Club's description, as well as a {@code "contentWarnings"} key that maps to a List of 
-   *     Strings describing the content warnings of the Club. Suitable defaults will be created
-   *     in the absence of these optional keys
-   * @param idGen the {@link IdentifierGenerator} used when constructing the Club and Book. If
-   *     null, the default generator will be used
+   *     name of the Club, a {@code "currentBook"} key that is mapped to another Map
+   *     that follows the format described in {@link Book#fromMap(Map)}, a {@code "clubId"} key
+   *     that corresponds to a String of the clubId of the Club, and a {@code "owenerId"} key that
+   *     corresponds to a String of the userId of the owner of the Club. Optional keys include a
+   *     {@code "description"} key that maps to a String describing the Club's description, as
+   *     well as a {@code "contentWarnings"} key that maps to a List of Strings describing the
+   *     content warnings of the Club. Suitable defaults will be created in the absence of these
+   *     optional keys
    * @return the created Club
-   * @throws IllegalArgumentException if no valid {@code "name"} key or 
-   *     {@code "currentBook"} key is defined
+   * @throws IllegalStateException if no valid {@code "name"} key or 
+   *     {@code "currentBook"} key or {@code "clubId"} or {@code "ownerId"} key is defined
    */
-  public static Club fromMap(Map clubInfo, IdentifierGenerator idGen) {
-    String name = (String) clubInfo.getOrDefault(NAME_FIELD_NAME, null);
-    Map bookInfo = (Map) clubInfo.getOrDefault(CURRENTBOOK_FIELD_NAME, null);
-    if (name == null || bookInfo == null) {
-      throw new IllegalArgumentException(NO_VALID_NAME_BOOK_FROM_MAP);
+  public static Club fromMap(Map clubInfo) {
+    Club.Builder clubBuilder = Club.newBuilder();
+    if (clubInfo.containsKey(CURRENT_BOOK_FIELD_NAME)) {
+      Map bookInfo = (Map) clubInfo.get(CURRENT_BOOK_FIELD_NAME);
+      clubBuilder.setCurrentBook(Book.fromMap(bookInfo));
     }
-
-    Book currentBook = Book.fromMap(bookInfo, idGen);
-    
-    Club.Builder clubBuilder = Club.newBuilder(name, currentBook);
-    if (clubInfo.containsKey(CONTENTWARNINGS_FIELD_NAME)) {
-      clubBuilder.setContentWarnings((List) clubInfo.get(CONTENTWARNINGS_FIELD_NAME));
+    if (clubInfo.containsKey(NAME_FIELD_NAME)) {
+      clubBuilder.setName((String) clubInfo.get(NAME_FIELD_NAME));
+    }
+    if (clubInfo.containsKey(CLUB_ID_FIELD_NAME)) {
+      clubBuilder.setClubId((String) clubInfo.get(CLUB_ID_FIELD_NAME));
+    }
+    if (clubInfo.containsKey(OWNER_ID_FIELD_NAME)) {
+      clubBuilder.setOwnerId((String) clubInfo.get(OWNER_ID_FIELD_NAME));
+    }
+    if (clubInfo.containsKey(CONTENT_WARNINGS_FIELD_NAME)) {
+      clubBuilder.setContentWarnings((List) clubInfo.get(CONTENT_WARNINGS_FIELD_NAME));
     }
     if (clubInfo.containsKey(DESCRIPTION_FIELD_NAME)) {
       clubBuilder.setDescription((String) clubInfo.get(DESCRIPTION_FIELD_NAME));
-    }
-    if (idGen != null) {
-      clubBuilder.setIdGenerator(idGen);
     }
     return clubBuilder.build();
   }
 
   public String getName() {
     return name;
+  }
+
+  public String getOwnerId() {
+    return ownerId;
   }
 
   public Book getCurrentBook() {
@@ -128,8 +127,8 @@ public class Club implements Saveable {
   }
 
   /** Starts the building process of a new Club object. */
-  public static Builder newBuilder(String name, Book book) {
-    return new Builder(name, book);
+  public static Builder newBuilder() {
+    return new Builder();
   }
 
   @Override
@@ -146,16 +145,32 @@ public class Club implements Saveable {
   }
 
   public static class Builder {
-    private String name;
-    private Book currentBook;
-    private String description = "";
-    private IdentifierGenerator idGenerator = new UuidWrapper();
+    private String name = null;
+    private Book currentBook = null;
+    private String description = null;
+    private String clubId = null;
+    private String ownerId = null;
     private List<String> contentWarnings = new ArrayList<>();;
     private static final String DEFAULT_DESCRIPTION = "A book club about %s.";
-
-    public Builder(String name, Book currentBook) {
+        
+    public Builder setCurrentBook(Book currenBook) {
+      this.currentBook = currenBook;
+      return this;
+    }
+    
+    public Builder setName(String name) {
       this.name = name;
-      this.currentBook = currentBook;
+      return this;
+    }
+
+    public Builder setClubId(String clubId) {
+      this.clubId = clubId;
+      return this;
+    }
+
+    public Builder setOwnerId(String ownerId) {
+      this.ownerId = ownerId;
+      return this;
     }
 
     public Builder setDescription(String description) {
@@ -168,17 +183,24 @@ public class Club implements Saveable {
       return this;
     }
 
-    public Builder setIdGenerator(IdentifierGenerator idGenerator) {
-      this.idGenerator = idGenerator;
-      return this;
-    }
-
     private String generateDefaultDescription() {
       return String.format(DEFAULT_DESCRIPTION, currentBook.getTitle());
     }
 
     public Club build() {
-      description = description == "" ? generateDefaultDescription() : description;
+      if (name == null) {
+        throw new IllegalStateException("Club must be instantiated with a non-null name");
+      }
+      if (currentBook == null) {
+        throw new IllegalStateException("Club must be instantiated with a non-null currentBook");
+      }
+      if (clubId == null) {
+        throw new IllegalStateException("Club must be instantiated with a non-null clubId");
+      }
+      if (ownerId == null) {
+        throw new IllegalStateException("Club must be instantiated with a non-null ownerId");
+      }
+      description = description == null ? generateDefaultDescription() : description;
       return new Club(this);
     }
   }
