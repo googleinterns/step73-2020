@@ -38,11 +38,11 @@ public class GetProfileServlet extends HttpServlet {
    */
   public static final String BODY_ERROR = "- unable to parse body.";
 
-  /** The logged error string when an error parsing the body of the GET request is encountered */
+  /** The logged error string when an error parsing the body of the GET request is encountered. */
   public static final String LOG_BODY_ERROR_MESSAGE = 
       "Body unable to be parsed in GetProfileServlet: ";
 
-  /** Message to be logged when the body of the POST request does not have required fields. */
+  /** Message to be logged when the body of the GET request does not have required fields. */
   public static final String LOG_INPUT_ERROR_MESSAGE =
       "Error with JSON input in GetProfileServlet: No \"userId\" found in JSON.";
 
