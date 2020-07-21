@@ -40,7 +40,7 @@ public class RetrieveTokenServlet extends HttpServlet {
   /** The name of the key to be associated with the auth code in the JSON. */
   public static final String CODE_KEY_NAME = "code";
   /** The name of the key to be associated with the redirect URI in the JSON. */
-  public static final String REDIRECTURI_KEY_NAME = "redirectUri";
+  public static final String REDIRECT_URI_KEY_NAME = "redirectUri";
   /** 
    * The error string sent by the response object in doPost when the body of the 
    * POST request cannot be parsed into JSON and a code/redirect URI retrieved.
@@ -97,7 +97,7 @@ public class RetrieveTokenServlet extends HttpServlet {
    * Exchanges an auth code for an ID/auth/refresh token. Returns the ID token in JSON format.
    * @param request the POST request that must have a JSON body with a valid auth code and 
    *     redirect URI (associated with the keys defined by the CODE_KEY_NAME and 
-   *     REDIRECTURI_KEY_NAME constants).
+   *     REDIRECT_URI_KEY_NAME constants).
    * @param response the response from this method, will contain the retrieved ID token as JSON.
    *     If the request object does not have the required JSON, this object will send a 
    *     "400 Bad Request error". If the ID token retrieved by this servlet cannot be verified,
@@ -111,7 +111,7 @@ public class RetrieveTokenServlet extends HttpServlet {
     try {
       Map body = gson.fromJson(request.getReader(), Map.class);
       code = (String) body.get(CODE_KEY_NAME);
-      redirectUri = (String) body.get(REDIRECTURI_KEY_NAME);
+      redirectUri = (String) body.get(REDIRECT_URI_KEY_NAME);
       if (code == null || redirectUri == null) {
         throw new IllegalArgumentException(NO_CODE_REDIRECTURI);
       }

@@ -48,13 +48,13 @@ public class RetrieveTokenServletTest {
   private static final String VALID_JSON = String.join("\n",
       "{",
       "  \"" + RetrieveTokenServlet.CODE_KEY_NAME + "\":\"123\",",
-      "  \"" + RetrieveTokenServlet.REDIRECTURI_KEY_NAME + "\":\"abc\"",
+      "  \"" + RetrieveTokenServlet.REDIRECT_URI_KEY_NAME + "\":\"abc\"",
       "}");
   private static final String NO_CODE_JSON = String.join("\n",
       "{",
-      "  \"" + RetrieveTokenServlet.REDIRECTURI_KEY_NAME + "\":\"abc\"",
+      "  \"" + RetrieveTokenServlet.REDIRECT_URI_KEY_NAME + "\":\"abc\"",
       "}");
-  private static final String NO_REDIRECTURI_JSON = String.join("\n",
+  private static final String NO_REDIRECT_URI_JSON = String.join("\n",
       "{",
       "  \"" + RetrieveTokenServlet.CODE_KEY_NAME + "\":\"123\"",
       "}");
@@ -137,7 +137,7 @@ public class RetrieveTokenServletTest {
   @Test
   public void doPost_missingRedirectUri() throws IOException, GeneralSecurityException {
     when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(NO_REDIRECTURI_JSON)));
+          new BufferedReader(new StringReader(NO_REDIRECT_URI_JSON)));
     when(verifier.verify(any(String.class))).thenReturn(idToken);
 
     retrieveTokenServlet = new RetrieveTokenServlet(verifier, tokenRequest);
