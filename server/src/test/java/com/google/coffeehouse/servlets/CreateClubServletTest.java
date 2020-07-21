@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.coffeehouse.common.Book;
 import com.google.coffeehouse.common.Club;
 import com.google.coffeehouse.util.IdentifierGenerator;
 import com.google.gson.Gson;
@@ -43,6 +44,7 @@ import org.mockito.Mock;
  */
 public class CreateClubServletTest {
   private static final String NAME = "Club Name";
+  private static final String OWNER_ID = "predetermined-owner-identification-string";
   private static final String DESCRIPTION = "Club Description";
   private static final String IDENTIFICATION_STRING = "predetermined-identification-string";
   private static final String BOOK_TITLE = "Book Name";
@@ -50,31 +52,34 @@ public class CreateClubServletTest {
   private static final String BOOK_ISBN = "978-3-16-148410-0";
   private static final String MINIMUM_JSON = String.join("\n", 
       "{",
-      "  \"name\" : \"" + NAME + "\",",
-      "  \"currentBook\" : {",
-      "    \"title\" : \"" + BOOK_TITLE + "\"",
+      "  \"" + Club.NAME_FIELD_NAME + "\" : \"" + NAME + "\",",
+      "  \"" + Club.OWNER_ID_FIELD_NAME + "\" : \"" + OWNER_ID + "\",",
+      "  \"" + Club.CURRENT_BOOK_FIELD_NAME + "\" : {",
+      "    \"" + Book.TITLE_FIELD_NAME + "\" : \"" + BOOK_TITLE + "\"",
       "  }",
       "}");
   private static final String MAXIMUM_JSON = String.join("\n", 
       "{",
-      "  \"name\" : \"" + NAME + "\",",
-      "  \"description\" : \"" + DESCRIPTION + "\",",
-      "  \"contentWarnings\" : [\"1\", \"2\"],",
-      "  \"currentBook\" : {",
-      "    \"title\" : \"" + BOOK_TITLE + "\",",
-      "    \"author\" : \"" + BOOK_AUTHOR + "\",",
-      "    \"isbn\" : \"" + BOOK_ISBN + "\"",
+      "  \"" + Club.NAME_FIELD_NAME + "\" : \"" + NAME + "\",",
+      "  \"" + Club.OWNER_ID_FIELD_NAME + "\" : \"" + OWNER_ID + "\",",
+      "  \"" + Club.DESCRIPTION_FIELD_NAME + "\" : \"" + DESCRIPTION + "\",",
+      "  \"" + Club.CONTENT_WARNINGS_FIELD_NAME + "\" : [\"1\", \"2\"],",
+      "  \"" + Club.CURRENT_BOOK_FIELD_NAME + "\" : {",
+      "    \"" + Book.TITLE_FIELD_NAME + "\" : \"" + BOOK_TITLE + "\",",
+      "    \"" + Book.AUTHOR_FIELD_NAME + "\" : \"" + BOOK_AUTHOR + "\",",
+      "    \"" + Book.ISBN_FIELD_NAME + "\" : \"" + BOOK_ISBN + "\"",
       "  }",
       "}");
   private static final String NO_NAME_JSON = String.join("\n", 
       "{",
-      "  \"currentBook\" : {",
-      "    \"title\" : \"" + BOOK_TITLE + "\"",
+      "  \"" + Club.CURRENT_BOOK_FIELD_NAME + "\" : {",
+      "  \"" + Club.OWNER_ID_FIELD_NAME + "\" : \"" + OWNER_ID + "\",",
+      "    \"" + Book.TITLE_FIELD_NAME + "\" : \"" + BOOK_TITLE + "\"",
       "  }",
       "}");
   private static final String NO_BOOK_JSON = String.join("\n", 
       "{",
-      "  \"name\" : \"" + NAME + "\"",
+      "  \"" + Club.NAME_FIELD_NAME + "\" : \"" + NAME + "\"",
       "}");
   private static final String SYNTACTICALLY_INCORRECT_JSON = "{\"name\"";
 

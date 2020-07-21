@@ -15,7 +15,9 @@
 package com.google.coffeehouse.servlets;
 
 import com.google.coffeehouse.common.Club;
+import com.google.coffeehouse.common.Book;
 import com.google.coffeehouse.util.IdentifierGenerator;
+import com.google.coffeehouse.util.UuidWrapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
@@ -42,7 +44,7 @@ public class CreateClubServlet extends HttpServlet {
   /** The logged error string when an error parsing the body of the POST request is encoutered */
   public static final String LOG_BODY_ERROR_MESSAGE = 
       "LOGGING: Body unable to be parsed in CreateClubServlet: ";
-  private IdentifierGenerator idGen = null;
+  private IdentifierGenerator idGen = new UuidWrapper();
   private static final Gson gson = new Gson();
 
   /** 
@@ -76,7 +78,15 @@ public class CreateClubServlet extends HttpServlet {
     Club newClub;
     try {
       Map clubInfo = gson.fromJson(request.getReader(), Map.class);
-      newClub = Club.fromMap(clubInfo, idGen);
+      Map bookInfo = (Map) clubInfo.getOrDefault(Club.CURRENT_BOOK_FIELD_NAME, null);
+      if (bookInfo == null) {
+        throw new IllegalArgumentException("Club cannot be built without a book.");
+      }
+
+      // Generate IDs for the club and the book.
+      bookInfo.put(Book.BOOK_ID_FIELD_NAME, idGen.generateId());
+      clubInfo.put(Club.CLUB_ID_FIELD_NAME, idGen.generateId());
+      newClub = Club.fromMap(clubInfo);
     } catch (Exception e) {
       System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, BODY_ERROR);
