@@ -53,8 +53,9 @@ public class UpdatePersonServlet extends HttpServlet {
   /** Message to be logged when the body of the POST request does not have required fields. */
   public static final String LOG_INPUT_ERROR_MESSAGE =
       "Error with JSON input in UpdatePersonServlet: ";
-  
+  /** Name of the key in the input JSON that corresponds to the person object. */
   public static final String PERSON_FIELD_NAME = "person";
+  /** Name of the key in the input JSON that corresponds to the update mask. */
   public static final String UPDATE_MASK_FIELD_NAME = "updateMask";
 
   private static final Gson gson = new Gson();
