@@ -38,7 +38,6 @@ import java.util.List;
 * The StorageHandler class holds the functions that either get information from the
 * database and return the respective objects created with that information, or
 * perform transactions to the database.
-* .
 */
 public class StorageHandler {
   public static final String NO_PRONOUNS = "No pronouns";
@@ -67,11 +66,13 @@ public class StorageHandler {
               Key.of(userId),
               Arrays.asList("email", "nickname", "pronouns"));
     if (row != null) {
-      Person.Builder personBuilder = Person.newBuilder(row.getString(/*emailIndex=*/0),
-                                                       row.getString(/*nicknameIndex=*/1));
-      // TODO: implement setting the userId field @JosephBushagour
-      if (!row.isNull(/*index=*/2) || !row.getString(/*index=*/2).isEmpty()) {
-        personBuilder.setPronouns(row.getString(/*pronounsIndex=*/2));
+      Person.Builder personBuilder = Person.newBuilder()
+                                           .setEmail(row.getString(/* emailIndex= */0))
+                                           .setNickname(row.getString(/* nicknameIndex= */1))
+                                           .setUserId(userId);
+
+      if (!row.isNull(/* index= */2) || !row.getString(/* index= */2).isEmpty()) {
+        personBuilder.setPronouns(row.getString(/* pronounsIndex= */2));
       }
       return personBuilder.build();
     } else {
@@ -96,14 +97,14 @@ public class StorageHandler {
               Key.of(bookId),
               Arrays.asList("title", "autho", "isbn"));
     if (row != null) {
-      Book.Builder bookBuilder = Book.newBuilder(row.getString(/*titleIndex=*/0));
+      Book.Builder bookBuilder = Book.newBuilder(row.getString(/* titleIndex= */0));
       // TODO: implement setting the bookId field @JosephBushagour
 
-      if (!row.isNull(/*index=*/1) || !row.getString(/*index=*/1).isEmpty()) {
-        bookBuilder.setAuthor(row.getString(/*authorIndex=*/1));
+      if (!row.isNull(/* index= */1) || !row.getString(/* index= */1).isEmpty()) {
+        bookBuilder.setAuthor(row.getString(/* authorIndex= */1));
       }
-      if (!row.isNull(/*index=*/2) || !row.getString(/*index=*/2).isEmpty()) {
-        bookBuilder.setIsbn(row.getString(/*isbnIndex=*/2));
+      if (!row.isNull(/* index= */2) || !row.getString(/* index= */2).isEmpty()) {
+        bookBuilder.setIsbn(row.getString(/* isbnIndex= */2));
       }
       return bookBuilder.build();
     } else {
@@ -128,12 +129,12 @@ public class StorageHandler {
             Key.of(clubId),
             Arrays.asList("bookId", "name", "description", "ownerId"));
     if (row != null) {
-      Book book = getBook(dbClient, row.getString(/*bookIdIndex=*/0));
-      Club.Builder clubBuilder = Club.newBuilder(row.getString(/*nameIndex=*/1),
+      Book book = getBook(dbClient, row.getString(/* bookIdIndex= */0));
+      Club.Builder clubBuilder = Club.newBuilder(row.getString(/* nameIndex= */1),
                                                  book);
       // TODO: implement setting the clubId field @JosephBushagour
       // TODO: implement setting the ownerId field @JosephBushagour
-      clubBuilder.setDescription(row.getString(/*descriptionIndex=*/2));
+      clubBuilder.setDescription(row.getString(/* descriptionIndex= */2));
       return clubBuilder.build();
     } else {
       throw new IllegalArgumentException(CLUB_DOES_NOT_EXIST);
@@ -223,7 +224,7 @@ public class StorageHandler {
                 KeySet.range(KeyRange.prefix(Key.of(clubId))),
                 Arrays.asList("userId"));
       while (resultSet.next()) {
-        persons.add(getPerson(dbClient, resultSet.getString(/**userIdIndex=**/0)));
+        persons.add(getPerson(dbClient, resultSet.getString(/* userIdIndex= */0)));
       }
     }
     return persons;
@@ -265,7 +266,7 @@ public class StorageHandler {
       resultSet = dbClient.singleUse().executeQuery(statement);
     }
     while (resultSet.next()) {
-      clubs.add(getClub(dbClient, resultSet.getString(/**clubIdIndex=**/0)));
+      clubs.add(getClub(dbClient, resultSet.getString(/* clubIdIndex= */0)));
     }
     return clubs;
   }
