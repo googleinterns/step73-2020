@@ -98,10 +98,10 @@ public class StorageHandler {
     if (row != null) {
       Book.Builder bookBuilder = Book.newBuilder().setTitle(row.getString(/* titleIndex= */ 0));
 
-      if (!row.isNull(/* index= */ 1) || !row.getString(/* index= */ 1).isEmpty()) {
-        bookBuilder.setAuthor(row.getString(/* authorIndex =*/ 1));
+      if (!row.isNull(/* authorIndex= */ 1) || !row.getString(/* authorIndex= */ 1).isEmpty()) {
+        bookBuilder.setAuthor(row.getString(/* authorIndex= */ 1));
       }
-      if (!row.isNull(/* index= */ 2) || !row.getString(/* index= */ 2).isEmpty()) {
+      if (!row.isNull(/* isbnIndex= */ 2) || !row.getString(/* isbnIndex= */ 2).isEmpty()) {
         bookBuilder.setIsbn(row.getString(/* isbnIndex= */ 2));
       }
       return bookBuilder.build();
@@ -134,8 +134,10 @@ public class StorageHandler {
                                      .setClubId(clubId)
                                      .setDescription(row.getString(/* descriptionIndex= */ 2))
                                      .setOwnerId(row.getString(/* ownerIdIndex= */ 3));                       
-      if (!row.isNull(/* index= */ 4) || !row.getString(/* index= */ 4).isEmpty()) {
-        List<String> contentWarnings = Arrays.asList(row.getString(/* contentWarningIndex =*/ 4).split("\\n"));
+      if (!row.isNull(/* contentWarningIndex =*/ 4)||
+          !row.getString(/* contentWarningIndex =*/ 4).isEmpty()) {
+        List<String> contentWarnings =
+            Arrays.asList(row.getString(/* contentWarningIndex =*/ 4).split("\\n"));
         clubBuilder.setContentWarnings(contentWarnings);
       }
       return clubBuilder.build();
