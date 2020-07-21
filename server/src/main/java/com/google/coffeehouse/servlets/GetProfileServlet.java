@@ -26,7 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 
 /** 
  * Servlet to get a {@link Person} from Http GET Request Body (in JSON format)
- * that exists in the database, and return it in JSON format.
+ * that exists in the database through a call to the Storage Handler API,
+ * and return it in JSON format.
  */
 @WebServlet("/api/get-profile")
 public class GetProfileServlet extends HttpServlet {
