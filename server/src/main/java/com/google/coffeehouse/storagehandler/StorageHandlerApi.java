@@ -38,7 +38,7 @@ public class StorageHandlerApi {
   * @param  userId    the user ID string used to query the Persons table from the database
   * @return           a Person object containing information from the database
   */
-  public static Person fetchPersonFromId(String userId) {
+  public Person fetchPersonFromId(String userId) {
     return StorageHandler.getPerson(dbClient, userId);
   }
 
@@ -48,7 +48,7 @@ public class StorageHandlerApi {
   * @param  clubId    the club ID string used to query the Clubs table from the database.
   * @return           a Club object containing information from the database
   */
-  public static Club fetchClubFromId(String clubId) {
+  public Club fetchClubFromId(String clubId) {
     return StorageHandler.getClub(dbClient, clubId);
   }
 
@@ -58,7 +58,7 @@ public class StorageHandlerApi {
   * @param  clubId    the club ID used to retrieve a list of members
   * @return           a list of Person objects that are members of a club
   */
-  public static List<Person> fetchMembersByClubId(String clubId) {
+  public List<Person> fetchMembersByClubId(String clubId) {
     return StorageHandler.getListOfMembers(dbClient, clubId);
   }
 
@@ -69,7 +69,7 @@ public class StorageHandlerApi {
   * @param  userId      the user ID string specifying the person who is being added as a member
   * @param  clubId      the club ID string specifying the club a person is being added to
   */
-  public static void addMembership(String userId, String clubId) {
+  public void addMembership(String userId, String clubId) {
     StorageHandler.runAddMembershipTransaction(dbClient, userId, clubId);
   }
 
@@ -80,7 +80,7 @@ public class StorageHandlerApi {
   * @param  userId      the user ID string specifying the person who is leaving a club
   * @param  clubId      the club ID string specifying the club a person is leaving
   */
-  public static void deleteMembership(String userId, String clubId) {
+  public void deleteMembership(String userId, String clubId) {
     StorageHandler.runDeleteMembershipTransaction(dbClient, userId, clubId);
   }
 
@@ -91,7 +91,7 @@ public class StorageHandlerApi {
   * @param  membershipStatus  the enum specifying whether the user is a member or not
   * @return                   the list of {@link Club}s
   */
-  public static List<Club> listClubsFromUserId(String userId, MembershipConstants.MembershipStatus membershipStatus) {
+  public List<Club> listClubsFromUserId(String userId, MembershipConstants.MembershipStatus membershipStatus) {
     return StorageHandler.getListOfClubs(dbClient, userId, membershipStatus);
   }
 }

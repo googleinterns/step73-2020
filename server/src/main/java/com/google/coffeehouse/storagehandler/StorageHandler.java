@@ -133,9 +133,10 @@ public class StorageHandler {
                                      .setName(row.getString(/* nameIndex= */ 1))
                                      .setClubId(clubId)
                                      .setDescription(row.getString(/* descriptionIndex= */ 2))
-                                     .setOwnerId(row.getString(/* owerIdIndex= */ 3));
+                                     .setOwnerId(row.getString(/* ownerIdIndex= */ 3));                       
       if (!row.isNull(/* index= */ 4) || !row.getString(/* index= */ 4).isEmpty()) {
-        clubBuilder.setContentWarnings(row.getString(/* contentWarningIndex =*/ 4));
+        List<String> contentWarnings = Arrays.asList(row.getString(/* contentWarningIndex =*/ 4).split("\\n"));
+        clubBuilder.setContentWarnings(contentWarnings);
       }
       return clubBuilder.build();
     } else {
