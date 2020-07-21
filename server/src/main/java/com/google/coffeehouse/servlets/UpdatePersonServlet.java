@@ -37,6 +37,9 @@ public class UpdatePersonServlet extends HttpServlet {
    * POST request cannot be parsed for any reason.
    */
   public static final String BODY_ERROR = "- unable to parse body.";
+  /** Message to be logged when the body of the POST request cannot be parsed. */
+  public static final String LOG_BODY_ERROR_MESSAGE =
+      "Body unable to be parsed in UpdatePersonServlet: ";
   /** 
    * The error string sent by the response object in doPost when the body of the 
    * POST request does not have a "person" field.
@@ -47,10 +50,13 @@ public class UpdatePersonServlet extends HttpServlet {
    * POST request does not have a "userId" field in its "person" field.
    */
   public static final String NO_USER_ID_ERROR = "No \"userId\" found in JSON.";
-  public static final String LOG_BODY_ERROR_MESSAGE =
-      "Body unable to be parsed in UpdatePersonServlet: ";
+  /** Message to be logged when the body of the POST request does not have required fields. */
   public static final String LOG_INPUT_ERROR_MESSAGE =
       "Error with JSON input in UpdatePersonServlet: ";
+  
+  public static final String PERSON_FIELD_NAME = "person";
+  public static final String UPDATE_MASK_FIELD_NAME = "updateMask";
+
   private static final Gson gson = new Gson();
   private static StorageHandlerApi storageHandler;
 
@@ -92,14 +98,14 @@ public class UpdatePersonServlet extends HttpServlet {
     try {
       // Get the update mask / updated Person from the post request.
       Map mappedRequest = gson.fromJson(request.getReader(), Map.class);
-      Map personInfo = (Map) mappedRequest.getOrDefault("person", null);
+      Map personInfo = (Map) mappedRequest.getOrDefault(PERSON_FIELD_NAME, null);
       if (personInfo == null) {
         throw new IllegalArgumentException(NO_PERSON_ERROR);
       }
-      String rawUpdateMask = (String) mappedRequest.getOrDefault("updateMask", null);
+      String rawUpdateMask = (String) mappedRequest.getOrDefault(UPDATE_MASK_FIELD_NAME, null);
 
       // Get the Person from the database and convert it to JSON for easy manipulation.
-      String userId = (String) personInfo.getOrDefault("userId", null);
+      String userId = (String) personInfo.getOrDefault(Person.USER_ID_FIELD_NAME, null);
       if (userId == null) {
         throw new IllegalArgumentException(NO_USER_ID_ERROR);
       }

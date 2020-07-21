@@ -59,9 +59,9 @@ public class UpdatePersonServletTest {
                                                  .build();
   private static final String MASK_PARTIAL_UPDATE = String.join("\n",
       "{",
-      "  \"" + "updateMask" + "\" : \"" + Person.NICKNAME_FIELD_NAME +
-      "," + Person.PRONOUNS_FIELD_NAME + "\",",
-      "  \"person\" : {",
+      "  \"" + UpdatePersonServlet.UPDATE_MASK_FIELD_NAME + "\" : \"" +
+      Person.NICKNAME_FIELD_NAME + "," + Person.PRONOUNS_FIELD_NAME + "\",",
+      "  \"" + UpdatePersonServlet.PERSON_FIELD_NAME + "\" : {",
       "    \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + ALT_NICKNAME + "\",",
       "    \"" + Person.EMAIL_FIELD_NAME + "\" : \"" + ALT_EMAIL + "\",",
       "    \"" + Person.PRONOUNS_FIELD_NAME + "\" : \"" + ALT_PRONOUNS + "\",",
@@ -70,7 +70,7 @@ public class UpdatePersonServletTest {
       "}");
   private static final String NO_MASK_UPDATE = String.join("\n",
       "{",
-      "  \"person\" : {",
+      "  \"" + UpdatePersonServlet.PERSON_FIELD_NAME + "\" : {",
       "    \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + ALT_NICKNAME + "\",",
       "    \"" + Person.EMAIL_FIELD_NAME + "\" : \"" + ALT_EMAIL + "\",",
       "    \"" + Person.PRONOUNS_FIELD_NAME + "\" : \"" + ALT_PRONOUNS + "\",",
@@ -79,10 +79,10 @@ public class UpdatePersonServletTest {
       "}");
   private static final String MASK_ALL_UPDATE = String.join("\n",
       "{",
-      "  \"" + "updateMask" + "\" : \"" + Person.NICKNAME_FIELD_NAME +
-      "," + Person.PRONOUNS_FIELD_NAME + "," + Person.EMAIL_FIELD_NAME +
-      "," + Person.USER_ID_FIELD_NAME + "\",",
-      "  \"person\" : {",
+      "  \"" + UpdatePersonServlet.UPDATE_MASK_FIELD_NAME + "\" : \"" +
+      Person.NICKNAME_FIELD_NAME + "," + Person.PRONOUNS_FIELD_NAME + "," +
+      Person.EMAIL_FIELD_NAME + "," + Person.USER_ID_FIELD_NAME + "\",",
+      "  \"" + UpdatePersonServlet.PERSON_FIELD_NAME + "\" : {",
       "    \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + ALT_NICKNAME + "\",",
       "    \"" + Person.EMAIL_FIELD_NAME + "\" : \"" + ALT_EMAIL + "\",",
       "    \"" + Person.PRONOUNS_FIELD_NAME + "\" : \"" + ALT_PRONOUNS + "\",",
@@ -91,10 +91,10 @@ public class UpdatePersonServletTest {
       "}");
   private static final String NO_USER_ID = String.join("\n",
       "{",
-      "  \"" + "updateMask" + "\" : \"" + Person.NICKNAME_FIELD_NAME +
-      "," + Person.PRONOUNS_FIELD_NAME + "," + Person.EMAIL_FIELD_NAME +
-      "," + Person.USER_ID_FIELD_NAME + "\",",
-      "  \"person\" : {",
+      "  \"" + UpdatePersonServlet.UPDATE_MASK_FIELD_NAME + "\" : \"" +
+      Person.NICKNAME_FIELD_NAME + "," + Person.PRONOUNS_FIELD_NAME + "," +
+      Person.EMAIL_FIELD_NAME + "," + Person.USER_ID_FIELD_NAME + "\",",
+      "  \"" + UpdatePersonServlet.PERSON_FIELD_NAME + "\" : {",
       "    \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + ALT_NICKNAME + "\",",
       "    \"" + Person.EMAIL_FIELD_NAME + "\" : \"" + ALT_EMAIL + "\",",
       "    \"" + Person.PRONOUNS_FIELD_NAME + "\" : \"" + ALT_PRONOUNS + "\"",
@@ -102,9 +102,9 @@ public class UpdatePersonServletTest {
       "}");
   private static final String NO_PERSON = String.join("\n",
       "{",
-      "  \"" + "updateMask" + "\" : \"" + Person.NICKNAME_FIELD_NAME +
-      "," + Person.PRONOUNS_FIELD_NAME + "," + Person.EMAIL_FIELD_NAME +
-      "," + Person.USER_ID_FIELD_NAME + "\"",
+      "  \"" + UpdatePersonServlet.UPDATE_MASK_FIELD_NAME + "\" : \"" +
+      Person.NICKNAME_FIELD_NAME + "," + Person.PRONOUNS_FIELD_NAME + "," +
+      Person.EMAIL_FIELD_NAME + "," + Person.USER_ID_FIELD_NAME + "\"",
       "}");
   private static final String SYNTACTICALLY_INCORRECT_JSON = "{\"{";
 
