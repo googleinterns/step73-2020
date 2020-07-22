@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexBasis: '100%',
       flexWrap: 'wrap',
-      marginBottom: theme.spacing(1),
+      marginBottom: theme.spacing(2),
       marginLeft: theme.spacing(2),
       marginRight: theme.spacing(2),
     },
@@ -44,9 +44,10 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexBasis: '100%',
       justifyContent: 'space-between',
-      marginBottom: theme.spacing(0),
+      marginBottom: theme.spacing(2),
       marginLeft: theme.spacing(2),
       marginRight: theme.spacing(2),
+      marginTop: theme.spacing(1),
     },
     clubTitle: {
       marginBottom: theme.spacing(0),
@@ -137,7 +138,7 @@ export function ClubList(props: ClubListProps) {
                     </Button>
                   </div>
                 </div>
-                <div className={classes.clubContent}>
+                <div className={classes.clubContent} >
                   <ClubDescription description={item.description} />
                 </div>
                 <div className={classes.clubContent}>
