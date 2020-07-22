@@ -5,7 +5,12 @@
     ],
     "jsRules": {},
     "rules": {
-        "no-var-requires": false
+      "curly": true,
+      "jsdoc-format": false,
+      "max-classes-per-file": false,
+      "no-var-requires": false,
+      "no-empty-interface": false,
+      "restrict-plus-operands": true
     },
     "rulesDirectory": []
 }

@@ -5,8 +5,9 @@ export interface BackendProfileServiceInterface {
 }
 
 export interface BackendYourClubsServiceInterface {
+  createClub(clubJson: string): Promise<boolean>,
   listClubs(numClubs: number): Promise<string>,
-  leaveClub(id: string): Promise<boolean>,
+  leaveClub(clubId: string): Promise<boolean>,
 }
 
 export interface BackendAuthenticationInterface {

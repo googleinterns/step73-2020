@@ -2,15 +2,15 @@ import { CLUBS } from "../../utils/mock_club_data";
 import { MAX_NUM_CLUBS } from "../../utils/temporary_testing_consts";
 
 export interface BookProps {
-  title: string, 
-  author: string, 
-  isbn: string, 
+  title: string,
+  author: string,
+  isbn: string,
 }
 
 export interface ClubProps {
   name: string,
   description: string,
-  contentWarnings: Array<string>, 
+  contentWarnings: string[],
   currentBook: BookProps,
 }
 
@@ -32,9 +32,15 @@ export class MockYourClubsBackendService {
     }
   }
 
+  createClub(clubJson: string): Promise<boolean> {
+    const club = JSON.parse(clubJson);
+    this.mockClubs.push(club);
+    return Promise.resolve(true);
+  }
+
   /** TODO: Update parameters to include Membership status, user Id, page. */
   listClubs(numClubs: number): Promise<string> {
-    let listedClubs: ClubProps[] = [];
+    const listedClubs: ClubProps[] = [];
     for (let i = 0; i < Math.min(numClubs, this.mockClubs.length); i++) {
       listedClubs.push(this.mockClubs[i]);
     }

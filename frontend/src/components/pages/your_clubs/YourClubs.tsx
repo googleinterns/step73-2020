@@ -3,6 +3,7 @@ import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button";
 import { ClubList } from "./ClubList";
 import { ClubProps } from "../../../services/mock_backend/mock_your_clubs_backend";
+import { CreateNewClubWindow } from "./CreateNewClub";
 import { createStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
@@ -56,6 +57,7 @@ export const YourClubs = () => {
     React.useState<ClubProps[]|undefined>(undefined);
   const [numClubsDisplayed, setNumClubsDisplayed] =
     React.useState<number|undefined>(DEFAULT_NUM_DISPLAYED);
+  const [createNewClub, setCreateNewClub] = React.useState<boolean>(false);
 
   /* Re-renders Profile only when number of displayed clubs changes. */
   React.useEffect(() => {
@@ -88,6 +90,17 @@ export const YourClubs = () => {
     }
   }
 
+  const openCreateClubWindow = () => {
+    setCreateNewClub(true);
+  }
+
+  const closeCreateClubWindow = (successfulCreation: boolean) => {
+    setCreateNewClub(false);
+    if (successfulCreation) {
+      updateClubList();
+    }
+  }
+
   return (
     <div className={classes.root}>
       <div className={classes.topUtilitiesContainer}>
@@ -115,6 +128,7 @@ export const YourClubs = () => {
           className={classes.button}
           color="primary"
           endIcon={<AddIcon />}
+          onClick={openCreateClubWindow}
           variant="contained"
         >
           Create Club
@@ -123,6 +137,10 @@ export const YourClubs = () => {
       <ClubList
         clubsToDisplay={listedClubs}
         handleLeaveClub={updateClubListAfterLeaving}
+      />
+      <CreateNewClubWindow
+        closeWindow={closeCreateClubWindow}
+        isCreatingNewClub={createNewClub}
       />
     </div>
   );

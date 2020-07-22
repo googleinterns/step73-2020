@@ -14,8 +14,6 @@
 
 package com.google.coffeehouse.common;
 
-import com.google.coffeehouse.util.IdentifierGenerator;
-import com.google.coffeehouse.util.UuidWrapper;
 import java.util.Map;
 import java.util.Optional;
 
@@ -30,10 +28,8 @@ public class Book implements Saveable {
   public static final String AUTHOR_FIELD_NAME = "author";
   public static final String ISBN_FIELD_NAME = "isbn";
   public static final String TITLE_FIELD_NAME = "title";
+  public static final String BOOK_ID_FIELD_NAME = "bookId";
 
-  /** The message on the IllegalArgumentException when there is no "title" key */
-  public static final String NO_VALID_TITLE_FROM_MAP = 
-      "No valid \"" + TITLE_FIELD_NAME + "\" key defined.";
   private String title;
   private String author;
   private String isbn;
@@ -43,41 +39,33 @@ public class Book implements Saveable {
     this.title = builder.title;
     this.author = builder.author;
     this.isbn = builder.isbn;
-    this.bookId = builder.idGenerator.generateId();
-  }
-
-  /** Overloaded static factory, calls other fromMap with null IdentifierGenerator. */
-  public static Book fromMap(Map bookInfo) {
-    return Book.fromMap(bookInfo, null);
+    this.bookId = builder.bookId;
   }
 
   /** 
    * Creates a {@link Book} object from a Map with the relevant parameters as keys.
    * @param bookInfo the Map that contains the information used to construct the Book. At a
    *     minimum this includes a {@code "title"} key that is mapped to a String that describes
-   *     the title of the Book to be created. Optional keys include a {@code "author"} key 
+   *     the title of the Book to be created and a {@code "bookId"} key that is mapped to a
+   *     String that is the bookId of the Book. Optional keys include a {@code "author"} key
    *     that is mapped to a String describing the author of the book, as well as an 
    *     {@code "isbn"} key that is mapped to a String that is the isbn number of the book
-   * @param idGen the {@link IdentifierGenerator} used when constructing the Book. If
-   *     null, the default generator will be used
    * @return the created Book
-   * @throws IllegalArgumentException if no valid {@code "title"} key is defined
+   * @throws IllegalStateException if no valid {@code "title"} or {@code "bookId"} key is defined
    */
-  public static Book fromMap(Map bookInfo, IdentifierGenerator idGen) {
-    String title = (String) bookInfo.getOrDefault(TITLE_FIELD_NAME, null);
-    if (title == null) {
-      throw new IllegalArgumentException(NO_VALID_TITLE_FROM_MAP);
+  public static Book fromMap(Map bookInfo) {
+    Book.Builder bookBuilder = Book.newBuilder();
+    if (bookInfo.containsKey(TITLE_FIELD_NAME)) {
+      bookBuilder.setTitle((String) bookInfo.get(TITLE_FIELD_NAME));
     }
-
-    Book.Builder bookBuilder = Book.newBuilder(title);
+    if (bookInfo.containsKey(BOOK_ID_FIELD_NAME)) {
+      bookBuilder.setBookId((String) bookInfo.get(BOOK_ID_FIELD_NAME));
+    }
     if (bookInfo.containsKey(AUTHOR_FIELD_NAME)) {
       bookBuilder.setAuthor((String) bookInfo.get(AUTHOR_FIELD_NAME));
     }
     if (bookInfo.containsKey(ISBN_FIELD_NAME)) {
       bookBuilder.setIsbn((String) bookInfo.get(ISBN_FIELD_NAME));
-    }
-    if (idGen != null) {
-      bookBuilder.setIdGenerator(idGen);
     }
     return bookBuilder.build();
   }
@@ -112,8 +100,8 @@ public class Book implements Saveable {
     this.isbn = isbn;
   }
 
-  public static Builder newBuilder(String title) {
-    return new Builder(title);
+  public static Builder newBuilder() {
+    return new Builder();
   }
 
   @Override
@@ -128,13 +116,14 @@ public class Book implements Saveable {
   }
 
   public static class Builder {
-    private String title;
+    private String title = null;
     private String author = null;
     private String isbn = null;
-    private IdentifierGenerator idGenerator = new UuidWrapper();
+    private String bookId = null;
 
-    public Builder(String title) {
+    public Builder setTitle(String title) {
       this.title = title;
+      return this;
     }
 
     public Builder setAuthor(String author) {
@@ -147,12 +136,18 @@ public class Book implements Saveable {
       return this;
     }
 
-    public Builder setIdGenerator(IdentifierGenerator idGenerator) {
-      this.idGenerator = idGenerator;
+    public Builder setBookId(String bookId) {
+      this.bookId = bookId;
       return this;
     }
 
     public Book build() {
+      if (title == null) {
+        throw new IllegalStateException("Book must be instantiated with a non-null title");
+      }
+      if (bookId == null) {
+        throw new IllegalStateException("Book must be instantiated with a non-null bookId");
+      }
       return new Book(this);
     }
   }

@@ -15,7 +15,9 @@
 package com.google.coffeehouse.servlets;
 
 import com.google.coffeehouse.common.Club;
+import com.google.coffeehouse.common.Book;
 import com.google.coffeehouse.util.IdentifierGenerator;
+import com.google.coffeehouse.util.UuidWrapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
@@ -32,17 +34,23 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/api/create-club")
 public class CreateClubServlet extends HttpServlet {
-
   /** 
    * The error string sent by the response object in doPost when the body of the 
    * POST request cannot be used to construct a {@link Club} for any reason.
    */
   public static final String BODY_ERROR = "- unable to parse body.";
-
-  /** The logged error string when an error parsing the body of the POST request is encoutered */
+  /** The logged error string when an error parsing the body of the POST request is encountered. */
   public static final String LOG_BODY_ERROR_MESSAGE = 
       "Body unable to be parsed in CreateClubServlet: ";
-  private IdentifierGenerator idGen = null;
+  /** 
+   * The error string sent by the response object in doPost when the body of the 
+   * POST request does not have a required field.
+   */
+  public static final String NO_FIELD_ERROR = "No \"%s\" found in JSON.";
+  /** Message to be logged when the body of the POST request does not have required fields. */
+  public static final String LOG_INPUT_ERROR_MESSAGE =
+      "Error with JSON input in CreateClubServlet: ";
+  private static IdentifierGenerator idGen;
   private static final Gson gson = new Gson();
 
   /** 
@@ -59,6 +67,7 @@ public class CreateClubServlet extends HttpServlet {
    */
   public CreateClubServlet() {
     super();
+    this.idGen = new UuidWrapper();
   }
 
   /** 
@@ -76,7 +85,20 @@ public class CreateClubServlet extends HttpServlet {
     Club newClub;
     try {
       Map clubInfo = gson.fromJson(request.getReader(), Map.class);
-      newClub = Club.fromMap(clubInfo, idGen);
+      Map bookInfo = (Map) clubInfo.getOrDefault(Club.CURRENT_BOOK_FIELD_NAME, null);
+      if (bookInfo == null) {
+        throw new IllegalArgumentException(
+            String.format(NO_FIELD_ERROR, Club.CURRENT_BOOK_FIELD_NAME));
+      }
+
+      // Generate IDs for the club and the book.
+      bookInfo.put(Book.BOOK_ID_FIELD_NAME, idGen.generateId());
+      clubInfo.put(Club.CLUB_ID_FIELD_NAME, idGen.generateId());
+      newClub = Club.fromMap(clubInfo);
+    } catch (IllegalArgumentException e) {
+      System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+      return;
     } catch (Exception e) {
       System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, BODY_ERROR);

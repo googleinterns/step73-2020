@@ -5,8 +5,8 @@ export const CLUBS = [
                   exploration of world-building and universes different from \
                   our own. All are welcome!",
     contentWarnings: ["Fantasy and SciFi violence", "Strong language"],
-    currentBook: { title: "Dune", 
-                   author: "Frank Herbert", 
+    currentBook: { title: "Dune",
+                   author: "Frank Herbert",
                    isbn: "9780736692403", },
   },
   {
@@ -16,7 +16,7 @@ export const CLUBS = [
                   discussion include abolition, alternative forms of policing \
                   and envisioning a world where community infrastructure is \
                   prioritized over conventional policing. All are welcome!",
-    contentWarnings: ["Discussion of police brutality", 
+    contentWarnings: ["Discussion of police brutality",
                       "Discussion of violence and injustices against minority \
                       groups."],
     currentBook: { title: "Are Prisons Obsolete?",
@@ -43,7 +43,7 @@ export const CLUBS = [
                   welcome!",
     contentWarnings: ["Discussion of religion and political systems."],
     currentBook: { title: "Sapiens: A Brief History of Humankind",
-                   author: "Yuval Noah Harari", 
+                   author: "Yuval Noah Harari",
                    isbn: "9780062316097", },
   },
   {

@@ -15,8 +15,6 @@
 package com.google.coffeehouse.servlets;
 
 import com.google.coffeehouse.common.Person;
-import com.google.coffeehouse.util.IdentifierGenerator;
-import com.google.coffeehouse.util.UuidWrapper;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.Map;
@@ -32,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/api/create-person")
 public class CreatePersonServlet extends HttpServlet {
-
   /** 
    * The error string sent by the response object in doPost when the body of the 
    * POST request cannot be used to construct a {@link Person} for any reason.
@@ -42,24 +39,7 @@ public class CreatePersonServlet extends HttpServlet {
   /** The logged error string when an error parsing the body of the POST request is encountered */
   public static final String LOG_BODY_ERROR_MESSAGE = 
       "Body unable to be parsed in CreatePersonServlet: ";
-  private IdentifierGenerator idGen = null;
   private static final Gson gson = new Gson();
-  
-  /** 
-   * Overloaded constructor for dependency injection.
-   * @param idGen the {@link IdentifierGenerator} that is used when constructing the Person
-   */
-  public CreatePersonServlet(IdentifierGenerator idGen) {
-    super();
-    this.idGen = idGen;
-  }
-
-  /** 
-   * Explicit default constructor used for instantiating the servlet when not testing.
-   */
-  public CreatePersonServlet() {
-    super();
-  }
 
   /** 
    * Creates a {@link Person} object, saves it in the database and returns it in JSON format.
@@ -76,7 +56,7 @@ public class CreatePersonServlet extends HttpServlet {
     Person newPerson;
     try {
       Map personInfo = gson.fromJson(request.getReader(), Map.class);
-      newPerson = Person.fromMap(personInfo, idGen);
+      newPerson = Person.fromMap(personInfo);
     } catch (Exception e) {
       System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, BODY_ERROR);

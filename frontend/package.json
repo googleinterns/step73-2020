@@ -8,7 +8,8 @@
     "start": "npm run start-dev",
     "start-dev": "webpack-dev-server --config=configs/webpack/dev.js",
     "start-prod": "npm run build && node express.js",
-    "test": "jest --coverage --watchAll --config=configs/jest.json"
+    "test": "jest --coverage --watchAll --config=configs/jest.json",
+    "test-once": "jest --config=configs/jest.json --passWithNoTests"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.3",

@@ -8,6 +8,13 @@ export class ErrorLoadingClubs extends Error {
   }
 }
 
+/** Error that occurs when an attempt to create a club fails. */
+export class ErrorCreatingClub extends Error {
+  constructor(readonly club: ClubProps) {
+    super(`Error occurred while creating club '${club.name}'.`);
+  }
+}
+
 /**
  * Handling service that obtains the club that a user is in and
  * loads them to the user's Your Clubs page.
@@ -15,6 +22,22 @@ export class ErrorLoadingClubs extends Error {
 export class YourClubsHandlerService {
   /** Backend is responsible for holding all YourClubs information. */
   constructor(private readonly backend: BackendYourClubsServiceInterface) {};
+
+  /* TODO: In another PR, create interfaces for handler services, and have
+   *       have JSON functionality solely in backend for stronger typing.
+   */
+  async createClub(club: ClubProps) {
+    try {
+      if (!club?.contentWarnings) {
+        club.contentWarnings = [];
+      }
+      const clubJson = JSON.stringify(club);
+      const success = await this.backend.createClub(clubJson);
+      return success;
+    } catch(err) {
+      throw new ErrorCreatingClub(club);
+    }
+  }
 
   async listClubs(numClubs: number) {
     try {

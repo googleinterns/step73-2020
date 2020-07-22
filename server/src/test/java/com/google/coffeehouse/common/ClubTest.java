@@ -18,7 +18,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.google.coffeehouse.util.IdentifierGenerator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -38,8 +37,10 @@ public final class ClubTest {
   private static final String NAME = "Club Name";
   private static final String DESCRIPTION = "Club Description";
   private static final String ALT_DESCRIPTION = "New Club Description";
-  private static final String IDENTIFICATION_STRING = "predetermined-identification-string";
+  private static final String CLUB_ID = "predetermined-identification-string";
+  private static final String OWNER_ID = "predetermined-owner-identification-string";
   private static final String BOOK_TITLE = "Book Name";
+  private static final String BOOK_ID = "predetermined-book-identification-string";
   private static final String ALT_BOOK_TITLE = "New Book Name";
   private List<String> testContentWarnings;
   private Club.Builder clubBuilder;
@@ -48,8 +49,6 @@ public final class ClubTest {
   private Map clubInfo;
   private Map bookInfo;
 
-  @Mock private IdentifierGenerator idGen;
-
   @Before
   public void setUp() {
     testContentWarnings = new ArrayList<>(Arrays.asList("1", "2"));
@@ -57,13 +56,15 @@ public final class ClubTest {
     clubInfo = new HashMap();
     bookInfo = new HashMap<String, String>();
     bookInfo.put(Book.TITLE_FIELD_NAME, BOOK_TITLE);
-    
-    idGen = mock(IdentifierGenerator.class);
-    when(idGen.generateId()).thenReturn(IDENTIFICATION_STRING);
+    bookInfo.put(Book.BOOK_ID_FIELD_NAME, BOOK_ID);
 
-    testBook = Book.newBuilder(BOOK_TITLE).build();
-    altTestBook = Book.newBuilder(ALT_BOOK_TITLE).build();
-    clubBuilder = Club.newBuilder(NAME, testBook);
+    testBook = Book.newBuilder().setTitle(BOOK_TITLE).setBookId(BOOK_ID).build();
+    altTestBook = Book.newBuilder().setTitle(ALT_BOOK_TITLE).setBookId(BOOK_ID).build();
+    clubBuilder = Club.newBuilder()
+                      .setName(NAME)
+                      .setCurrentBook(testBook)
+                      .setOwnerId(OWNER_ID)
+                      .setClubId(CLUB_ID);
   }
 
   @Test
@@ -79,6 +80,12 @@ public final class ClubTest {
   }
 
   @Test
+  public void getOwnerId_exists() {
+    Club c = clubBuilder.build();
+    assertEquals(OWNER_ID, c.getOwnerId());
+  }
+
+  @Test
   public void getCurrentBook_exists() {
     Club c = clubBuilder.build();
     assertEquals(testBook, c.getCurrentBook());
@@ -86,8 +93,8 @@ public final class ClubTest {
 
   @Test
   public void getClubId_exists() {
-    Club c = clubBuilder.setIdGenerator(idGen).build();
-    assertEquals(IDENTIFICATION_STRING, c.getClubId());
+    Club c = clubBuilder.build();
+    assertEquals(CLUB_ID, c.getClubId());
   }
 
   @Test
@@ -119,8 +126,8 @@ public final class ClubTest {
   
   @Test 
   public void fromMap_invalidInput() {
-    clubInfo.put(Club.CONTENTWARNINGS_FIELD_NAME, testContentWarnings);
-    assertThrows(IllegalArgumentException.class, () -> {
+    clubInfo.put(Club.CONTENT_WARNINGS_FIELD_NAME, testContentWarnings);
+    assertThrows(IllegalStateException.class, () -> {
         Club.fromMap(clubInfo);
     });
   }
@@ -128,9 +135,13 @@ public final class ClubTest {
   @Test 
   public void fromMap_minimumValidInput() {
     clubInfo.put(Club.NAME_FIELD_NAME, NAME);
-    clubInfo.put(Club.CURRENTBOOK_FIELD_NAME, bookInfo);
+    clubInfo.put(Club.CURRENT_BOOK_FIELD_NAME, bookInfo);
+    clubInfo.put(Club.CLUB_ID_FIELD_NAME, CLUB_ID);
+    clubInfo.put(Club.OWNER_ID_FIELD_NAME, OWNER_ID);
     Club c = Club.fromMap(clubInfo);
     assertEquals(NAME, c.getName());
+    assertEquals(CLUB_ID, c.getClubId());
+    assertEquals(OWNER_ID, c.getOwnerId());
     assertEquals(new ArrayList<>(), c.getContentWarnings());
     assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
   }
@@ -138,16 +149,19 @@ public final class ClubTest {
   @Test 
   public void fromMap_maximumValidInput() {
     clubInfo.put(Club.NAME_FIELD_NAME, NAME);
-    clubInfo.put(Club.CONTENTWARNINGS_FIELD_NAME, testContentWarnings);
-    clubInfo.put(Club.CURRENTBOOK_FIELD_NAME, bookInfo);
+    clubInfo.put(Club.CONTENT_WARNINGS_FIELD_NAME, testContentWarnings);
+    clubInfo.put(Club.CURRENT_BOOK_FIELD_NAME, bookInfo);
     clubInfo.put(Club.DESCRIPTION_FIELD_NAME, DESCRIPTION);
+    clubInfo.put(Club.CLUB_ID_FIELD_NAME, CLUB_ID);
+    clubInfo.put(Club.OWNER_ID_FIELD_NAME, OWNER_ID);
 
-    Club c = Club.fromMap(clubInfo, idGen);
+    Club c = Club.fromMap(clubInfo);
     assertEquals(NAME, c.getName());
     assertEquals(testContentWarnings, c.getContentWarnings());
+    assertEquals(CLUB_ID, c.getClubId());
+    assertEquals(OWNER_ID, c.getOwnerId());
     assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
     assertEquals(DESCRIPTION, c.getDescription());
-    assertEquals(IDENTIFICATION_STRING, c.getClubId());
   }
 
   // TODO: test saving @linamontes10
