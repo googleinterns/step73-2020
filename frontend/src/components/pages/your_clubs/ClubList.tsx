@@ -20,15 +20,13 @@ const useStyles = makeStyles((theme: Theme) =>
       fontWeight: 'bold',
       marginBottom: theme.spacing(0),
     },
-    break : {
-      flexBasis: '100%',
-      height: 0,
-    },
     button : {
-      margin: theme.spacing(1),
-      marginLeft: theme.spacing(0),
+      marginLeft: theme.spacing(1),
       marginTop: theme.spacing(1),
-      maxHeight: '50px',
+      height: '35px',
+    },
+    buttonContainer: {
+      marginTop: theme.spacing(1),
     },
     club : {
       marginTop: theme.spacing(3),
@@ -36,15 +34,23 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     clubContent: {
       display: 'flex',
+      flexBasis: '100%',
       flexWrap: 'wrap',
       marginBottom: theme.spacing(1),
-      marginLeft: theme.spacing(4),
-      marginRight: theme.spacing(4),
-      marginTop: theme.spacing(1),
+      marginLeft: theme.spacing(2),
+      marginRight: theme.spacing(2),
+    },
+    clubHeader: {
+      display: 'flex',
+      flexBasis: '100%',
+      justifyContent: 'space-between',
+      marginBottom: theme.spacing(0),
+      marginLeft: theme.spacing(2),
+      marginRight: theme.spacing(2),
     },
     clubTitle: {
       marginBottom: theme.spacing(0),
-      marginRight: theme.spacing(6),
+      maxWidth: '500px',
     },
     listedClubsContainer: {
       alignItems: 'center',
@@ -109,38 +115,35 @@ export function ClubList(props: ClubListProps) {
           <div className={classes.club} key={item.name}>
             <Box border={1} borderColor="text.primary" borderRadius={16}>
               <div className={classes.clubContent}>
-                <h2 className={classes.clubTitle}>{item.name}</h2>
-                <ClubDescription description={item.description} />
-                <div className={classes.break}></div>
-                <BookInfo book={item.currentBook} />
-                <ContentWarnings contentWarnings={item.contentWarnings} />
-                <div className={classes.break}></div>
-                <div>
-                  <Button
-                    className={classes.button}
-                    color="primary"
-                    endIcon={<PageviewIcon />}
-                    variant="contained"
-                  >
-                    View Club
-                  </Button>
-                  <Button
-                    className={classes.button}
-                    color="secondary"
-                    endIcon={<HighlightOffIcon />}
-                    onClick={() => (openAlertWindow(item.name))}
-                    variant="contained"
-                  >
-                    Leave Club
-                  </Button>
+                <div className={classes.clubHeader}>
+                  <h2 className={classes.clubTitle}>{item.name}</h2>
+                  <div className={classes.buttonContainer}>
+                    <Button
+                      className={classes.button}
+                      color="primary"
+                      endIcon={<PageviewIcon />}
+                      variant="contained"
+                    >
+                      View Club
+                    </Button>
+                    <Button
+                      className={classes.button}
+                      color="secondary"
+                      endIcon={<HighlightOffIcon />}
+                      onClick={() => (openAlertWindow(item.name))}
+                      variant="contained"
+                    >
+                      Leave Club
+                    </Button>
+                  </div>
                 </div>
-                <LeaveClubAlertWindow
-                  clubId={item.name}
-                  nameOfClubLeaving={nameOfClubAlert}
-                  alertOpen={leaveClubAlertOpen}
-                  handleAlertWindowClose={closeAlertWindow}
-                  handleLeaveClub={handleLeaveClub}
-                />
+                <div className={classes.clubContent}>
+                  <ClubDescription description={item.description} />
+                </div>
+                <div className={classes.clubContent}>
+                  <BookInfo book={item.currentBook} />
+                  <ContentWarnings contentWarnings={item.contentWarnings} />
+                </div>
               </div>
             </Box>
           </div>
@@ -162,9 +165,10 @@ function ClubDescription(props: ClubDescriptionProps) {
 
   return (
     <>
-      <div className={classes.break}></div>
+      <div className={classes.boldTextElement}>
+        Description:
+      </div>
       <p className={classes.textElement}>
-        <b>Description: </b><br/>
         {props.description}
       </p>
     </>
