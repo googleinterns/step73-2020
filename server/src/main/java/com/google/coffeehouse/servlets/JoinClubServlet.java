@@ -15,6 +15,7 @@
 package com.google.coffeehouse.servlets;
 
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
+import com.google.coffeehouse.common.MembershipConstants;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.Map;
@@ -61,7 +62,7 @@ public class JoinClubServlet extends HttpServlet {
    */
   public JoinClubServlet(StorageHandlerApi storageHandler) {
     super();
-    this.storageHandler = new StorageHandlerApi();
+    this.storageHandler = storageHandler;
   }
 
   /**
@@ -97,11 +98,16 @@ public class JoinClubServlet extends HttpServlet {
       storageHandler.addMembership(userId, clubId);
     } catch (IllegalArgumentException e) {
       System.out.println(LOG_INPUT_ERROR_MESSAGE + e.getMessage());
-      response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+      if (e.getMessage() == MembershipConstants.PERSON_ALREADY_IN_CLUB) {
+        response.sendError(HttpServletResponse.SC_NOT_FOUND,
+                           MembershipConstants.PERSON_ALREADY_IN_CLUB);
+      } else {
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+      }
       return;
     } catch (Exception e) {
       System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());
-      response.sendError(HttpServletResponse.SC_BAD_REQUEST, BODY_ERROR);
+      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, BODY_ERROR);
       return;
     }
     response.setStatus(200);

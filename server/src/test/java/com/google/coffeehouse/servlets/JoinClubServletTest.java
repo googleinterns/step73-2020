@@ -16,7 +16,7 @@ package com.google.coffeehouse.servlets;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -78,10 +78,10 @@ public class JoinClubServletTest {
     helper.setUp();
 
     successfulHandlerSpy = spy(StorageHandlerApi.class);
+    doNothing().when(successfulHandlerSpy).addMembership(anyString(), anyString());
     joinClubServlet = new JoinClubServlet(successfulHandlerSpy);
 
     failingHandler = mock(StorageHandlerApi.class);
-    when(failingHandler.)
     doThrow(new IllegalArgumentException(MembershipConstants.PERSON_ALREADY_IN_CLUB))
                 .when(failingHandler).addMembership(anyString(), anyString());
     failingJoinClubServlet = new JoinClubServlet(failingHandler);
@@ -136,7 +136,7 @@ public class JoinClubServletTest {
     failingJoinClubServlet.doPost(request, response);
 
     verify(response).sendError(
-        HttpServletResponse.SC_BAD_REQUEST,
+        HttpServletResponse.SC_NOT_FOUND,
         MembershipConstants.PERSON_ALREADY_IN_CLUB);
   }
 
@@ -147,7 +147,7 @@ public class JoinClubServletTest {
     joinClubServlet.doPost(request, response);
 
     verify(response).sendError(
-        HttpServletResponse.SC_BAD_REQUEST,
+        HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
         joinClubServlet.BODY_ERROR);
   }
 }
