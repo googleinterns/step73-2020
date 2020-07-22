@@ -9,3 +9,7 @@ export interface BackendYourClubsServiceInterface {
   listClubs(numClubs: number): Promise<string>,
   leaveClub(clubId: string): Promise<boolean>,
 }
+
+export interface BackendAuthenticationInterface {
+  retrieveToken(code: string, redirectUri: string): Promise<string>,
+}

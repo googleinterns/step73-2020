@@ -47,6 +47,8 @@
   "dependencies": {
     "@material-ui/core": "^4.10.2",
     "@material-ui/icons": "^4.9.1",
+    "@types/gapi": "0.0.39",
+    "@types/gapi.auth2": "0.0.52",
     "react-router-dom": "^5.2.0"
   }
 }

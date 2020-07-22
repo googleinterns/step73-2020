@@ -12,7 +12,7 @@ import Profile from "./pages/profile/Profile";
 import { Route } from "react-router-dom";
 import { Switch } from "react-router-dom";
 import { ServiceContext } from "./contexts/contexts";
-import { defaultServices } from "./contexts/contexts";
+import { defaultServices } from "./contexts/default_services";
 import { withStyles } from "@material-ui/core/styles";
 import { YourClubs } from "./pages/your_clubs/YourClubs";
 

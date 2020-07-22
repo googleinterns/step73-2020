@@ -5,7 +5,6 @@ import { ClubList } from "./ClubList";
 import { ClubProps } from "../../../services/mock_backend/mock_your_clubs_backend";
 import { CreateNewClubWindow } from "./CreateNewClub";
 import { createStyles } from "@material-ui/core/styles";
-import { defaultServices } from "../../contexts/contexts";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import InputLabel from "@material-ui/core/InputLabel";

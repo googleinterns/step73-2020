@@ -41,7 +41,7 @@ public class CreateClubServlet extends HttpServlet {
   public static final String BODY_ERROR = "- unable to parse body.";
   /** The logged error string when an error parsing the body of the POST request is encountered. */
   public static final String LOG_BODY_ERROR_MESSAGE = 
-      "LOGGING: Body unable to be parsed in CreateClubServlet: ";
+      "Body unable to be parsed in CreateClubServlet: ";
   /** 
    * The error string sent by the response object in doPost when the body of the 
    * POST request does not have a required field.
