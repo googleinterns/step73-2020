@@ -4,17 +4,16 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import { ClubProps } from "../../../services/mock_backend/mock_your_clubs_backend";
 import { createStyles } from "@material-ui/core/styles";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-import LibraryBooksRoundedIcon from "@material-ui/icons/LibraryBooksRounded";
-import { makeStyles } from "@material-ui/core/styles";
-import PageviewIcon from "@material-ui/icons/Pageview";
-import { Theme } from "@material-ui/core/styles";
-
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import LibraryBooksRoundedIcon from "@material-ui/icons/LibraryBooksRounded";
+import { makeStyles } from "@material-ui/core/styles";
+import PageviewIcon from "@material-ui/icons/Pageview";
+import { Theme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     club : {
       marginTop: theme.spacing(3),
-      maxWidth: '900px',
+      width: '900px',
     },
     clubContent: {
       display: 'flex',
@@ -90,7 +89,7 @@ export function ClubList(props: ClubListProps) {
     setLeaveAlertOpen(false);
   }
 
-  /* If clubs to display is not yet defined, or 'None' are chosen to display. */
+  /* If clubs to display is not yet defined. */
   if (clubsToDisplay !== undefined)  {
     return (
       <div className={classes.listedClubsContainer}>
@@ -101,6 +100,7 @@ export function ClubList(props: ClubListProps) {
                 <h2 className={classes.clubTitle}>{item.name}</h2>
                 <LibraryBooksRoundedIcon className={classes.clubPhoto} />
                 <ClubDescription description={item.description} />
+                <div className={classes.break}></div>
                 <BookInfo book={item.currentBook} />
                 <ContentWarnings contentWarnings={item.contentWarnings} />
                 <div className={classes.break}></div>
@@ -184,16 +184,24 @@ function ContentWarnings(props) {
   const classes = useStyles();
   const contentWarnings = props.contentWarnings;
 
-  return (
-    <p className={classes.textElement}>
-      <b>Content Warnings:</b>
-      {contentWarnings.map((item, index) => (
-        <>
-          - <b>{item}<br/></b>
-        </>
-      ))}
-    </p>
-  );
+  if (contentWarnings) {
+    return (
+      <p className={classes.textElement}>
+        <b>Content Warnings:</b><br/>
+        {contentWarnings.map((item, index) => (
+          <>
+            - <b>{item}<br/></b>
+          </>
+        ))}
+      </p>
+    );
+  } else {
+    return (
+      <p className={classes.textElement}>
+        <b>No Content Warnings</b>
+      </p>
+    );
+  }
 }
 
 interface LeaveClubAlertWindowProps {
