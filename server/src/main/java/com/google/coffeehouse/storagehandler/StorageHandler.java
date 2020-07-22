@@ -94,7 +94,7 @@ public class StorageHandler {
             .readRow(
               "Books",
               Key.of(bookId),
-              Arrays.asList("title", "autho", "isbn"));
+              Arrays.asList("title", "author", "isbn"));
     if (row != null) {
       Book.Builder bookBuilder = Book.newBuilder().setTitle(row.getString(/* titleIndex= */ 0));
 
@@ -123,7 +123,7 @@ public class StorageHandler {
       dbClient
           .singleUse()
           .readRow(
-            "Books",
+            "Clubs",
             Key.of(clubId),
             Arrays.asList("bookId", "name", "description", "ownerId", "contentWarning"));
     if (row != null) {
