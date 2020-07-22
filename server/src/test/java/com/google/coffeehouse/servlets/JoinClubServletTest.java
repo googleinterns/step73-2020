@@ -77,6 +77,7 @@ public class JoinClubServletTest {
   public void setUp() throws IOException {
     helper.setUp();
 
+    // The addMembership method is a void function, and thus requires the use of a spy.
     successfulHandlerSpy = spy(StorageHandlerApi.class);
     doNothing().when(successfulHandlerSpy).addMembership(anyString(), anyString());
     joinClubServlet = new JoinClubServlet(successfulHandlerSpy);
