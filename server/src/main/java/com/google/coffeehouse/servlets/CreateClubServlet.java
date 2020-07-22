@@ -39,7 +39,7 @@ public class CreateClubServlet extends HttpServlet {
    * POST request cannot be used to construct a {@link Club} for any reason.
    */
   public static final String BODY_ERROR = "- unable to parse body.";
-  /** The logged error string when an error parsing the body of the POST request is encoutered. */
+  /** The logged error string when an error parsing the body of the POST request is encountered. */
   public static final String LOG_BODY_ERROR_MESSAGE = 
       "LOGGING: Body unable to be parsed in CreateClubServlet: ";
   /** 
