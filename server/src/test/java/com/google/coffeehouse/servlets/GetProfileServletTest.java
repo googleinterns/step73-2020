@@ -17,6 +17,8 @@ package com.google.coffeehouse.servlets;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
@@ -35,7 +37,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.Mock;
+import org.mockito.Spy;
 
 /**
  * Unit tests for {@link GetProfileServlet}.
@@ -108,6 +112,9 @@ public class GetProfileServletTest {
     Person p = gson.fromJson(result, Person.class);
 
     assertEquals(USER_ID, p.getUserId());
+    assertEquals(EMAIL, p.getEmail());
+    assertEquals(NICKNAME, p.getNickname());
+    assertEquals(PRONOUNS, p.getPronouns().get());
   }
 
   @Test
@@ -128,7 +135,7 @@ public class GetProfileServletTest {
     failingGetProfileServlet.doGet(request, response);
     
     verify(response).sendError(
-        HttpServletResponse.SC_BAD_REQUEST,
+        HttpServletResponse.SC_NOT_FOUND,
         StorageHandler.PERSON_DOES_NOT_EXIST);
   }
 
@@ -139,7 +146,7 @@ public class GetProfileServletTest {
     getProfileServlet.doGet(request, response);
     
     verify(response).sendError(
-        HttpServletResponse.SC_BAD_REQUEST,
+        HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
         GetProfileServlet.BODY_ERROR);
   }
 }

@@ -16,6 +16,7 @@ package com.google.coffeehouse.servlets;
 
 import com.google.coffeehouse.common.Person;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
+import com.google.coffeehouse.storagehandler.StorageHandler;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.Map;
@@ -55,7 +56,7 @@ public class GetProfileServlet extends HttpServlet {
    */
   public GetProfileServlet(StorageHandlerApi storageHandler) {
     super();
-    this.storageHandler = new StorageHandlerApi();
+    this.storageHandler = storageHandler;
   }
 
   /**
@@ -89,11 +90,16 @@ public class GetProfileServlet extends HttpServlet {
       person = storageHandler.fetchPersonFromId(userId);
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
-      response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+      if (e.getMessage() == StorageHandler.PERSON_DOES_NOT_EXIST) {
+        response.sendError(HttpServletResponse.SC_NOT_FOUND,
+                           StorageHandler.PERSON_DOES_NOT_EXIST);
+      } else {
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+      }
       return;
     } catch (Exception e) {
       System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());
-      response.sendError(HttpServletResponse.SC_BAD_REQUEST, BODY_ERROR);
+      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, BODY_ERROR);
       return;
     }
     response.setContentType("application/json;");
