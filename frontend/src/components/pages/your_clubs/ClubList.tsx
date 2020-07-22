@@ -10,7 +10,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-import LibraryBooksRoundedIcon from "@material-ui/icons/LibraryBooksRounded";
 import { makeStyles } from "@material-ui/core/styles";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import { Theme } from "@material-ui/core/styles";
@@ -42,9 +41,6 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(4),
       marginRight: theme.spacing(4),
       marginTop: theme.spacing(1),
-    },
-    clubPhoto: {
-      marginTop: theme.spacing(2),
     },
     clubTitle: {
       marginBottom: theme.spacing(0),
@@ -114,7 +110,6 @@ export function ClubList(props: ClubListProps) {
             <Box border={1} borderColor="text.primary" borderRadius={16}>
               <div className={classes.clubContent}>
                 <h2 className={classes.clubTitle}>{item.name}</h2>
-                <LibraryBooksRoundedIcon className={classes.clubPhoto} />
                 <ClubDescription description={item.description} />
                 <div className={classes.break}></div>
                 <BookInfo book={item.currentBook} />
