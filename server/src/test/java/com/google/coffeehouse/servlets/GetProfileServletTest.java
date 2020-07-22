@@ -82,8 +82,8 @@ public class GetProfileServletTest {
 
     failingHandler = mock(StorageHandlerApi.class);
     when(failingHandler.fetchPersonFromId(anyString()))
-                       .thenThrow(new IllegalArgumentException(StorageHandler.PERSON_DOES_NOT_EXIST))
-                       .thenReturn(null);
+                       .thenThrow(new IllegalArgumentException(
+                                      StorageHandler.PERSON_DOES_NOT_EXIST));
     failingGetProfileServlet = new GetProfileServlet(failingHandler);
 
     request = mock(HttpServletRequest.class);

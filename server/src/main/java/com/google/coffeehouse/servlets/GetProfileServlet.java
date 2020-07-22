@@ -81,7 +81,7 @@ public class GetProfileServlet extends HttpServlet {
     Person person;
     try {
       Map userInfo = gson.fromJson(request.getReader(), Map.class);
-      // TODO: Change to actual oauth parameter from json that is passed in @JoeyBushagour
+      // TODO: Change to actual oauth parameter from json that is passed in @JoeyBushagour.
       String userId = (String) userInfo.get(Person.USER_ID_FIELD_NAME);
       if (userId == null) {
         throw new IllegalArgumentException(LOG_INPUT_ERROR_MESSAGE);
