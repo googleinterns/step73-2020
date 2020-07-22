@@ -99,7 +99,7 @@ public class JoinClubServlet extends HttpServlet {
     } catch (IllegalArgumentException e) {
       System.out.println(LOG_INPUT_ERROR_MESSAGE + e.getMessage());
       if (e.getMessage() == MembershipConstants.PERSON_ALREADY_IN_CLUB) {
-        response.sendError(HttpServletResponse.SC_NOT_FOUND,
+        response.sendError(HttpServletResponse.SC_CONFLICT,
                            MembershipConstants.PERSON_ALREADY_IN_CLUB);
       } else {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());

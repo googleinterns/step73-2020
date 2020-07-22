@@ -136,7 +136,7 @@ public class JoinClubServletTest {
     failingJoinClubServlet.doPost(request, response);
 
     verify(response).sendError(
-        HttpServletResponse.SC_NOT_FOUND,
+        HttpServletResponse.SC_CONFLICT,
         MembershipConstants.PERSON_ALREADY_IN_CLUB);
   }
 
