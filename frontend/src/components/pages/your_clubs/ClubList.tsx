@@ -145,6 +145,13 @@ export function ClubList(props: ClubListProps) {
                   <BookInfo book={item.currentBook} />
                   <ContentWarnings contentWarnings={item.contentWarnings} />
                 </div>
+                <LeaveClubAlertWindow
+                  clubId={item.name}
+                  nameOfClubLeaving={nameOfClubAlert}
+                  alertOpen={leaveClubAlertOpen}
+                  handleAlertWindowClose={closeAlertWindow}
+                  handleLeaveClub={handleLeaveClub}
+                />
               </div>
             </Box>
           </div>
