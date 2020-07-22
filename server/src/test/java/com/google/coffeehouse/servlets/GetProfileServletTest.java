@@ -41,7 +41,6 @@ import org.mockito.Mock;
  * Unit tests for {@link GetProfileServlet}.
  */
 public class GetProfileServletTest {
-  // TODO: Change field name to be appropriate
   private static final String USER_ID = "predetermined-identification-string";
   private static final String EMAIL = "email@test.com";
   private static final String NICKNAME = "test";
