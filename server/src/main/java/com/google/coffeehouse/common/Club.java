@@ -25,7 +25,7 @@ import java.util.Map;
  * in the database.
  */
 public class Club implements Saveable {
-  /** The names of each possible field in the map in fromMap */
+  /** The names of each possible field in the map in fromMap. */
   public static final String NAME_FIELD_NAME = "name";
   public static final String CURRENT_BOOK_FIELD_NAME = "currentBook";
   public static final String CONTENT_WARNINGS_FIELD_NAME = "contentWarnings";
@@ -55,7 +55,7 @@ public class Club implements Saveable {
    *     minimum this includes a {@code "name"} key that corresponds to the String describing the
    *     name of the Club, a {@code "currentBook"} key that is mapped to another Map
    *     that follows the format described in {@link Book#fromMap(Map)}, a {@code "clubId"} key
-   *     that corresponds to a String of the clubId of the Club, and a {@code "owenerId"} key that
+   *     that corresponds to a String of the clubId of the Club, and a {@code "ownerId"} key that
    *     corresponds to a String of the userId of the owner of the Club. Optional keys include a
    *     {@code "description"} key that maps to a String describing the Club's description, as
    *     well as a {@code "contentWarnings"} key that maps to a List of Strings describing the
@@ -153,8 +153,8 @@ public class Club implements Saveable {
     private List<String> contentWarnings = new ArrayList<>();
     private static final String DEFAULT_DESCRIPTION = "A book club about %s.";
         
-    public Builder setCurrentBook(Book currenBook) {
-      this.currentBook = currenBook;
+    public Builder setCurrentBook(Book currentBook) {
+      this.currentBook = currentBook;
       return this;
     }
     
