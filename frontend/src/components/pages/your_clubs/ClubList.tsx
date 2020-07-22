@@ -17,6 +17,10 @@ import { Theme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    boldTextElement: {
+      fontWeight: 'bold',
+      marginBottom: theme.spacing(0),
+    },
     break : {
       flexBasis: '100%',
       height: 0,
@@ -54,6 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     textElement: {
       marginBottom: theme.spacing(0),
+      marginTop: theme.spacing(0),
     },
     warningsHeader: {
       fontWeight: 'bold',
@@ -180,13 +185,15 @@ function BookInfo(props: BookInfoProps) {
   const classes = useStyles();
 
   return (
-    <>
-      <p className={classes.textElement} style={{marginRight: 20}}>
-        <b>Current Book: </b><br/>
-        {props.book.title}<br/>
-        by {props.book.author}
+    <div>
+      <div className={classes.boldTextElement}>
+        Current Book:
+      </div>
+      <p className={classes.textElement}>
+        <div> {props.book.title} </div>
+        <div> by {props.book.author} </div>
       </p>
-    </>
+    </div>
   );
 }
 
