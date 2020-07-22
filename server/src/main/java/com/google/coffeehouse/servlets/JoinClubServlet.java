@@ -25,23 +25,36 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** 
- * Servlet to get a {@link Person} from Http GET Request Body (in JSON format)
- * that exists in the database, and return it in JSON format.
+ * Servlet to join a club from Http POST Request Body (in JSON format) containing a club
+ * and user that exists in the database, and return a success status.
  */
 @WebServlet("/api/join-club")
 public class JoinClubServlet extends HttpServlet {
 
   /** 
    * The error string sent by the response object in doPost when the body of the 
-   * POST request cannot be used to fetch a {@link Person} for any reason.
+   * POST request cannot be used to join a club for any reason.
    */
   public static final String BODY_ERROR = "- unable to parse body.";
-
-  /** The logged error string when an error parsing the body of the POST request is encountered */
+  /** The message to be logged when the body of the POST request cannot be parsed. */
   public static final String LOG_BODY_ERROR_MESSAGE = 
       "Body unable to be parsed in JoinClubServlet: ";
+
+  /** 
+   * The error string sent by the response object in doPost when the body of the 
+   * POST request does not have a required field.
+   */
+  public static final String NO_FIELD_ERROR = "No \"%s\" found in JSON.";
+  /** The message to be logged when the body of the GET request does not have required fields. */
+  public static final String LOG_INPUT_ERROR_MESSAGE =
+      "Error with JSON input in GetProfileServlet: No \"userId\" found in JSON.";
+  /** Name of the key in the input JSON that corresponds to the userId. */
+  public static final String USER_ID_FIELD_NAME = "userId";
+  /** Name of the key in the input JSON that corresponds to the clubId. */
+  public static final String CLUB_ID_FIELD_NAME = "clubId";
+
   private static final Gson gson = new Gson();
-  private static StorageHandlerApi storageHandler;
+  private final StorageHandlerApi storageHandler;
 
   /**
    * Overloaded constructor for dependency injection.
@@ -49,7 +62,7 @@ public class JoinClubServlet extends HttpServlet {
    */
   public JoinClubServlet(StorageHandlerApi storageHandler) {
     super();
-    this.storageHandler = storageHandler;
+    this.storageHandler = new StorageHandlerApi();
   }
 
   /**
@@ -61,9 +74,9 @@ public class JoinClubServlet extends HttpServlet {
   }
 
   /** 
-   * Adds a membership to the database using user and club ID.
+   * Adds a membership to the database using user ID and club ID.
    * @param request the POST request that must have a valid JSON representation of the userId and clubID
-   *     to be passed in order to add a membership to the Mmeberships table in the database. If this is
+   *     to be passed in order to add a membership to the Memberships table in the database. If this is
    *     not the case the response will send a "400 Bad Request error"
    * @param response the response from this method, will set the status to 200 (OK).
    *     If the request object does not have a valid JSON body representation of the userId and clubID,
@@ -74,13 +87,23 @@ public class JoinClubServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
       Map clubAndUserInfo = gson.fromJson(request.getReader(), Map.class);
-      String clubId = clubAndUserInfo.get("clubId").toString();
       String userId = clubAndUserInfo.get("userId").toString();
+      if (userId == null) {
+        throw new IllegalArgumentException(String.format(NO_FIELD_ERROR, USER_ID_FIELD_NAME));
+      }
+      String clubId = clubAndUserInfo.get("clubId").toString();
+      if (clubId == null) {
+        throw new IllegalArgumentException(String.format(NO_FIELD_ERROR, CLUB_ID_FIELD_NAME));
+      }
       StorageHandlerApi.addMembership(userId, clubId);
-      response.setStatus(200);
+    } catch (IllegalArgumentException e) {
+      System.out.println(LOG_INPUT_ERROR_MESSAGE + e.getMessage());
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+      return;
     } catch (Exception e) {
       System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, BODY_ERROR);
     }
+    response.setStatus(200);
   }
 }
