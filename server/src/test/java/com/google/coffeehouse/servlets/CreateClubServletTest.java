@@ -46,7 +46,7 @@ public class CreateClubServletTest {
   private static final String NAME = "Club Name";
   private static final String OWNER_ID = "predetermined-owner-identification-string";
   private static final String DESCRIPTION = "Club Description";
-  private static final String IDENTIFICATION_STRING = "predetermined-identification-string";
+  private static final String CLUB_ID = "predetermined-identification-string";
   private static final String BOOK_TITLE = "Book Name";
   private static final String BOOK_AUTHOR = "Book Author";
   private static final String BOOK_ISBN = "978-3-16-148410-0";
@@ -96,7 +96,7 @@ public class CreateClubServletTest {
     helper.setUp();
 
     IdentifierGenerator idGen = mock(IdentifierGenerator.class);
-    when(idGen.generateId()).thenReturn(IDENTIFICATION_STRING);
+    when(idGen.generateId()).thenReturn(CLUB_ID);
     CreateClubServlet = new CreateClubServlet(idGen);
 
     request = mock(HttpServletRequest.class);
@@ -121,10 +121,10 @@ public class CreateClubServletTest {
     Club c = gson.fromJson(result, Club.class);
 
     assertEquals(NAME, c.getName());
-    assertEquals(IDENTIFICATION_STRING, c.getClubId());
+    assertEquals(CLUB_ID, c.getClubId());
     assertEquals(new ArrayList<String>(), c.getContentWarnings());
     assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
-    assertEquals(IDENTIFICATION_STRING, c.getCurrentBook().getBookId());
+    assertEquals(CLUB_ID, c.getCurrentBook().getBookId());
     assertFalse(c.getCurrentBook().getAuthor().isPresent());
     assertFalse(c.getCurrentBook().getIsbn().isPresent());
   }
@@ -141,11 +141,11 @@ public class CreateClubServletTest {
     Club c = gson.fromJson(result, Club.class);
 
     assertEquals(NAME, c.getName());
-    assertEquals(IDENTIFICATION_STRING, c.getClubId());
+    assertEquals(CLUB_ID, c.getClubId());
     assertEquals(testContentWarnings, c.getContentWarnings());
     assertEquals(DESCRIPTION, c.getDescription());
     assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
-    assertEquals(IDENTIFICATION_STRING, c.getCurrentBook().getBookId());
+    assertEquals(CLUB_ID, c.getCurrentBook().getBookId());
     assertTrue(c.getCurrentBook().getAuthor().isPresent());
     assertEquals(BOOK_AUTHOR, c.getCurrentBook().getAuthor().get());
     assertTrue(c.getCurrentBook().getIsbn().isPresent());
