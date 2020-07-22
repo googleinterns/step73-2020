@@ -55,6 +55,17 @@ const useStyles = makeStyles((theme: Theme) =>
     textElement: {
       marginBottom: theme.spacing(0),
     },
+    warningsHeader: {
+      fontWeight: 'bold',
+      marginBottom: theme.spacing(0),
+      marginLeft: '-17px',
+    },
+    warningsList: {
+      fontWeight: 'bold',
+      justifyContent: 'left',
+      marginBottom: theme.spacing(0),
+      marginTop: theme.spacing(0),
+    },
   }),
 );
 
@@ -186,19 +197,19 @@ function ContentWarnings(props) {
 
   if (contentWarnings) {
     return (
-      <p className={classes.textElement}>
-        <b>Content Warnings:</b><br/>
-        {contentWarnings.map((item, index) => (
-          <>
-            - <b>{item}<br/></b>
-          </>
-        ))}
-      </p>
+        <div>
+          <ul className={classes.warningsList}>
+            <div className={classes.warningsHeader}>Content Warnings:</div>
+            {contentWarnings.map((item, index) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </div>
     );
   } else {
     return (
-      <p className={classes.textElement}>
-        <b>No Content Warnings</b>
+      <p className={classes.warningsList}>
+        No Content Warnings
       </p>
     );
   }
