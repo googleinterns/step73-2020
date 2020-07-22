@@ -197,8 +197,8 @@ function BookInfo(props: BookInfoProps) {
         Current Book:
       </div>
       <p className={classes.textElement}>
-        <div> {props.book.title} </div>
-        <div> by {props.book.author} </div>
+        <div>{props.book.title}</div>
+        <div>by {props.book.author}</div>
       </p>
     </div>
   );
