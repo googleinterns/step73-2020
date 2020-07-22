@@ -14,7 +14,6 @@
 
 package com.google.coffeehouse.servlets;
 
-import com.google.coffeehouse.common.Person;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -58,7 +57,7 @@ public class JoinClubServlet extends HttpServlet {
 
   /**
    * Overloaded constructor for dependency injection.
-   * @param storageHandler the {@link StorageHandlerApi} that is used when fetching the Person
+   * @param storageHandler the {@link StorageHandlerApi} that is used when adding the membership.
    */
   public JoinClubServlet(StorageHandlerApi storageHandler) {
     super();
@@ -87,15 +86,15 @@ public class JoinClubServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
       Map clubAndUserInfo = gson.fromJson(request.getReader(), Map.class);
-      String userId = clubAndUserInfo.get("userId").toString();
+      String userId = (String) clubAndUserInfo.get(USER_ID_FIELD_NAME);
       if (userId == null) {
         throw new IllegalArgumentException(String.format(NO_FIELD_ERROR, USER_ID_FIELD_NAME));
       }
-      String clubId = clubAndUserInfo.get("clubId").toString();
+      String clubId = (String) clubAndUserInfo.get(CLUB_ID_FIELD_NAME);
       if (clubId == null) {
         throw new IllegalArgumentException(String.format(NO_FIELD_ERROR, CLUB_ID_FIELD_NAME));
       }
-      StorageHandlerApi.addMembership(userId, clubId);
+      storageHandler.addMembership(userId, clubId);
     } catch (IllegalArgumentException e) {
       System.out.println(LOG_INPUT_ERROR_MESSAGE + e.getMessage());
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
@@ -103,6 +102,7 @@ public class JoinClubServlet extends HttpServlet {
     } catch (Exception e) {
       System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, BODY_ERROR);
+      return;
     }
     response.setStatus(200);
   }
