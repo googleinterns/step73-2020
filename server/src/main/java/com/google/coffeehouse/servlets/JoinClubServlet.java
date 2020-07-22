@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /** 
  * Servlet to join a club from Http POST Request Body (in JSON format) containing a club
- * and user that exists in the database, and return a success status.
+ * and user ID that exists in the database, and return a success status 200 (OK).
  */
 @WebServlet("/api/join-club")
 public class JoinClubServlet extends HttpServlet {
