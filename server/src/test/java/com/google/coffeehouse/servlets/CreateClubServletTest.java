@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.coffeehouse.common.Book;
 import com.google.coffeehouse.common.Club;
 import com.google.coffeehouse.util.IdentifierGenerator;
 import com.google.gson.Gson;
@@ -43,38 +44,42 @@ import org.mockito.Mock;
  */
 public class CreateClubServletTest {
   private static final String NAME = "Club Name";
+  private static final String OWNER_ID = "predetermined-owner-identification-string";
   private static final String DESCRIPTION = "Club Description";
-  private static final String IDENTIFICATION_STRING = "predetermined-identification-string";
+  private static final String CLUB_ID = "predetermined-identification-string";
   private static final String BOOK_TITLE = "Book Name";
   private static final String BOOK_AUTHOR = "Book Author";
   private static final String BOOK_ISBN = "978-3-16-148410-0";
   private static final String MINIMUM_JSON = String.join("\n", 
       "{",
-      "  \"name\" : \"" + NAME + "\",",
-      "  \"currentBook\" : {",
-      "    \"title\" : \"" + BOOK_TITLE + "\"",
+      "  \"" + Club.NAME_FIELD_NAME + "\" : \"" + NAME + "\",",
+      "  \"" + Club.OWNER_ID_FIELD_NAME + "\" : \"" + OWNER_ID + "\",",
+      "  \"" + Club.CURRENT_BOOK_FIELD_NAME + "\" : {",
+      "    \"" + Book.TITLE_FIELD_NAME + "\" : \"" + BOOK_TITLE + "\"",
       "  }",
       "}");
   private static final String MAXIMUM_JSON = String.join("\n", 
       "{",
-      "  \"name\" : \"" + NAME + "\",",
-      "  \"description\" : \"" + DESCRIPTION + "\",",
-      "  \"contentWarnings\" : [\"1\", \"2\"],",
-      "  \"currentBook\" : {",
-      "    \"title\" : \"" + BOOK_TITLE + "\",",
-      "    \"author\" : \"" + BOOK_AUTHOR + "\",",
-      "    \"isbn\" : \"" + BOOK_ISBN + "\"",
+      "  \"" + Club.NAME_FIELD_NAME + "\" : \"" + NAME + "\",",
+      "  \"" + Club.OWNER_ID_FIELD_NAME + "\" : \"" + OWNER_ID + "\",",
+      "  \"" + Club.DESCRIPTION_FIELD_NAME + "\" : \"" + DESCRIPTION + "\",",
+      "  \"" + Club.CONTENT_WARNINGS_FIELD_NAME + "\" : [\"1\", \"2\"],",
+      "  \"" + Club.CURRENT_BOOK_FIELD_NAME + "\" : {",
+      "    \"" + Book.TITLE_FIELD_NAME + "\" : \"" + BOOK_TITLE + "\",",
+      "    \"" + Book.AUTHOR_FIELD_NAME + "\" : \"" + BOOK_AUTHOR + "\",",
+      "    \"" + Book.ISBN_FIELD_NAME + "\" : \"" + BOOK_ISBN + "\"",
       "  }",
       "}");
   private static final String NO_NAME_JSON = String.join("\n", 
       "{",
-      "  \"currentBook\" : {",
-      "    \"title\" : \"" + BOOK_TITLE + "\"",
+      "  \"" + Club.CURRENT_BOOK_FIELD_NAME + "\" : {",
+      "  \"" + Club.OWNER_ID_FIELD_NAME + "\" : \"" + OWNER_ID + "\",",
+      "    \"" + Book.TITLE_FIELD_NAME + "\" : \"" + BOOK_TITLE + "\"",
       "  }",
       "}");
   private static final String NO_BOOK_JSON = String.join("\n", 
       "{",
-      "  \"name\" : \"" + NAME + "\"",
+      "  \"" + Club.NAME_FIELD_NAME + "\" : \"" + NAME + "\"",
       "}");
   private static final String SYNTACTICALLY_INCORRECT_JSON = "{\"name\"";
 
@@ -91,7 +96,7 @@ public class CreateClubServletTest {
     helper.setUp();
 
     IdentifierGenerator idGen = mock(IdentifierGenerator.class);
-    when(idGen.generateId()).thenReturn(IDENTIFICATION_STRING);
+    when(idGen.generateId()).thenReturn(CLUB_ID);
     CreateClubServlet = new CreateClubServlet(idGen);
 
     request = mock(HttpServletRequest.class);
@@ -116,10 +121,10 @@ public class CreateClubServletTest {
     Club c = gson.fromJson(result, Club.class);
 
     assertEquals(NAME, c.getName());
-    assertEquals(IDENTIFICATION_STRING, c.getClubId());
+    assertEquals(CLUB_ID, c.getClubId());
     assertEquals(new ArrayList<String>(), c.getContentWarnings());
     assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
-    assertEquals(IDENTIFICATION_STRING, c.getCurrentBook().getBookId());
+    assertEquals(CLUB_ID, c.getCurrentBook().getBookId());
     assertFalse(c.getCurrentBook().getAuthor().isPresent());
     assertFalse(c.getCurrentBook().getIsbn().isPresent());
   }
@@ -136,11 +141,11 @@ public class CreateClubServletTest {
     Club c = gson.fromJson(result, Club.class);
 
     assertEquals(NAME, c.getName());
-    assertEquals(IDENTIFICATION_STRING, c.getClubId());
+    assertEquals(CLUB_ID, c.getClubId());
     assertEquals(testContentWarnings, c.getContentWarnings());
     assertEquals(DESCRIPTION, c.getDescription());
     assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
-    assertEquals(IDENTIFICATION_STRING, c.getCurrentBook().getBookId());
+    assertEquals(CLUB_ID, c.getCurrentBook().getBookId());
     assertTrue(c.getCurrentBook().getAuthor().isPresent());
     assertEquals(BOOK_AUTHOR, c.getCurrentBook().getAuthor().get());
     assertTrue(c.getCurrentBook().getIsbn().isPresent());
@@ -164,7 +169,8 @@ public class CreateClubServletTest {
     CreateClubServlet.doPost(request, response);
 
     verify(response).sendError(
-        HttpServletResponse.SC_BAD_REQUEST, CreateClubServlet.BODY_ERROR);
+        HttpServletResponse.SC_BAD_REQUEST,
+        String.format(CreateClubServlet.NO_FIELD_ERROR, Club.CURRENT_BOOK_FIELD_NAME));
   }
 
   @Test

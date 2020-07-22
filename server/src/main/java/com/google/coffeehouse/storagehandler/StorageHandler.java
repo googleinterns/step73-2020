@@ -95,16 +95,15 @@ public class StorageHandler {
             .readRow(
               "Books",
               Key.of(bookId),
-              Arrays.asList("title", "autho", "isbn"));
+              Arrays.asList("title", "author", "isbn"));
     if (row != null) {
-      Book.Builder bookBuilder = Book.newBuilder(row.getString(/* titleIndex= */0));
-      // TODO: implement setting the bookId field @JosephBushagour
+      Book.Builder bookBuilder = Book.newBuilder().setTitle(row.getString(/* titleIndex= */ 0));
 
-      if (!row.isNull(/* index= */1) || !row.getString(/* index= */1).isEmpty()) {
-        bookBuilder.setAuthor(row.getString(/* authorIndex= */1));
+      if (!row.isNull(/* authorIndex= */ 1) || !row.getString(/* authorIndex= */ 1).isEmpty()) {
+        bookBuilder.setAuthor(row.getString(/* authorIndex= */ 1));
       }
-      if (!row.isNull(/* index= */2) || !row.getString(/* index= */2).isEmpty()) {
-        bookBuilder.setIsbn(row.getString(/* isbnIndex= */2));
+      if (!row.isNull(/* isbnIndex= */ 2) || !row.getString(/* isbnIndex= */ 2).isEmpty()) {
+        bookBuilder.setIsbn(row.getString(/* isbnIndex= */ 2));
       }
       return bookBuilder.build();
     } else {
@@ -125,16 +124,23 @@ public class StorageHandler {
       dbClient
           .singleUse()
           .readRow(
-            "Books",
+            "Clubs",
             Key.of(clubId),
-            Arrays.asList("bookId", "name", "description", "ownerId"));
+            Arrays.asList("bookId", "name", "description", "ownerId", "contentWarning"));
     if (row != null) {
-      Book book = getBook(dbClient, row.getString(/* bookIdIndex= */0));
-      Club.Builder clubBuilder = Club.newBuilder(row.getString(/* nameIndex= */1),
-                                                 book);
-      // TODO: implement setting the clubId field @JosephBushagour
-      // TODO: implement setting the ownerId field @JosephBushagour
-      clubBuilder.setDescription(row.getString(/* descriptionIndex= */2));
+      Book book = getBook(dbClient, row.getString(/* bookIdIndex= */ 0));
+      Club.Builder clubBuilder = Club.newBuilder()
+                                     .setCurrentBook(book)
+                                     .setName(row.getString(/* nameIndex= */ 1))
+                                     .setClubId(clubId)
+                                     .setDescription(row.getString(/* descriptionIndex= */ 2))
+                                     .setOwnerId(row.getString(/* ownerIdIndex= */ 3));                       
+      if (!row.isNull(/* contentWarningIndex =*/ 4)||
+          !row.getString(/* contentWarningIndex =*/ 4).isEmpty()) {
+        List<String> contentWarnings =
+            Arrays.asList(row.getString(/* contentWarningIndex =*/ 4).split("\\n"));
+        clubBuilder.setContentWarnings(contentWarnings);
+      }
       return clubBuilder.build();
     } else {
       throw new IllegalArgumentException(CLUB_DOES_NOT_EXIST);
