@@ -75,7 +75,7 @@ public class GetProfileServletTest {
   @Mock private HttpServletResponse response;
   @Mock private StorageHandlerApi successfulHandler;
   @Mock private StorageHandlerApi failingHandler;
-
+  
   @Before
   public void setUp() throws IOException {
     helper.setUp();
