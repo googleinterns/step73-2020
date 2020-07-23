@@ -2,8 +2,11 @@ import * as React from "react";
 import GoogleSignInButton from "../../sign_in/GoogleSignInButton";
 
 export const Login = () => {
+  // Fires upon login success
   const tokenConsumer = (token: string) => {
     // Temporary: console.logs the parsed token
+    // TODO: set boolean logged in
+    // TODO: set jwt
     console.log(JSON.parse(atob(token.split('.')[1])));
   }
 

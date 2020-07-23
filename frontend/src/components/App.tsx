@@ -4,6 +4,7 @@ import AppBar from "./appbar/AppBar";
 import { BrowserRouter } from "react-router-dom";
 import clsx from "clsx";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import { defaultServices } from "./contexts/default_services";
 import Drawer from "./drawer/Drawer";
 import { Explore } from "./pages/explore/Explore";
 import { hot } from "react-hot-loader";
@@ -11,8 +12,8 @@ import { Login } from "./pages/login/Login";
 import Profile from "./pages/profile/Profile";
 import { Route } from "react-router-dom";
 import { Switch } from "react-router-dom";
-import { ServiceContext } from "./contexts/contexts";
-import { defaultServices } from "./contexts/default_services";
+import { ServiceContext, UserLoginStatusContext } from "./contexts/contexts";
+import { userLoginServices } from "./contexts/user_login_services";
 import { withStyles } from "@material-ui/core/styles";
 import { YourClubs } from "./pages/your_clubs/YourClubs";
 
@@ -21,14 +22,20 @@ interface AppProps {}
 interface AppState {
   /** @state determines if drawer is shown or not*/
   navigationDrawerOpen: boolean;
+  isUserLoggedIn: boolean;
 }
 
 class App extends React.Component<AppProps, AppState> {
+  // Construct dependencies to determine status of user login.
+  private readonly userLoginStatusService = userLoginServices.loginStatusHandlerService;
+
   constructor(props) {
     super(props);
     this.state = {
-      navigationDrawerOpen: false
+      navigationDrawerOpen: false,
+      isUserLoggedIn: this.userLoginStatusService.getUserLoginStatus(),
     };
+    console.log(this.state.isUserLoggedIn);
   }
 
   // Handles opening drawer in AppBar and Drawer components
