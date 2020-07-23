@@ -10,14 +10,13 @@ import { Explore } from "./pages/explore/Explore";
 import { hot } from "react-hot-loader";
 import { Login } from "./pages/login/Login";
 import Profile from "./pages/profile/Profile";
-import { ServiceContext, UserLoginStatusContext } from "./contexts/contexts";
-import { userLoginServices } from "./contexts/user_login_services";
+import { ServiceContext } from "./contexts/contexts";
 import { withStyles } from "@material-ui/core/styles";
 import { YourClubs } from "./pages/your_clubs/YourClubs";
 
 function App() {
   // Construct dependencies to determine status of user login.
-  const userLoginStatusService = userLoginServices.loginStatusHandlerService;
+  const userLoginStatusService = defaultServices.loginStatusHandlerService;
   const [navigationDrawerOpen, setNavigationDrawerOpen] = React.useState<boolean>(false);
   const [userLoggedIn, setUserLoggedIn] = React.useState<boolean>(false);
 
@@ -66,28 +65,26 @@ interface UserLoggedInProps {
 function UserLoggedIn(props: UserLoggedInProps) {
   return (
     <BrowserRouter>
-      <UserLoginStatusContext.Provider value={userLoginServices}>
-        <ServiceContext.Provider value={defaultServices}>
-          <CssBaseline />
-          <AppBar
-            navigationDrawerOpen={props.navigationDrawerOpen}
-            handleDrawerOpen={props.handleDrawerOpen}
-          />
-          <Drawer
-            navigationDrawerOpen={props.navigationDrawerOpen}
-            handleDrawerClose={props.handleDrawerClose}
-            handleUserSignOut={props.handleUserSignOut}
-          />
-          <main>
-            <Switch>
-              <Route exact path={PageConstants.URL_EXPLORE} component={Explore} />
-              <Route exact path={PageConstants.URL_PROFILE} component={Profile} />
-              <Route exact path={PageConstants.URL_YOUR_CLUBS} component={YourClubs} />
-              <Redirect to={PageConstants.URL_YOUR_CLUBS} />
-            </Switch>
-          </main>
-        </ServiceContext.Provider>
-      </UserLoginStatusContext.Provider>
+      <ServiceContext.Provider value={defaultServices}>
+        <CssBaseline />
+        <AppBar
+          navigationDrawerOpen={props.navigationDrawerOpen}
+          handleDrawerOpen={props.handleDrawerOpen}
+        />
+        <Drawer
+          navigationDrawerOpen={props.navigationDrawerOpen}
+          handleDrawerClose={props.handleDrawerClose}
+          handleUserSignOut={props.handleUserSignOut}
+        />
+        <main>
+          <Switch>
+            <Route exact path={PageConstants.URL_EXPLORE} component={Explore} />
+            <Route exact path={PageConstants.URL_PROFILE} component={Profile} />
+            <Route exact path={PageConstants.URL_YOUR_CLUBS} component={YourClubs} />
+            <Redirect to={PageConstants.URL_YOUR_CLUBS} />
+          </Switch>
+        </main>
+      </ServiceContext.Provider>
     </BrowserRouter>
   );
 }
@@ -103,15 +100,13 @@ interface UserNotLoggedInProps {
 function UserNotLoggedIn(props: UserNotLoggedInProps) {
   return (
     <BrowserRouter>
-      <UserLoginStatusContext.Provider value={userLoginServices}>
-        <ServiceContext.Provider value={defaultServices}>
-          <Route
-            exact path={PageConstants.URL_LOGIN}
-            component={()=><Login handleUserLogin={props.handleUserLogin} />}
-          />
-          <Redirect to={PageConstants.URL_LOGIN} />
-        </ServiceContext.Provider>
-      </UserLoginStatusContext.Provider>
+      <ServiceContext.Provider value={defaultServices}>
+        <Route
+          exact path={PageConstants.URL_LOGIN}
+          component={()=><Login handleUserLogin={props.handleUserLogin} />}
+        />
+        <Redirect to={PageConstants.URL_LOGIN} />
+      </ServiceContext.Provider>
     </BrowserRouter>
   );
 }

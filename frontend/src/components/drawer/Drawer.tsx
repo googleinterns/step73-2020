@@ -25,7 +25,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import { Theme} from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { ServiceContext, UserLoginStatusContext } from "../contexts/contexts";
+import { ServiceContext } from "../contexts/contexts";
 import { useTheme } from "@material-ui/core/styles";
 
 const drawerWidth = LayoutConstants.DRAWER_WIDTH;
@@ -73,7 +73,6 @@ export default function DrawerComp(props: DrawerProps) {
   const theme = useTheme();
 
   const contextServices = React.useContext(ServiceContext);
-  const userLoginStatusService = React.useContext(UserLoginStatusContext);
 
   const [displaySignOutWindow, setDisplaySignOutWindow] = React.useState<boolean>(false);
 
@@ -94,7 +93,7 @@ export default function DrawerComp(props: DrawerProps) {
 
   const handleSignOut = async () => {
     const authenticationHandlerService = contextServices.authenticationHandlerService;
-    const loginStatusHandlerService = userLoginStatusService.loginStatusHandlerService;
+    const loginStatusHandlerService = contextServices.loginStatusHandlerService;
 
     loginStatusHandlerService.setUserLoginStatus(false);
 

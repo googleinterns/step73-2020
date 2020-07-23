@@ -1,6 +1,6 @@
 import * as React from "react";
 import GoogleSignInButton from "../../sign_in/GoogleSignInButton";
-import { UserLoginStatusContext } from "../../contexts/contexts";
+import { ServiceContext } from "../../contexts/contexts";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -27,8 +27,8 @@ interface LoginProps {
 }
 
 export const Login = (props: LoginProps) => {
-  const userLoginServices = React.useContext(UserLoginStatusContext)
-  const loginStatusHandlerService = userLoginServices.loginStatusHandlerService;
+  const contextServices = React.useContext(ServiceContext)
+  const loginStatusHandlerService = contextServices.loginStatusHandlerService;
 
   const classes = useStyles();
 

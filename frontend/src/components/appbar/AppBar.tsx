@@ -10,7 +10,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import { Theme } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import { UserLoginStatusContext } from "../contexts/contexts";
+import { ServiceContext } from "../contexts/contexts";
 import { useTheme } from "@material-ui/core/styles";
 
 const drawerWidth = LayoutConstants.DRAWER_WIDTH;
@@ -114,7 +114,7 @@ export default function AppBarComp(props: AppBarProps) {
 export function UserAvatarImage() {
   const classes = useStyles();
 
-  const contextServices = React.useContext(UserLoginStatusContext);
+  const contextServices = React.useContext(ServiceContext);
   const loginStatusHandlerService = contextServices.loginStatusHandlerService;
 
   const token = loginStatusHandlerService.getUserToken();

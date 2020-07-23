@@ -1,5 +1,6 @@
 import { AuthenticationHandlerService } from "../../services/authentication_handler_service/authentication_handler_service";
 import { AuthenticationBackendService } from "../../services/backend/authentication_backend";
+import { LoginStatusHandlerService } from "../../services/login_status_handler_service/login_status_handler_service";
 import { MockProfileBackendService } from "../../services/mock_backend/mock_profile_backend";
 import { MockYourClubsBackendService } from "../../services/mock_backend/mock_your_clubs_backend";
 import { NUM_PROFILES } from "../../utils/temporary_testing_consts";
@@ -15,4 +16,5 @@ export const defaultServices = {
   profileHandlerService: new ProfileHandlerService(mockProfileBackendService),
   yourClubsHandlerService: new YourClubsHandlerService(mockYourClubsBackendService),
   authenticationHandlerService: new AuthenticationHandlerService(actualAuthenticationBackendService),
+  loginStatusHandlerService: new LoginStatusHandlerService(),
 }

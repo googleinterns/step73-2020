@@ -8,11 +8,7 @@ interface ServicesInterfaces {
   profileHandlerService: ProfileHandlerService,
   yourClubsHandlerService: YourClubsHandlerService,
   authenticationHandlerService: AuthenticationHandlerService,
-}
-
-interface UserLoginStatusInterface {
   loginStatusHandlerService: LoginStatusHandlerService,
 }
 
 export const ServiceContext = React.createContext<undefined|ServicesInterfaces>(undefined);
-export const UserLoginStatusContext = React.createContext<undefined|UserLoginStatusInterface>(undefined);
