@@ -2,19 +2,24 @@ import * as React from "react";
 import GoogleSignInButton from "../../sign_in/GoogleSignInButton";
 import { UserLoginStatusContext } from "../../contexts/contexts";
 
-export const Login = () => {
+interface LoginProps {
+  handleUserLogin(): void,
+}
+
+export const Login = (props: LoginProps) => {
   const contextServices = React.useContext(UserLoginStatusContext);
   const loginStatusHandlerService = contextServices.loginStatusHandlerService;
 
   // Fires upon login success
   const tokenConsumer = (token: string) => {
+    // Temporary: console.logs the parsed token
+    console.log(JSON.parse(atob(token.split('.')[1])));
+    
     // Cache token in localStorage to keep user signed in after refresh.
     localStorage.setItem('token', token);
     loginStatusHandlerService.setUserToken(token);
     loginStatusHandlerService.setUserLoginStatus(/*Successfully logged in*/ true);
-
-    // Temporary: console.logs the parsed token
-    console.log(JSON.parse(atob(token.split('.')[1])));
+    props.handleUserLogin();
   }
 
   const failureCallback = () => {
