@@ -96,12 +96,12 @@ public class UpdateClubServlet extends HttpServlet {
    * @param request the POST request that must have a valid JSON representation of the Club to be
    *     updated, the {@code userId} of the user who wants to update the Club, as well as an
    *     optional mask of fields that will be updated as its body. The Club to be updated must be
-   *     represnted by a {@code "club"} key, who's value is an object that represents the updated
+   *     represented by a {@code "club"} key, whose value is an object that represents the updated
    *     Club. Inside of this object, there will be a {@code "currentBook"} key that is associated
    *     with an object that represents the Book the Club is reading. The update mask must be
    *     associated with the key {@code "updateMask"} and have the value of a comma separated list
    *     of the fields to be updated from the "club" key. To specify an update inside of the book
-   *     object inside of the Club, preprend the field name in the update mask with "currentBook.".
+   *     object inside of the Club, prepend the field name in the update mask with "currentBook.".
    *     If no update mask exists, all fields from the "club" key will be used to update the Club
    *     (and nested Book). If the request does not have either of these keys, or is syntactically
    *     incorrect, the response object will send a "400 Bad Request error". If the user attempting
