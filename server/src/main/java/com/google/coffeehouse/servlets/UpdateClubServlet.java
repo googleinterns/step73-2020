@@ -94,20 +94,23 @@ public class UpdateClubServlet extends HttpServlet {
   /** 
    * Updates a Club object in the database and returns that object in JSON format.
    * @param request the POST request that must have a valid JSON representation of the Club to be
-   *     updated as well as an optional mask of fields that will be updated as its body. The
-   *     Club to be updated must be represnted by a {@code "club"} key, who's value is an 
-   *     object that represents the updated Club. Inside of this object, there will be a
-   *     {@code "currentBook"} key that is associated with an object that represents the Book
-   *     the Club is reading. The update mask must have the key {@code "updateMask"} and the value
-   *     of a comma separated list of the fields to be updated from the "club" key. To specify an
-   *     update inside of the book object inside of the club, preprend the field name with
-   *     "currentBook.". If no update mask exists, all fields from the "club" key will be
-   *     used to update the Club (and nested Book). If the request does not have either of these
-   *     keys, or is syntactically incorrect, the response object will send a
-   *     "400 Bad Request error"
-   * @param response the response from this method, will contain the updated Person in JSON format.
+   *     updated, the {@code userId} of the user who wants to update the Club, as well as an
+   *     optional mask of fields that will be updated as its body. The Club to be updated must be
+   *     represnted by a {@code "club"} key, who's value is an object that represents the updated
+   *     Club. Inside of this object, there will be a {@code "currentBook"} key that is associated
+   *     with an object that represents the Book the Club is reading. The update mask must be
+   *     associated with the key {@code "updateMask"} and have the value of a comma separated list
+   *     of the fields to be updated from the "club" key. To specify an update inside of the book
+   *     object inside of the Club, preprend the field name in the update mask with "currentBook.".
+   *     If no update mask exists, all fields from the "club" key will be used to update the Club
+   *     (and nested Book). If the request does not have either of these keys, or is syntactically
+   *     incorrect, the response object will send a "400 Bad Request error". If the user attempting
+   *     to update the Club is not the Club owner, the response object will send a "403 Forbidden
+   *     Error"
+   * @param response the response from this method, will contain the updated Club in JSON format.
    *     If the request object does not have a valid JSON body (as described in the request
-   *     parameter) this object will send a "400 Bad Request error"
+   *     parameter) this object will send a "400 Bad Request error". If the user attempting
+   *     to update the Club is not the Club owner, this object will send a "403 Forbidden Error"
    * @throws IOException if an input or output error is detected when the servlet handles the request
    */
   @Override
@@ -119,7 +122,7 @@ public class UpdateClubServlet extends HttpServlet {
       JsonObject updatedBookJson = updatedClubJson.getAsJsonObject(Club.CURRENT_BOOK_FIELD_NAME);
       JsonElement updateMask = requestJson.get(UPDATE_MASK_FIELD_NAME);
       
-      // Get attempted updates for the club and the book inside the club.
+      // Get attempted updates for the Club and the Book inside the Club.
       List<String> bookMask = new ArrayList<>();
       List<String> clubMask = new ArrayList<>();
       if (updateMask == null) {
@@ -149,14 +152,14 @@ public class UpdateClubServlet extends HttpServlet {
         throw new IllegalArgumentException(
             String.format(NO_FIELD_ERROR, Person.USER_ID_FIELD_NAME));
       }
-      // Determine if the user has the permissions to actually make changes on the club.
+      // Determine if the user has the permissions to actually make changes on the Club.
       if (!club.getOwnerId().equals(userIdElement.getAsString())) {
         throw new IllegalArgumentException(LACK_OF_PRIVILEGE_ERROR);
       }
       JsonObject clubJson = gson.toJsonTree(club).getAsJsonObject();
       JsonObject bookJson = clubJson.get(Club.CURRENT_BOOK_FIELD_NAME).getAsJsonObject();
 
-      // Make the changes to the book and the club.
+      // Make the changes to the Book and the Club.
       bookMask.stream()
           .filter(updateableBookFields::contains)
           .forEach(elem -> bookJson.addProperty(elem, updatedBookJson.get(elem).getAsString()));
