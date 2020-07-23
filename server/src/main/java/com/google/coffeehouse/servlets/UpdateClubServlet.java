@@ -63,7 +63,10 @@ public class UpdateClubServlet extends HttpServlet {
   /** Message to be logged when the body of the POST request does not have required fields. */
   public static final String LOG_INPUT_ERROR_MESSAGE =
       "Error with JSON input in UpdateClubServlet: ";
-  /** Message to be logged when the body of the POST request does not have required fields. */
+  /**
+   * Message to be logged when an invalid ID token is passed in or a valid ID token that is
+   * associated with a user who does not have the permissions to update the Club is paeed in.
+   */
   public static final String LOG_SECURITY_MESSAGE =
       "Forbidden action attempted: ";
   /** 
@@ -76,9 +79,8 @@ public class UpdateClubServlet extends HttpServlet {
    * to update the club does not have permissions to do so.
    */
   public static final String LACK_OF_PRIVILEGE_ERROR = "Person does not have required privileges.";
-
   /** The logged error string when an an ID token fails verification. */
-  public static final String INVALID_ID_TOKEN_ERROR = 
+  public static final String INVALID_ID_TOKEN_ERROR =
       "ID token failed verification or didn't exist: ";
   /** Name of the key in the input JSON that corresponds to the Club object. */
   public static final String CLUB_FIELD_NAME = "club";
@@ -90,8 +92,7 @@ public class UpdateClubServlet extends HttpServlet {
   private static final Gson gson = new Gson();
   private static final HttpTransport transport = new NetHttpTransport();
   private static final GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
-  private GoogleIdTokenVerifier verifier =
-      new GoogleIdTokenVerifier.Builder(transport, jsonFactory).build();
+  private final GoogleIdTokenVerifier verifier;
   private final StorageHandlerApi storageHandler;
 
   /** 
@@ -111,6 +112,7 @@ public class UpdateClubServlet extends HttpServlet {
   public UpdateClubServlet() {
     super();
     this.storageHandler = new StorageHandlerApi();
+    this.verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory).build();
   }
 
   /** 
