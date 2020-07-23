@@ -7,6 +7,11 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import clsx from 'clsx';
 import { createStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import Drawer from '@material-ui/core/Drawer';
 import ExploreIcon from '@material-ui/icons/Explore';
 import FaceIcon from '@material-ui/icons/Face';
@@ -20,7 +25,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import { Theme} from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { UserLoginStatusContext } from "../contexts/contexts";
+import { ServiceContext, UserLoginStatusContext } from "../contexts/contexts";
 import { useTheme } from "@material-ui/core/styles";
 
 const drawerWidth = LayoutConstants.DRAWER_WIDTH;
@@ -60,11 +65,17 @@ const useStyles = makeStyles((theme: Theme) =>
 interface DrawerProps {
   navigationDrawerOpen: boolean;  // whether or not Drawer comp is displayed
   handleDrawerClose(): void;
+  handleUserSignOut(): void;
 }
 
 export default function DrawerComp(props: DrawerProps) {
   const classes = useStyles();
   const theme = useTheme();
+
+  const contextServices = React.useContext(ServiceContext);
+  const userLoginStatusService = React.useContext(UserLoginStatusContext);
+
+  const [displaySignOutWindow, setDisplaySignOutWindow] = React.useState<boolean>(false);
 
   // Associates each URL with a text representation and icon
   const pagesList = [
@@ -72,6 +83,29 @@ export default function DrawerComp(props: DrawerProps) {
     {text: "Explore", url: "/Explore", icon: <ExploreIcon />},
     {text: "Profile", url: "/Profile", icon: <FaceIcon />}
   ];
+
+  const handleOpenSignOutWindow = () => {
+    setDisplaySignOutWindow(true);
+  }
+
+  const handleCloseSignOutWindow = () => {
+    setDisplaySignOutWindow(false);
+  }
+
+  const handleSignOut = async () => {
+    const authenticationHandlerService = contextServices.authenticationHandlerService;
+    const loginStatusHandlerService = userLoginStatusService.loginStatusHandlerService;
+
+    loginStatusHandlerService.setUserLoginStatus(false);
+    loginStatusHandlerService.setUserToken(undefined);
+
+    const success = await authenticationHandlerService.signOut();
+    if (success) {
+      setDisplaySignOutWindow(false);
+      props.handleDrawerClose();
+      props.handleUserSignOut();
+    }
+  }
 
   return (
     <div>
@@ -104,11 +138,49 @@ export default function DrawerComp(props: DrawerProps) {
           className={classes.button}
           color="primary"
           endIcon={<MeetingRoomIcon />}
+          onClick={handleOpenSignOutWindow}
           variant="contained"
         >
           Sign Out
         </Button>
       </Drawer>
+      <SignOutWindow 
+        displaySignOutWindow={displaySignOutWindow}
+        handleSignOutWindowClose={handleCloseSignOutWindow}
+        handleSignOut={handleSignOut}
+      />
     </div>
   )
+}
+
+interface SignOutWindowProps {
+  displaySignOutWindow: boolean,
+  handleSignOutWindowClose(): void,
+  handleSignOut(): void,
+}
+
+export function SignOutWindow(props: SignOutWindowProps) {
+  const classes = useStyles();
+
+  return (
+    <Dialog open={props.displaySignOutWindow}>
+      <DialogTitle>Sign Out?</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          By pressing 'Confirm', you will be signed out of CoffeeHouse.
+          Press 'Cancel' to remain logged in.
+        </DialogContentText>
+        <DialogActions>
+          <Button onClick={props.handleSignOutWindowClose} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={props.handleSignOut} color="primary"
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </DialogContent>
+    </Dialog>
+  );
 }

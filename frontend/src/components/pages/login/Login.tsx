@@ -27,16 +27,13 @@ interface LoginProps {
 }
 
 export const Login = (props: LoginProps) => {
-  const contextServices = React.useContext(UserLoginStatusContext);
-  const loginStatusHandlerService = contextServices.loginStatusHandlerService;
+  const userLoginServices = React.useContext(UserLoginStatusContext)
+  const loginStatusHandlerService = userLoginServices.loginStatusHandlerService;
 
   const classes = useStyles();
 
   // Fires upon login success
   const tokenConsumer = (token: string) => {
-    // Temporary: console.logs the parsed token
-    console.log(JSON.parse(atob(token.split('.')[1])));
-
     // Cache token in localStorage to keep user signed in after refresh.
     localStorage.setItem('token', token);
     loginStatusHandlerService.setUserToken(token);

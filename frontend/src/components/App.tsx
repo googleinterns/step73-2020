@@ -39,13 +39,13 @@ function App() {
 
   React.useEffect(() => {
     setUserLoggedIn(userLoginStatusService.getUserLoginStatus());
-    console.log(userLoginStatusService.getUserLoginStatus());
   }, [userLoginStatusService.getUserLoginStatus()]);
 
   return (userLoggedIn
     ? <UserLoggedIn 
         handleDrawerOpen={handleDrawerOpen}
         handleDrawerClose={handleDrawerClose}
+        handleUserSignOut={handleUserLogout}
         navigationDrawerOpen={navigationDrawerOpen}
       />
     : <UserNotLoggedIn handleUserLogin={handleUserLogin} />
@@ -55,6 +55,7 @@ function App() {
 interface UserLoggedInProps {
   handleDrawerOpen(): void,
   handleDrawerClose(): void, 
+  handleUserSignOut(): void,
   navigationDrawerOpen: boolean,
 }
 
@@ -71,6 +72,7 @@ function UserLoggedIn(props: UserLoggedInProps) {
           <Drawer
             navigationDrawerOpen={props.navigationDrawerOpen}
             handleDrawerClose={props.handleDrawerClose}
+            handleUserSignOut={props.handleUserSignOut}
           />
           <main>
             <Switch>
