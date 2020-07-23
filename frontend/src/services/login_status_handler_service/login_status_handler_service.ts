@@ -39,7 +39,7 @@ export class LoginStatusHandlerService implements LoginStatusHandlerInterface {
     this.userLoggedIn = loginStatus;
   }
 
-  setUserToken(userToken: string): void {
+  setUserToken(userToken: string|undefined): void {
     this.token = userToken;
   }
 }

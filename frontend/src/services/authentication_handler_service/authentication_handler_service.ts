@@ -55,6 +55,7 @@ export class AuthenticationHandlerService {
       return false;
     }
     await authInstance.signOut();
+    localStorage.removeItem('token');
     return true;
   }
 
