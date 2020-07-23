@@ -130,7 +130,7 @@ public class ListClubsServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     List<Club> clubs;
     try {
-      // Get the userId after validating the user's ID token
+      // Get the userId after validating the user's ID token.
       Map requestInfo = gson.fromJson(request.getReader(), Map.class);
       String idToken = (String) requestInfo.get(ID_TOKEN_FIELD_NAME);
       String userId = AuthenticationHelper.getUserIdFromIdToken(idToken, verifier);
