@@ -159,6 +159,11 @@ interface SignOutWindowProps {
   handleSignOut(): void,
 }
 
+/**
+ * Prompts the user if they are sure they would like to sign out.
+ * If user confirms, authenticationHandler and loginStatusHandler are called
+ * to remove them from localStorage and render the Login screen.
+ */
 export function SignOutWindow(props: SignOutWindowProps) {
   const classes = useStyles();
 

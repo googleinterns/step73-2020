@@ -107,6 +107,10 @@ export default function AppBarComp(props: AppBarProps) {
   );
 }
 
+/**
+ * Extracts the user profile image contained in the OAuth token.
+ * If the user token is not defined, returns a stock account icon.
+ */
 export function UserAvatarImage() {
   const classes = useStyles();
 

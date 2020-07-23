@@ -59,6 +59,10 @@ interface UserLoggedInProps {
   navigationDrawerOpen: boolean,
 }
 
+/**
+ * Renders CoffeeHouse core functionalities such as /YourClubs, /Explore,
+ * and /Profile that are contingent upon the user being logged in.
+ */
 function UserLoggedIn(props: UserLoggedInProps) {
   return (
     <BrowserRouter>
@@ -92,6 +96,10 @@ interface UserNotLoggedInProps {
   handleUserLogin(): void,
 }
 
+/**
+ * Renders the Login page where the user is prompted with a Google
+ * button to sign in to CoffeeHouse.
+ */
 function UserNotLoggedIn(props: UserNotLoggedInProps) {
   return (
     <BrowserRouter>
