@@ -10,14 +10,15 @@ import MenuIcon from "@material-ui/icons/Menu";
 import { Theme } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
+import { ServiceContext } from "../contexts/contexts";
 import { useTheme } from "@material-ui/core/styles";
 
 const drawerWidth = LayoutConstants.DRAWER_WIDTH;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      display: 'flex',
+    accountIcon: {
+      marginLeft: "auto",
     },
     appBar: {
       transition: theme.transitions.create(['margin', 'width'], {
@@ -33,11 +34,9 @@ const useStyles = makeStyles((theme: Theme) =>
       }),
       width: `calc(100% - ${drawerWidth}px)`,
     },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    hide: {
-      display: 'none',
+    avatarImg: {
+      borderRadius: '50%',
+      height: '32px',
     },
     content: {
       flexGrow: 1,
@@ -55,9 +54,12 @@ const useStyles = makeStyles((theme: Theme) =>
         duration: theme.transitions.duration.enteringScreen,
       }),
     },
-    accountIcon: {
-      marginLeft: "auto"
-    }
+    hide: {
+      display: 'none',
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+    },
   }),
 );
 
@@ -71,7 +73,7 @@ export default function AppBarComp(props: AppBarProps) {
   const theme = useTheme();
 
   return (
-    <div className={classes.root}>
+    <>
       <AppBar
         position="fixed"
         className={clsx(classes.appBar, {
@@ -94,13 +96,36 @@ export default function AppBarComp(props: AppBarProps) {
           </Typography>
           <IconButton
             aria-label="User's profile avatar"
-            color="inherit"
             className={classes.accountIcon}
+            color="inherit"
           >
-            <AccountCircleIcon fontSize="large"/>
+            <UserAvatarImage />
           </IconButton>
         </Toolbar>
       </AppBar>
-    </div>
+    </>
   );
+}
+
+/**
+ * Extracts the user profile image contained in the OAuth token.
+ * If the user token is not defined, returns a stock account icon.
+ */
+export function UserAvatarImage() {
+  const classes = useStyles();
+
+  const contextServices = React.useContext(ServiceContext);
+  const loginStatusHandlerService = contextServices.loginStatusHandlerService;
+
+  const token = loginStatusHandlerService.getUserToken();
+  if (token) {
+    const parsedToken = JSON.parse(atob(token.split('.')[1]));
+    const profileImg = parsedToken.picture;
+    return (profileImg
+      ? <img src={profileImg} className={classes.avatarImg} />
+      : <AccountCircleIcon />
+    );
+  } else {
+    return <AccountCircleIcon />
+  }
 }
