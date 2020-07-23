@@ -75,7 +75,7 @@ public class GetProfileServletTest {
   @Mock private HttpServletResponse response;
   @Mock private StorageHandlerApi successfulHandler;
   @Mock private StorageHandlerApi failingHandler;
-  
+
   @Before
   public void setUp() throws IOException {
     helper.setUp();
@@ -122,7 +122,7 @@ public class GetProfileServletTest {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(NO_USER_ID_JSON)));
     getProfileServlet.doGet(request, response);
-    
+
     verify(response).sendError(
         HttpServletResponse.SC_BAD_REQUEST,
         GetProfileServlet.LOG_INPUT_ERROR_MESSAGE);
@@ -133,7 +133,7 @@ public class GetProfileServletTest {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(PROFILE_NOT_FOUND_JSON)));
     failingGetProfileServlet.doGet(request, response);
-    
+
     verify(response).sendError(
         HttpServletResponse.SC_NOT_FOUND,
         StorageHandler.PERSON_DOES_NOT_EXIST);
@@ -144,7 +144,7 @@ public class GetProfileServletTest {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(SYNTACTICALLY_INCORRECT_JSON)));
     getProfileServlet.doGet(request, response);
-    
+
     verify(response).sendError(
         HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
         GetProfileServlet.BODY_ERROR);
