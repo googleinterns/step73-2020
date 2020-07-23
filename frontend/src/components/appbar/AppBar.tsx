@@ -18,7 +18,7 @@ const drawerWidth = LayoutConstants.DRAWER_WIDTH;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     accountIcon: {
-      marginLeft: "auto"
+      marginLeft: "auto",
     },
     appBar: {
       transition: theme.transitions.create(['margin', 'width'], {
