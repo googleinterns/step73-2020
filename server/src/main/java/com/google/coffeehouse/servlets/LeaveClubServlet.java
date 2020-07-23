@@ -75,15 +75,15 @@ public class LeaveClubServlet extends HttpServlet {
 
   /** 
    * Deletes a membership from the database using user ID and club ID.
-   * @param request the POST request that must have a valid JSON representation of the userId and clubId
-   *     to be passed in order to delete a membership from the Memberships table in the database. If this
-   *     is not the case the response will send a "400 Bad Request error".
+   * @param request the POST request that must have a valid JSON representation of the userId and
+   *     clubId to be passed in order to delete a membership from the Memberships table in the
+   *     database. If this is not the case the response will send a "400 Bad Request error".
    * @param response the response from this method, will set the status to 200 (OK).
-   *     If the request object does not have a valid JSON body representation of the required fields
-   *     userId and clubId, the response will send a "400 Bad Request error".
-   *     If the request object is attempting to delete a membership which does not exist in the database,
-   *     the response will send a "409 Conflict" status.
-   *     If the request object is unable to be parsed, the response will send a "500 Internal Server error".
+   *     If the request object does not have a valid JSON body representation of the required
+   *     fields userId and clubId, the response will send a "400 Bad Request error". If the request
+   *     object is attempting to delete a membership which does not exist in the database, the
+   *     response will send a "409 Conflict" status. If the request object is unable to be parsed,
+   *     the response will send a "500 Internal Server error".
    * @throws IOException if an input or output error is detected when the servlet handles the request
    */
   @Override
@@ -98,12 +98,12 @@ public class LeaveClubServlet extends HttpServlet {
       if (clubId == null) {
         throw new IllegalArgumentException(String.format(NO_FIELD_ERROR, CLUB_ID_FIELD_NAME));
       }
-      storageHandler.addMembership(userId, clubId);
+      storageHandler.deleteMembership(userId, clubId);
     } catch (IllegalArgumentException e) {
       System.out.println(LOG_INPUT_ERROR_MESSAGE + e.getMessage());
-      if (e.getMessage() == MembershipConstants.PERSON_ALREADY_IN_CLUB) {
+      if (e.getMessage() == MembershipConstants.PERSON_NOT_IN_CLUB) {
         response.sendError(HttpServletResponse.SC_CONFLICT,
-                           MembershipConstants.PERSON_ALREADY_IN_CLUB);
+                           MembershipConstants.PERSON_NOT_IN_CLUB);
       } else {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
       }
