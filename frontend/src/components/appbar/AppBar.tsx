@@ -2,6 +2,8 @@ import * as LayoutConstants from "../layout/layout_constants"
 import * as React from "react";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AppBar from "@material-ui/core/AppBar";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import clsx from "clsx";
 import { createStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
@@ -17,8 +19,8 @@ const drawerWidth = LayoutConstants.DRAWER_WIDTH;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      display: 'flex',
+    accountIcon: {
+      marginLeft: "auto"
     },
     appBar: {
       transition: theme.transitions.create(['margin', 'width'], {
@@ -38,12 +40,6 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: '50%',
       height: '60px',
     },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    hide: {
-      display: 'none',
-    },
     content: {
       flexGrow: 1,
       padding: theme.spacing(3),
@@ -60,9 +56,19 @@ const useStyles = makeStyles((theme: Theme) =>
         duration: theme.transitions.duration.enteringScreen,
       }),
     },
-    accountIcon: {
-      marginLeft: "auto"
-    }
+    hide: {
+      display: 'none',
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+    },
+    signOutWindow: {
+      float: 'right',
+      marginTop: theme.spacing(50),
+      width: '500px',
+    },
+    signOutWindowContent: {
+    },
   }),
 );
 
@@ -75,8 +81,14 @@ export default function AppBarComp(props: AppBarProps) {
   const classes = useStyles();
   const theme = useTheme();
 
+  const [displaySignOutWindow, setDisplaySignOutWindow] = React.useState<boolean>(false);
+
+  const toggleSignOutWindow = () => {
+    setDisplaySignOutWindow(!displaySignOutWindow);
+  }
+
   return (
-    <div className={classes.root}>
+    <>
       <AppBar
         position="fixed"
         className={clsx(classes.appBar, {
@@ -99,14 +111,15 @@ export default function AppBarComp(props: AppBarProps) {
           </Typography>
           <IconButton
             aria-label="User's profile avatar"
-            color="inherit"
             className={classes.accountIcon}
+            color="inherit"
+            onClick={toggleSignOutWindow}
           >
             <UserAvatarImage />
           </IconButton>
         </Toolbar>
       </AppBar>
-    </div>
+    </>
   );
 }
 
