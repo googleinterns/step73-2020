@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     avatarImg: {
       borderRadius: '50%',
-      height: '60px',
+      height: '32px',
     },
     content: {
       flexGrow: 1,
