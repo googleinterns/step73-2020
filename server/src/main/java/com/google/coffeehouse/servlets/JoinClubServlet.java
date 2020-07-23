@@ -44,10 +44,10 @@ public class JoinClubServlet extends HttpServlet {
    * The error string sent by the response object in doPost when the body of the 
    * POST request does not have a required field.
    */
-  public static final String NO_FIELD_ERROR = "No \"%s\" found in JSON.";
+  public static final String NO_FIELD_ERROR = "Missing \"%s\" field in JSON";
   /** The message to be logged when the body of the GET request does not have required fields. */
   public static final String LOG_INPUT_ERROR_MESSAGE =
-      "Error with JSON input in GetProfileServlet: No \"userId\" found in JSON.";
+      "Error with JSON input in GetProfileServlet: ";
   /** Name of the key in the input JSON that corresponds to the userId. */
   public static final String USER_ID_FIELD_NAME = "userId";
   /** Name of the key in the input JSON that corresponds to the clubId. */
