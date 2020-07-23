@@ -61,7 +61,8 @@ public class JoinClubServletTest {
       "{",
       "  \"" + JoinClubServlet.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\"",
       "}");
-  private static final String SYNTACTICALLY_INCORRECT_JSON = "{\"" + JoinClubServlet.USER_ID_FIELD_NAME + "\"";
+  private static final String SYNTACTICALLY_INCORRECT_JSON =
+      "{\"" + JoinClubServlet.USER_ID_FIELD_NAME + "\"";
 
   private JoinClubServlet joinClubServlet;
   private JoinClubServlet failingJoinClubServlet;
