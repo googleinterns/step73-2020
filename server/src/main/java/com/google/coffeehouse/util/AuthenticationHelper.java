@@ -30,7 +30,7 @@ public class AuthenticationHelper {
   public static final String CLIENT_SECRET = getSecret();
   /** The error message when an an ID token fails verification. */
   public static final String INVALID_ID_TOKEN_ERROR =
-      "ID token failed verification or didn't exist: ";
+      "ID token failed verification or didn't exist";
 
   private static String getSecret() {
     try (SecretManagerServiceClient client = SecretManagerServiceClient.create()) {

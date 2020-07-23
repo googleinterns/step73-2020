@@ -53,7 +53,6 @@ import org.mockito.Spy;
  */
 public class LeaveClubServletTest {
   private static final String USER_ID = "predetermined-user-identification-string";
-  private static final String ALT_USER_ID = "New predetermined-user-identification-string";
   private static final String CLUB_ID = "predetermined-club-identification-string";
   private static final String ID_TOKEN = "Identification Token";
   private static final String JSON = String.join("\n",
@@ -82,12 +81,9 @@ public class LeaveClubServletTest {
   @Mock private StorageHandlerApi failingHandler;
   @Spy private StorageHandlerApi successfulHandlerSpy;
   @Mock private GoogleIdTokenVerifier correctVerifier;
-  @Mock private GoogleIdTokenVerifier incorrectVerifier;
   @Mock private GoogleIdTokenVerifier nullVerifier;
   @Mock private GoogleIdToken correctIdToken;
-  @Mock private GoogleIdToken incorrectIdToken;
   @Mock private Payload correctPayload;
-  @Mock private Payload incorrectPayload;
 
   @Before
   public void setUp() throws IOException, GeneralSecurityException {
@@ -112,14 +108,6 @@ public class LeaveClubServletTest {
     when(correctIdToken.getPayload()).thenReturn(correctPayload);
     correctVerifier = mock(GoogleIdTokenVerifier.class);
     when(correctVerifier.verify(anyString())).thenReturn(correctIdToken);
-
-    // Verification setup that successfully verifies and gives incorrect userId.
-    incorrectPayload = mock(Payload.class);
-    when(incorrectPayload.getSubject()).thenReturn(ALT_USER_ID);
-    incorrectIdToken = mock(GoogleIdToken.class);
-    when(incorrectIdToken.getPayload()).thenReturn(incorrectPayload);
-    incorrectVerifier = mock(GoogleIdTokenVerifier.class);
-    when(incorrectVerifier.verify(anyString())).thenReturn(incorrectIdToken);
 
     // Verification setup that does not successfully verify.
     nullVerifier = mock(GoogleIdTokenVerifier.class);
