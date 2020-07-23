@@ -24,7 +24,9 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.coffeehouse.common.Club;
 import com.google.coffeehouse.common.MembershipConstants;
+import com.google.coffeehouse.common.Person;
 import com.google.coffeehouse.servlets.LeaveClubServlet;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.gson.Gson;
@@ -49,19 +51,19 @@ public class LeaveClubServletTest {
   private static final String CLUB_ID = "predetermined-club-identification-string";
   private static final String JSON = String.join("\n",
       "{",
-      "  \"" + LeaveClubServlet.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\",",
-      "  \"" + LeaveClubServlet.CLUB_ID_FIELD_NAME + "\" : \"" + CLUB_ID + "\"",
+      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\",",
+      "  \"" + Club.CLUB_ID_FIELD_NAME + "\" : \"" + CLUB_ID + "\"",
       "}");
   private static final String NO_USER_ID_JSON = String.join("\n",
       "{",
-      "  \"" + LeaveClubServlet.CLUB_ID_FIELD_NAME + "\" : \"" + CLUB_ID + "\"",
+      "  \"" + Club.CLUB_ID_FIELD_NAME + "\" : \"" + CLUB_ID + "\"",
       "}");
   private static final String NO_CLUB_ID_JSON = String.join("\n",
       "{",
-      "  \"" + LeaveClubServlet.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\"",
+      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\"",
       "}");
   private static final String SYNTACTICALLY_INCORRECT_JSON =
-      "{\"" + LeaveClubServlet.USER_ID_FIELD_NAME + "\"";
+      "{\"" + Person.USER_ID_FIELD_NAME + "\"";
 
   private LeaveClubServlet leaveClubServlet;
   private LeaveClubServlet failingLeaveClubServlet;
@@ -115,7 +117,7 @@ public class LeaveClubServletTest {
     verify(response).sendError(
         HttpServletResponse.SC_BAD_REQUEST,
         String.format(leaveClubServlet.NO_FIELD_ERROR,
-                      leaveClubServlet.USER_ID_FIELD_NAME));
+                      Person.USER_ID_FIELD_NAME));
   }
 
   @Test
@@ -127,7 +129,7 @@ public class LeaveClubServletTest {
     verify(response).sendError(
         HttpServletResponse.SC_BAD_REQUEST,
         String.format(leaveClubServlet.NO_FIELD_ERROR,
-                      leaveClubServlet.CLUB_ID_FIELD_NAME));
+                      Club.CLUB_ID_FIELD_NAME));
   }
 
   @Test

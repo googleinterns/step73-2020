@@ -15,7 +15,9 @@
 package com.google.coffeehouse.servlets;
 
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
+import com.google.coffeehouse.common.Club;
 import com.google.coffeehouse.common.MembershipConstants;
+import com.google.coffeehouse.common.Person;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.Map;
@@ -48,10 +50,6 @@ public class LeaveClubServlet extends HttpServlet {
   /** The message to be logged when the body of the GET request does not have required fields. */
   public static final String LOG_INPUT_ERROR_MESSAGE =
       "Error with JSON input in GetProfileServlet: ";
-  /** Name of the key in the input JSON that corresponds to the userId. */
-  public static final String USER_ID_FIELD_NAME = "userId";
-  /** Name of the key in the input JSON that corresponds to the clubId. */
-  public static final String CLUB_ID_FIELD_NAME = "clubId";
 
   private static final Gson gson = new Gson();
   private final StorageHandlerApi storageHandler;
@@ -77,26 +75,29 @@ public class LeaveClubServlet extends HttpServlet {
    * Deletes a membership from the database using user ID and club ID.
    * @param request the POST request that must have a valid JSON representation of the userId and
    *     clubId to be passed in order to delete a membership from the Memberships table in the
-   *     database. If this is not the case the response will send a "400 Bad Request error".
+   *     database. If the required fields don't exist, the response object will send a
+   *     "400 Bad Request error". If the JSON body is not valid, and unable to be parsed, the
+   *     response object will send a "500 Internal Server error". If the membership already does
+   *     not exist in the database, the response object will send a "409 Conflict" status
    * @param response the response from this method, will set the status to 200 (OK).
-   *     If the request object does not have a valid JSON body representation of the required
-   *     fields userId and clubId, the response will send a "400 Bad Request error". If the request
-   *     object is attempting to delete a membership which does not exist in the database, the
-   *     response will send a "409 Conflict" status. If the request object is unable to be parsed,
-   *     the response will send a "500 Internal Server error".
+   *     If the request object has a valid JSON body without the required fields "userId" and
+   *     "clubId", the response will send a "400 Bad Request error". If the request object is
+   *     attempting to delete a membership which does not exist in the database, the response will
+   *     send a "409 Conflict" status. If the request object is unable to be parsed, the response
+   *     will send a "500 Internal Server error"
    * @throws IOException if an input or output error is detected when the servlet handles the request
    */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
       Map clubAndUserInfo = gson.fromJson(request.getReader(), Map.class);
-      String userId = (String) clubAndUserInfo.get(USER_ID_FIELD_NAME);
+      String userId = (String) clubAndUserInfo.get(Person.USER_ID_FIELD_NAME);
       if (userId == null) {
-        throw new IllegalArgumentException(String.format(NO_FIELD_ERROR, USER_ID_FIELD_NAME));
+        throw new IllegalArgumentException(String.format(NO_FIELD_ERROR, Person.USER_ID_FIELD_NAME));
       }
-      String clubId = (String) clubAndUserInfo.get(CLUB_ID_FIELD_NAME);
+      String clubId = (String) clubAndUserInfo.get(Club.CLUB_ID_FIELD_NAME);
       if (clubId == null) {
-        throw new IllegalArgumentException(String.format(NO_FIELD_ERROR, CLUB_ID_FIELD_NAME));
+        throw new IllegalArgumentException(String.format(NO_FIELD_ERROR, Club.CLUB_ID_FIELD_NAME));
       }
       storageHandler.deleteMembership(userId, clubId);
     } catch (IllegalArgumentException e) {
