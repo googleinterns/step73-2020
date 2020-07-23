@@ -186,6 +186,8 @@ public class UpdateClubServlet extends HttpServlet {
       return;
     }
 
+    club.save();
+
     response.setContentType("application/json;");
     response.getWriter().println(gson.toJson(club));
   }
