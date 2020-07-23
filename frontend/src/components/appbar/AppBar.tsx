@@ -10,6 +10,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import { Theme } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
+import { UserLoginStatusContext } from "../contexts/contexts";
 import { useTheme } from "@material-ui/core/styles";
 
 const drawerWidth = LayoutConstants.DRAWER_WIDTH;
@@ -32,6 +33,10 @@ const useStyles = makeStyles((theme: Theme) =>
         easing: theme.transitions.easing.easeOut,
       }),
       width: `calc(100% - ${drawerWidth}px)`,
+    },
+    avatarImg: {
+      borderRadius: '50%',
+      height: '60px',
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -97,10 +102,23 @@ export default function AppBarComp(props: AppBarProps) {
             color="inherit"
             className={classes.accountIcon}
           >
-            <AccountCircleIcon fontSize="large"/>
+            <UserAvatarImage />
           </IconButton>
         </Toolbar>
       </AppBar>
     </div>
   );
+}
+
+export function UserAvatarImage() {
+  const classes = useStyles();
+
+  const contextServices = React.useContext(UserLoginStatusContext);
+  const loginStatusHandlerService = contextServices.loginStatusHandlerService;
+
+  const token = loginStatusHandlerService.getUserToken();
+  const parsedToken = JSON.parse(atob(token.split('.')[1]));
+  const profileImg = parsedToken.picture;
+
+  return <img src={profileImg} className={classes.avatarImg} />
 }
