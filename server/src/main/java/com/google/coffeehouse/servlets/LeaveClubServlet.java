@@ -96,7 +96,7 @@ public class LeaveClubServlet extends HttpServlet {
 
   /**
    * Deletes a membership from the database using user ID and club ID.
-   * @param request the POST request that must have a valid JSON representation of the userId and
+   * @param request the POST request that must have a valid JSON representation of the clubId and
    *     the {@code "idToken"} of the user to be passed in order to delete a membership from the
    *     Memberships table in the database. If the required fields don't exist, the response
    *     object will send a "400 Bad Request error". If the membership already does not exist in
