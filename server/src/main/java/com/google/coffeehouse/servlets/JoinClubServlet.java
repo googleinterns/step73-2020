@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** 
- * Servlet to join a club from Http POST Request Body (in JSON format) containing a club
+ * Servlet to join a club from Http POST Request Body (in JSON format) containing a club ID
  * and user ID that exists in the database, and return a success status 200 (OK).
  */
 @WebServlet("/api/join-club")
@@ -58,7 +58,7 @@ public class JoinClubServlet extends HttpServlet {
 
   /**
    * Overloaded constructor for dependency injection.
-   * @param storageHandler the {@link StorageHandlerApi} that is used when adding the membership.
+   * @param storageHandler the {@link StorageHandlerApi} that is used when adding the membership
    */
   public JoinClubServlet(StorageHandlerApi storageHandler) {
     super();
@@ -66,7 +66,7 @@ public class JoinClubServlet extends HttpServlet {
   }
 
   /**
-   * Explicity default constructor used for instantiating the servlet when not testing.
+   * Explicit default constructor used for instantiating the servlet when not testing.
    */
   public JoinClubServlet() {
     super();
