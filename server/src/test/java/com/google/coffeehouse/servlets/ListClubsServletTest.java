@@ -14,12 +14,12 @@
 
 package com.google.coffeehouse.servlets;
 
+import static com.google.coffeehouse.common.MembershipConstants.MembershipStatus;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
-import static com.google.coffeehouse.common.MembershipConstants.MembershipStatus;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
@@ -27,7 +27,6 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.coffeehouse.common.Book;
 import com.google.coffeehouse.common.Club;
-import com.google.coffeehouse.common.Person;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.coffeehouse.storagehandler.StorageHandler;
 import com.google.coffeehouse.util.AuthenticationHelper;
@@ -94,7 +93,7 @@ public class ListClubsServletTest {
              + ListClubsServlet.NOT_MEMBER + "\"",
       "}");
   private static final String SYNTACTICALLY_INCORRECT_JSON =
-      "{\"" + Person.USER_ID_FIELD_NAME + "\"";
+      "{\"" + UpdateClubServlet.ID_TOKEN_FIELD_NAME + "\"";
 
   private ListClubsServlet listClubsServlet;
   private final LocalServiceTestHelper helper = new LocalServiceTestHelper();
