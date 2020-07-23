@@ -19,7 +19,7 @@ function App() {
   // Construct dependencies to determine status of user login.
   const userLoginStatusService = userLoginServices.loginStatusHandlerService;
   const [navigationDrawerOpen, setNavigationDrawerOpen] = React.useState<boolean>(false);
-  const [userLoggedIn, setUserLoggedIn] = React.useState<boolean|undefined>(undefined);
+  const [userLoggedIn, setUserLoggedIn] = React.useState<boolean>(false);
 
   const handleDrawerOpen = () => {
     setNavigationDrawerOpen(true);
