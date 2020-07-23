@@ -2,8 +2,6 @@ import * as LayoutConstants from "../layout/layout_constants"
 import * as React from "react";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AppBar from "@material-ui/core/AppBar";
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
 import clsx from "clsx";
 import { createStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
