@@ -22,6 +22,7 @@ import static org.mockito.Mockito.verify;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -71,6 +72,7 @@ public class RetrieveTokenServletTest {
   @Mock private GoogleAuthorizationCodeTokenRequest tokenRequest;
   @Mock private GoogleTokenResponse tokenResponse;
   @Mock private GoogleIdToken idToken;
+  @Mock private Payload payload;
 
   @Before
   public void setUp() throws IOException {
@@ -88,7 +90,12 @@ public class RetrieveTokenServletTest {
     when(tokenResponse.getIdToken()).thenReturn(ID_TOKEN);
 
     verifier = mock(GoogleIdTokenVerifier.class);
+    
+    payload = mock(Payload.class);
+    when(payload.getSubject()).thenReturn(ID_TOKEN);
     idToken = mock(GoogleIdToken.class);
+    when(idToken.getPayload()).thenReturn(payload);
+    
   }
 
   @After
