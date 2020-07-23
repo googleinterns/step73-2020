@@ -62,13 +62,6 @@ const useStyles = makeStyles((theme: Theme) =>
     menuButton: {
       marginRight: theme.spacing(2),
     },
-    signOutWindow: {
-      float: 'right',
-      marginTop: theme.spacing(50),
-      width: '500px',
-    },
-    signOutWindowContent: {
-    },
   }),
 );
 
@@ -80,12 +73,6 @@ interface AppBarProps {
 export default function AppBarComp(props: AppBarProps) {
   const classes = useStyles();
   const theme = useTheme();
-
-  const [displaySignOutWindow, setDisplaySignOutWindow] = React.useState<boolean>(false);
-
-  const toggleSignOutWindow = () => {
-    setDisplaySignOutWindow(!displaySignOutWindow);
-  }
 
   return (
     <>
@@ -113,7 +100,6 @@ export default function AppBarComp(props: AppBarProps) {
             aria-label="User's profile avatar"
             className={classes.accountIcon}
             color="inherit"
-            onClick={toggleSignOutWindow}
           >
             <UserAvatarImage />
           </IconButton>
