@@ -68,12 +68,16 @@ public class GetClubServlet extends HttpServlet {
    * Returns a {@link Club} object in JSON format from information in the database.
    * @param request the GET request that must have a valid JSON representation of the "clubId" to
    *     be passed in order to fetch a Club from ID in the database. If this is not the case the
-   *     response will send a "400 Bad Request error". If an error occurs when attempting to fetch
-   *     the Club from the database, the response will send a "500 Internal Server error" 
+   *     response will send a "400 Bad Request error". If the "clubId" does not exist in the
+   *     database, the response will send a "404 Not Found error". If some other error occurs
+   *     while attempting to fetch the Club from the database, the response will send a
+   *     "500 Internal Server error"
    * @param response the response from this method, will contain the object in JSON format.
    *     If the request object does not have a valid JSON body that describes the Club, this object
-   *     will send a "400 Bad Request error" If an error occurs when attempting to fetch
-   *     the Club from the database, this object will send a "500 Internal Server error" 
+   *     will send a "400 Bad Request error". If the "clubId" does not exist in the
+   *     database, this object will send a "404 Not Found error". If some other error occurs
+   *     while attempting to fetch the Club from the database, this object will send a
+   *     "500 Internal Server error"
    * @throws IOException if an input or output error is detected when the servlet handles the request
    */
   @Override

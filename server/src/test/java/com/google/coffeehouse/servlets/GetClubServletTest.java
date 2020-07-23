@@ -131,7 +131,7 @@ public class GetClubServletTest {
   }
 
   @Test
-  public void doGet_noUserId() throws IOException {
+  public void doGet_noClubId() throws IOException {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(NO_CLUB_ID_JSON)));
     getClubServlet.doGet(request, response);
