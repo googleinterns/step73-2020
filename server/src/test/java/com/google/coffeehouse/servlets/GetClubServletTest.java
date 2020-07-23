@@ -138,7 +138,7 @@ public class GetClubServletTest {
     
     verify(response).sendError(
         HttpServletResponse.SC_BAD_REQUEST,
-        GetClubServlet.LOG_INPUT_ERROR_MESSAGE);
+        String.format(GetClubServlet.LOG_INPUT_ERROR_MESSAGE, Club.CLUB_ID_FIELD_NAME));
   }
 
   @Test

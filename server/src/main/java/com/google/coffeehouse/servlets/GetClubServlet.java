@@ -42,7 +42,7 @@ public class GetClubServlet extends HttpServlet {
       "Body unable to be parsed in GetClubServlet: ";
   /** Message to be logged when the body of the GET request does not have required fields. */
   public static final String LOG_INPUT_ERROR_MESSAGE =
-      "Error with JSON input in GetClubServlet: No \"clubId\" found in JSON.";
+      "Error with JSON input in GetClubServlet: No \"%s\" found in JSON.";
 
   private static final Gson gson = new Gson();
   private final StorageHandlerApi storageHandler;
@@ -81,7 +81,8 @@ public class GetClubServlet extends HttpServlet {
       Map requestInfo = gson.fromJson(request.getReader(), Map.class);
       String clubId = (String) requestInfo.get(Club.CLUB_ID_FIELD_NAME);
       if (clubId == null) {
-        throw new IllegalArgumentException(LOG_INPUT_ERROR_MESSAGE);
+        throw new IllegalArgumentException(
+            String.format(LOG_INPUT_ERROR_MESSAGE, Club.CLUB_ID_FIELD_NAME));
       }
       club = storageHandler.fetchClubFromId(clubId);
     } catch (IllegalArgumentException e) {
