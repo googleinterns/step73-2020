@@ -72,7 +72,7 @@ public class UpdateClubServlet extends HttpServlet {
 
   /** 
    * Overloaded constructor for dependency injection.
-   * @param storageHandler the {@link StorageHandlerApi} that is used when fetching the Club/Book.
+   * @param storageHandler the {@link StorageHandlerApi} that is used when fetching the Club/Book
    */
   public UpdateClubServlet(StorageHandlerApi storageHandler) {
     super();
