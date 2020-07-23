@@ -24,8 +24,9 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.coffeehouse.common.Club;
 import com.google.coffeehouse.common.MembershipConstants;
-import com.google.coffeehouse.servlets.JoinClubServlet;
+import com.google.coffeehouse.common.Person;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.coffeehouse.storagehandler.StorageHandler;
 import com.google.gson.Gson;
@@ -50,19 +51,19 @@ public class JoinClubServletTest {
   private static final String CLUB_ID = "predetermined-club-identification-string";
   private static final String JSON = String.join("\n",
       "{",
-      "  \"" + JoinClubServlet.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\",",
-      "  \"" + JoinClubServlet.CLUB_ID_FIELD_NAME + "\" : \"" + CLUB_ID + "\"",
+      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\",",
+      "  \"" + Club.CLUB_ID_FIELD_NAME + "\" : \"" + CLUB_ID + "\"",
       "}");
   private static final String NO_USER_ID_JSON = String.join("\n",
       "{",
-      "  \"" + JoinClubServlet.CLUB_ID_FIELD_NAME + "\" : \"" + CLUB_ID + "\"",
+      "  \"" + Club.CLUB_ID_FIELD_NAME + "\" : \"" + CLUB_ID + "\"",
       "}");
   private static final String NO_CLUB_ID_JSON = String.join("\n",
       "{",
-      "  \"" + JoinClubServlet.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\"",
+      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\"",
       "}");
   private static final String SYNTACTICALLY_INCORRECT_JSON =
-      "{\"" + JoinClubServlet.USER_ID_FIELD_NAME + "\"";
+      "{\"" + Person.USER_ID_FIELD_NAME + "\"";
 
   private JoinClubServlet joinClubServlet;
   private JoinClubServlet failingJoinClubServlet;
@@ -116,7 +117,7 @@ public class JoinClubServletTest {
     verify(response).sendError(
         HttpServletResponse.SC_BAD_REQUEST,
         String.format(joinClubServlet.NO_FIELD_ERROR,
-                      joinClubServlet.USER_ID_FIELD_NAME));
+                      Person.USER_ID_FIELD_NAME));
   }
 
   @Test
@@ -128,7 +129,7 @@ public class JoinClubServletTest {
     verify(response).sendError(
         HttpServletResponse.SC_BAD_REQUEST,
         String.format(joinClubServlet.NO_FIELD_ERROR,
-                      joinClubServlet.CLUB_ID_FIELD_NAME));
+                      Club.CLUB_ID_FIELD_NAME));
   }
 
   @Test
