@@ -77,6 +77,7 @@ function UserLoggedIn(props: UserLoggedInProps) {
               <Route exact path={PageConstants.URL_EXPLORE} component={Explore} />
               <Route exact path={PageConstants.URL_PROFILE} component={Profile} />
               <Route exact path={PageConstants.URL_YOUR_CLUBS} component={YourClubs} />
+              <Redirect to={PageConstants.URL_YOUR_CLUBS} />
             </Switch>
           </main>
         </ServiceContext.Provider>
