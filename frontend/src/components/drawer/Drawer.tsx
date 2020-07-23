@@ -171,11 +171,11 @@ export function SignOutWindow(props: SignOutWindowProps) {
       <DialogContent>
         <DialogContentText>
           By pressing 'Confirm', you will be signed out of CoffeeHouse.
-          Press 'Cancel' to remain logged in.
+          Press 'Stay signed in' to remain logged in.
         </DialogContentText>
         <DialogActions>
           <Button onClick={props.handleSignOutWindowClose} color="primary">
-            Cancel
+            Stay signed in
           </Button>
           <Button
             onClick={props.handleSignOut} color="primary"
