@@ -114,8 +114,11 @@ export function UserAvatarImage() {
   const loginStatusHandlerService = contextServices.loginStatusHandlerService;
 
   const token = loginStatusHandlerService.getUserToken();
-  const parsedToken = JSON.parse(atob(token.split('.')[1]));
-  const profileImg = parsedToken.picture;
-
-  return <img src={profileImg} className={classes.avatarImg} />
+  if (token) {
+    const parsedToken = JSON.parse(atob(token.split('.')[1]));
+    const profileImg = parsedToken.picture;
+    return <img src={profileImg} className={classes.avatarImg} />
+  } else {
+    return <AccountCircleIcon />
+  }
 }
