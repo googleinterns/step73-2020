@@ -121,7 +121,10 @@ export function UserAvatarImage() {
   if (token) {
     const parsedToken = JSON.parse(atob(token.split('.')[1]));
     const profileImg = parsedToken.picture;
-    return <img src={profileImg} className={classes.avatarImg} />
+    return (profileImg
+      ? <img src={profileImg} className={classes.avatarImg} />
+      : <AccountCircleIcon />
+    );
   } else {
     return <AccountCircleIcon />
   }
