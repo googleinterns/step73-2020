@@ -146,7 +146,7 @@ public class UpdateClubServlet extends HttpServlet {
             String.format(NO_FIELD_ERROR, Person.USER_ID_FIELD_NAME));
       }
       // Determine if the user has the permissions to actually make changes on the club.
-      if (club.getOwnerId() != userIdElement.getAsString().intern()) {
+      if (!club.getOwnerId().equals(userIdElement.getAsString())) {
         throw new IllegalArgumentException(LACK_OF_PRIVILEGE_ERROR);
       }
       JsonObject clubJson = gson.toJsonTree(club).getAsJsonObject();
@@ -159,7 +159,7 @@ public class UpdateClubServlet extends HttpServlet {
       clubMask.stream()
           .filter(updateableClubFields::contains)
           .forEach(elem -> {
-            if (elem == Club.CONTENT_WARNINGS_FIELD_NAME) {
+            if (elem.equals(Club.CONTENT_WARNINGS_FIELD_NAME)) {
               clubJson.add(elem, updatedClubJson.get(elem).getAsJsonArray());
             } else {
               clubJson.addProperty(elem, updatedClubJson.get(elem).getAsString());
@@ -170,7 +170,7 @@ public class UpdateClubServlet extends HttpServlet {
       club = gson.fromJson(clubJson, Club.class);
     } catch (IllegalArgumentException e) {
       System.out.println(LOG_INPUT_ERROR_MESSAGE + e.getMessage());
-      if (e.getMessage() == LACK_OF_PRIVILEGE_ERROR) {
+      if (e.getMessage().equals(LACK_OF_PRIVILEGE_ERROR)) {
         response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
       } else {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
