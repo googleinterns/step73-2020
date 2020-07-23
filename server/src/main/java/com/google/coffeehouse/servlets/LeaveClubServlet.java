@@ -118,9 +118,6 @@ public class LeaveClubServlet extends HttpServlet {
     try {
       Map clubAndUserInfo = gson.fromJson(request.getReader(), Map.class);
       String idToken = (String) clubAndUserInfo.get(ID_TOKEN_FIELD_NAME);
-      if (idToken == null) {
-        throw new GeneralSecurityException(AuthenticationHelper.INVALID_ID_TOKEN_ERROR);
-      }
       String userId = AuthenticationHelper.getUserIdFromIdToken(idToken, verifier);
       if (userId == null) {
         throw new IllegalArgumentException(String.format(NO_FIELD_ERROR, Person.USER_ID_FIELD_NAME));
