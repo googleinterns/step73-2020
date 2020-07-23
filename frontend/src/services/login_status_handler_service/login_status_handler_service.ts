@@ -13,7 +13,7 @@ export class LoginStatusHandlerService implements LoginStatusHandlerInterface {
   token: string|undefined = undefined;
   userLoggedIn: boolean|undefined = undefined;
 
-  /** 
+  /**
    * User token is cached in localStorage, which can be used to reliably
    * determine their login status independent of a page refresh.
    */

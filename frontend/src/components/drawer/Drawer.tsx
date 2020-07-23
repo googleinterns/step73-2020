@@ -144,7 +144,7 @@ export default function DrawerComp(props: DrawerProps) {
           Sign Out
         </Button>
       </Drawer>
-      <SignOutWindow 
+      <SignOutWindow
         displaySignOutWindow={displaySignOutWindow}
         handleSignOutWindowClose={handleCloseSignOutWindow}
         handleSignOut={handleSignOut}

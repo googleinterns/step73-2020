@@ -20,7 +20,7 @@ function App() {
   const userLoginStatusService = userLoginServices.loginStatusHandlerService;
   const [navigationDrawerOpen, setNavigationDrawerOpen] = React.useState<boolean>(false);
   const [userLoggedIn, setUserLoggedIn] = React.useState<boolean|undefined>(undefined);
-  
+
   const handleDrawerOpen = () => {
     setNavigationDrawerOpen(true);
   };
@@ -42,7 +42,7 @@ function App() {
   }, [userLoginStatusService.getUserLoginStatus()]);
 
   return (userLoggedIn
-    ? <UserLoggedIn 
+    ? <UserLoggedIn
         handleDrawerOpen={handleDrawerOpen}
         handleDrawerClose={handleDrawerClose}
         handleUserSignOut={handleUserLogout}
@@ -54,7 +54,7 @@ function App() {
 
 interface UserLoggedInProps {
   handleDrawerOpen(): void,
-  handleDrawerClose(): void, 
+  handleDrawerClose(): void,
   handleUserSignOut(): void,
   navigationDrawerOpen: boolean,
 }
@@ -97,7 +97,7 @@ function UserNotLoggedIn(props: UserNotLoggedInProps) {
     <BrowserRouter>
       <UserLoginStatusContext.Provider value={userLoginServices}>
         <ServiceContext.Provider value={defaultServices}>
-          <Route 
+          <Route
             exact path={PageConstants.URL_LOGIN}
             component={()=><Login handleUserLogin={props.handleUserLogin} />}
           />
