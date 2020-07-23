@@ -66,7 +66,7 @@ public class GetProfileServlet extends HttpServlet {
     super();
     this.storageHandler = new StorageHandlerApi();
   }
-
+  
   /** 
    * Returns a {@link Person} object in JSON format from information in the database.
    * @param request the GET request that must have a valid JSON representation of the userId to be
