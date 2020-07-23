@@ -106,11 +106,11 @@ public class UpdateClubServlet extends HttpServlet {
    *     (and nested Book). If the request does not have either of these keys, or is syntactically
    *     incorrect, the response object will send a "400 Bad Request error". If the user attempting
    *     to update the Club is not the Club owner, the response object will send a "403 Forbidden
-   *     Error"
+   *     error"
    * @param response the response from this method, will contain the updated Club in JSON format.
    *     If the request object does not have a valid JSON body (as described in the request
    *     parameter) this object will send a "400 Bad Request error". If the user attempting
-   *     to update the Club is not the Club owner, this object will send a "403 Forbidden Error"
+   *     to update the Club is not the Club owner, this object will send a "403 Forbidden error"
    * @throws IOException if an input or output error is detected when the servlet handles the request
    */
   @Override
