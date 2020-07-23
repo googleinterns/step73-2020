@@ -37,6 +37,9 @@ export class LoginStatusHandlerService implements LoginStatusHandlerInterface {
 
   setUserLoginStatus(loginStatus: boolean): void {
     this.userLoggedIn = loginStatus;
+    if (!loginStatus) {
+      this.setUserToken(undefined);
+    }
   }
 
   setUserToken(userToken: string|undefined): void {

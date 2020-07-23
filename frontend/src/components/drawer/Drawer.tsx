@@ -97,7 +97,6 @@ export default function DrawerComp(props: DrawerProps) {
     const loginStatusHandlerService = userLoginStatusService.loginStatusHandlerService;
 
     loginStatusHandlerService.setUserLoginStatus(false);
-    loginStatusHandlerService.setUserToken(undefined);
 
     const success = await authenticationHandlerService.signOut();
     if (success) {
