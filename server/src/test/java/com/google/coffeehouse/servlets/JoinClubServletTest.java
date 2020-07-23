@@ -85,7 +85,7 @@ public class JoinClubServletTest {
   @Mock private Payload correctPayload;
 
   @Before
-  public void setUp() throws IOException {
+  public void setUp() throws IOException, GeneralSecurityException {
     helper.setUp();
 
     // The addMembership method is a void function, and thus requires the use of a spy.
@@ -95,7 +95,6 @@ public class JoinClubServletTest {
     failingHandler = mock(StorageHandlerApi.class);
     doThrow(new IllegalArgumentException(MembershipConstants.PERSON_ALREADY_IN_CLUB))
                 .when(failingHandler).addMembership(anyString(), anyString());
-    failingJoinClubServlet = new JoinClubServlet(failingHandler);
 
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
@@ -158,7 +157,7 @@ public class JoinClubServletTest {
   public void doPost_userAlreadyInClub() throws IOException {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(JSON)));
-    failingLeaveClubServlet = new LeaveClubServlet(correctVerifier, failingHandler);
+    failingJoinClubServlet = new JoinClubServlet(correctVerifier, failingHandler);
     failingJoinClubServlet.doPost(request, response);
 
     verify(response).sendError(
