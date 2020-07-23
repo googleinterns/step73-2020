@@ -21,7 +21,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.google.coffeehouse.util.AuthenticationConstants;
+import com.google.coffeehouse.util.AuthenticationHelper;
 import com.google.gson.Gson;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -72,8 +72,8 @@ public class RetrieveTokenServlet extends HttpServlet {
       new GoogleAuthorizationCodeTokenRequest(
           transport,
           jsonFactory,
-          AuthenticationConstants.CLIENT_ID,
-          AuthenticationConstants.CLIENT_SECRET,
+          AuthenticationHelper.CLIENT_ID,
+          AuthenticationHelper.CLIENT_SECRET,
           /* code= */ "",
           /* redirectUri= */ "");
 
@@ -128,10 +128,7 @@ public class RetrieveTokenServlet extends HttpServlet {
 
     try {
       // Perform basic security to make sure the ID token is valid.
-      GoogleIdToken partialIdToken = verifier.verify(idToken);
-      if (partialIdToken == null) {
-        throw new GeneralSecurityException(idToken);
-      }
+      AuthenticationHelper.getUserIdFromIdToken(idToken, verifier);
     } catch (Exception e) {
       System.out.println(LOG_INVALID_ID_TOKEN_MESSAGE + e.getMessage());
       response.sendError(HttpServletResponse.SC_FORBIDDEN, INVALID_ID_TOKEN);

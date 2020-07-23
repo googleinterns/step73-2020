@@ -24,6 +24,7 @@ import com.google.coffeehouse.common.Book;
 import com.google.coffeehouse.common.Club;
 import com.google.coffeehouse.common.Person;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
+import com.google.coffeehouse.util.AuthenticationHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -65,7 +66,7 @@ public class UpdateClubServlet extends HttpServlet {
       "Error with JSON input in UpdateClubServlet: ";
   /**
    * Message to be logged when an invalid ID token is passed in or a valid ID token that is
-   * associated with a user who does not have the permissions to update the Club is paeed in.
+   * associated with a user who does not have the permissions to update the Club is passed in.
    */
   public static final String LOG_SECURITY_MESSAGE =
       "Forbidden action attempted: ";
@@ -79,9 +80,6 @@ public class UpdateClubServlet extends HttpServlet {
    * to update the club does not have permissions to do so.
    */
   public static final String LACK_OF_PRIVILEGE_ERROR = "Person does not have required privileges.";
-  /** The logged error string when an an ID token fails verification. */
-  public static final String INVALID_ID_TOKEN_ERROR =
-      "ID token failed verification or didn't exist: ";
   /** Name of the key in the input JSON that corresponds to the Club object. */
   public static final String CLUB_FIELD_NAME = "club";
   /** Name of the key in the input JSON that corresponds to the update mask. */
@@ -173,16 +171,12 @@ public class UpdateClubServlet extends HttpServlet {
       club = storageHandler.fetchClubFromId(clubIdElement.getAsString());
 
       // Determine if the user has the permissions to actually make changes on the Club.
-      JsonElement idTokenElement = requestJson.get(ID_TOKEN_FIELD_NAME);
-      if (idTokenElement == null) {
-        throw new GeneralSecurityException(INVALID_ID_TOKEN_ERROR);
-      }
-      GoogleIdToken idToken = verifier.verify(idTokenElement.getAsString());
+      JsonElement idToken = requestJson.get(ID_TOKEN_FIELD_NAME);
       if (idToken == null) {
-        throw new GeneralSecurityException(INVALID_ID_TOKEN_ERROR);
+        throw new GeneralSecurityException(AuthenticationHelper.INVALID_ID_TOKEN_ERROR);
       }
-
-      String userId = (String) idToken.getPayload().getSubject();
+      
+      String userId = AuthenticationHelper.getUserIdFromIdToken(idToken.getAsString(), verifier);
       if (!club.getOwnerId().equals(userId)) {
         throw new GeneralSecurityException(LACK_OF_PRIVILEGE_ERROR);
       }
