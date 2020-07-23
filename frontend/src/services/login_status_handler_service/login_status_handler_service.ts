@@ -23,11 +23,23 @@ export class LoginStatusHandlerService implements LoginStatusHandlerInterface {
   }
 
   /**
-   * Gets the status of user login.
+   * Gets status of user login.
    * @return true if a user token is cached in local storage,
    *         false if user token does not exist.
    */
-   public getUserLoginStatus(): boolean {
-     return (this.userLoggedIn ? true : false);
-   }
+  public getUserLoginStatus(): boolean {
+    return (this.userLoggedIn ? true : false);
+  }
+
+  public getUserToken(): string {
+    return this.token;
+  }
+
+  setUserLoginStatus(loginStatus: boolean): void {
+    this.userLoggedIn = loginStatus;
+  }
+
+  setUserToken(userToken: string): void {
+    this.token = userToken;
+  }
 }

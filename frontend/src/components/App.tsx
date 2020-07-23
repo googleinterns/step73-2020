@@ -51,25 +51,27 @@ class App extends React.Component<AppProps, AppState> {
   public render() {
     return (
       <BrowserRouter>
-        <ServiceContext.Provider value={defaultServices}>
-          <CssBaseline />
-          <AppBar
-            navigationDrawerOpen={this.state.navigationDrawerOpen}
-            handleDrawerOpen={this.handleDrawerOpen}
-          />
-          <Drawer
-            navigationDrawerOpen={this.state.navigationDrawerOpen}
-            handleDrawerClose={this.handleDrawerClose}
-          />
-          <main>
-            <Switch>
-              <Route exact path={PageConstants.URL_EXPLORE} component={Explore} />
-              <Route exact path={PageConstants.URL_LOGIN} component={Login} />
-              <Route exact path={PageConstants.URL_PROFILE} component={Profile} />
-              <Route exact path={PageConstants.URL_YOUR_CLUBS} component={YourClubs} />
-            </Switch>
-          </main>
-        </ServiceContext.Provider>
+        <UserLoginStatusContext.Provider value={userLoginServices}>
+          <ServiceContext.Provider value={defaultServices}>
+            <CssBaseline />
+            <AppBar
+              navigationDrawerOpen={this.state.navigationDrawerOpen}
+              handleDrawerOpen={this.handleDrawerOpen}
+            />
+            <Drawer
+              navigationDrawerOpen={this.state.navigationDrawerOpen}
+              handleDrawerClose={this.handleDrawerClose}
+            />
+            <main>
+              <Switch>
+                <Route exact path={PageConstants.URL_EXPLORE} component={Explore} />
+                <Route exact path={PageConstants.URL_LOGIN} component={Login} />
+                <Route exact path={PageConstants.URL_PROFILE} component={Profile} />
+                <Route exact path={PageConstants.URL_YOUR_CLUBS} component={YourClubs} />
+              </Switch>
+            </main>
+          </ServiceContext.Provider>
+        </UserLoginStatusContext.Provider>
       </BrowserRouter>
     );
   }
