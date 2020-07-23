@@ -1,6 +1,7 @@
 import * as LayoutConstants from "../layout/layout_constants"
 import * as React from "react";
 import { Link } from "react-router-dom"
+import Button from "@material-ui/core/Button";
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import clsx from 'clsx';
@@ -16,8 +17,10 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
+import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import { Theme} from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import { UserLoginStatusContext } from "../contexts/contexts";
 import { useTheme } from "@material-ui/core/styles";
 
 const drawerWidth = LayoutConstants.DRAWER_WIDTH;
@@ -26,6 +29,11 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
+    },
+    button: {
+      marginLeft: theme.spacing(3),
+      marginTop: theme.spacing(1),
+      width: '75%',
     },
     drawer: {
       flexShrink: 0,
@@ -92,6 +100,14 @@ export default function DrawerComp(props: DrawerProps) {
           ))}
         </List>
         <Divider />
+        <Button
+          className={classes.button}
+          color="primary"
+          endIcon={<MeetingRoomIcon />}
+          variant="contained"
+        >
+          Sign Out
+        </Button>
       </Drawer>
     </div>
   )
