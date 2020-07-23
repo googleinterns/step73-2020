@@ -14,6 +14,12 @@
 
 package com.google.coffeehouse.servlets;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.coffeehouse.common.Book;
 import com.google.coffeehouse.common.Club;
 import com.google.coffeehouse.common.Person;
@@ -22,6 +28,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,6 +60,12 @@ public class UpdateClubServlet extends HttpServlet {
   /** Message to be logged when the body of the POST request cannot be parsed. */
   public static final String LOG_BODY_ERROR_MESSAGE =
       "Body unable to be parsed in UpdateClubServlet: ";
+  /** Message to be logged when the body of the POST request does not have required fields. */
+  public static final String LOG_INPUT_ERROR_MESSAGE =
+      "Error with JSON input in UpdateClubServlet: ";
+  /** Message to be logged when the body of the POST request does not have required fields. */
+  public static final String LOG_SECURITY_MESSAGE =
+      "Forbidden action attempted: ";
   /** 
    * The error string sent by the response object in doPost when the body of the
    * POST request does not have a required field.
@@ -63,24 +76,33 @@ public class UpdateClubServlet extends HttpServlet {
    * to update the club does not have permissions to do so.
    */
   public static final String LACK_OF_PRIVILEGE_ERROR = "Person does not have required privileges.";
-  /** Message to be logged when the body of the POST request does not have required fields. */
-  public static final String LOG_INPUT_ERROR_MESSAGE =
-      "Error with JSON input in UpdateClubServlet: ";
+
+  /** The logged error string when an an ID token fails verification. */
+  public static final String INVALID_ID_TOKEN_ERROR = 
+      "ID token failed verification or didn't exist: ";
   /** Name of the key in the input JSON that corresponds to the Club object. */
   public static final String CLUB_FIELD_NAME = "club";
   /** Name of the key in the input JSON that corresponds to the update mask. */
   public static final String UPDATE_MASK_FIELD_NAME = "updateMask";
+  /** Name of the key in the input JSON that corresponds to the ID token. */
+  public static final String ID_TOKEN_FIELD_NAME = "idToken";
 
   private static final Gson gson = new Gson();
+  private static final HttpTransport transport = new NetHttpTransport();
+  private static final GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+  private GoogleIdTokenVerifier verifier =
+      new GoogleIdTokenVerifier.Builder(transport, jsonFactory).build();
   private final StorageHandlerApi storageHandler;
 
   /** 
    * Overloaded constructor for dependency injection.
+   * @param verifier the class that verifies the validity of the ID token
    * @param storageHandler the {@link StorageHandlerApi} that is used when fetching the Club/Book
    */
-  public UpdateClubServlet(StorageHandlerApi storageHandler) {
+  public UpdateClubServlet(GoogleIdTokenVerifier verifier, StorageHandlerApi storageHandler) {
     super();
     this.storageHandler = storageHandler;
+    this.verifier = verifier;
   }
 
   /** 
@@ -94,7 +116,7 @@ public class UpdateClubServlet extends HttpServlet {
   /** 
    * Updates a Club object in the database and returns that object in JSON format.
    * @param request the POST request that must have a valid JSON representation of the Club to be
-   *     updated, the {@code userId} of the user who wants to update the Club, as well as an
+   *     updated, the {@code "idToken"} of the user who wants to update the Club, as well as an
    *     optional mask of fields that will be updated as its body. The Club to be updated must be
    *     represented by a {@code "club"} key, whose value is an object that represents the updated
    *     Club. Inside of this object, there will be a {@code "currentBook"} key that is associated
@@ -103,14 +125,15 @@ public class UpdateClubServlet extends HttpServlet {
    *     of the fields to be updated from the "club" key. To specify an update inside of the book
    *     object inside of the Club, prepend the field name in the update mask with "currentBook.".
    *     If no update mask exists, all fields from the "club" key will be used to update the Club
-   *     (and nested Book). If the request does not have either of these keys, or is syntactically
+   *     (and nested Book). If the request does not have the required keys, or is syntactically
    *     incorrect, the response object will send a "400 Bad Request error". If the user attempting
-   *     to update the Club is not the Club owner, the response object will send a "403 Forbidden
-   *     error"
+   *     to update the Club is not the Club owner or has an invalid ID token, the response object
+   *     will send a "403 Forbidden error"
    * @param response the response from this method, will contain the updated Club in JSON format.
    *     If the request object does not have a valid JSON body (as described in the request
    *     parameter) this object will send a "400 Bad Request error". If the user attempting
-   *     to update the Club is not the Club owner, this object will send a "403 Forbidden error"
+   *     to update the Club is not the Club owner or has an invalid ID token, the response object
+   *     will send a "403 Forbidden error"
    * @throws IOException if an input or output error is detected when the servlet handles the request
    */
   @Override
@@ -132,7 +155,7 @@ public class UpdateClubServlet extends HttpServlet {
         // Cannot use stream here because Java will complain about local variables not being final.
         String[] elements = updateMask.getAsString().split(",");
         for (String element : elements) {
-          boolean isBookUpdate = element.contains(Club.CURRENT_BOOK_FIELD_NAME + ".");
+          boolean isBookUpdate = element.startsWith(Club.CURRENT_BOOK_FIELD_NAME + ".");
           if (isBookUpdate) {
             bookMask.add(element.split("\\.")[1]);
           } else {
@@ -147,14 +170,19 @@ public class UpdateClubServlet extends HttpServlet {
       }
       club = storageHandler.fetchClubFromId(clubIdElement.getAsString());
 
-      JsonElement userIdElement = requestJson.get(Person.USER_ID_FIELD_NAME);
-      if (userIdElement == null) {
-        throw new IllegalArgumentException(
-            String.format(NO_FIELD_ERROR, Person.USER_ID_FIELD_NAME));
-      }
       // Determine if the user has the permissions to actually make changes on the Club.
-      if (!club.getOwnerId().equals(userIdElement.getAsString())) {
-        throw new IllegalArgumentException(LACK_OF_PRIVILEGE_ERROR);
+      JsonElement idTokenElement = requestJson.get(ID_TOKEN_FIELD_NAME);
+      if (idTokenElement == null) {
+        throw new GeneralSecurityException(INVALID_ID_TOKEN_ERROR);
+      }
+      GoogleIdToken idToken = verifier.verify(idTokenElement.getAsString());
+      if (idToken == null) {
+        throw new GeneralSecurityException(INVALID_ID_TOKEN_ERROR);
+      }
+
+      String userId = (String) idToken.getPayload().getSubject();
+      if (!club.getOwnerId().equals(userId)) {
+        throw new GeneralSecurityException(LACK_OF_PRIVILEGE_ERROR);
       }
       JsonObject clubJson = gson.toJsonTree(club).getAsJsonObject();
       JsonObject bookJson = clubJson.get(Club.CURRENT_BOOK_FIELD_NAME).getAsJsonObject();
@@ -177,11 +205,11 @@ public class UpdateClubServlet extends HttpServlet {
       club = gson.fromJson(clubJson, Club.class);
     } catch (IllegalArgumentException e) {
       System.out.println(LOG_INPUT_ERROR_MESSAGE + e.getMessage());
-      if (e.getMessage().equals(LACK_OF_PRIVILEGE_ERROR)) {
-        response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
-      } else {
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-      }
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+      return;
+    } catch (GeneralSecurityException e) {
+      System.out.println(LOG_SECURITY_MESSAGE + e.getMessage());
+      response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
       return;
     } catch (Exception e) {
       System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());

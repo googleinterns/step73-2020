@@ -20,6 +20,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.coffeehouse.common.Club;
@@ -31,6 +34,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -59,6 +63,7 @@ public class UpdateClubServletTest {
   private static final String ISBN = "978-3-16-148410-0";
   private static final String ALT_ISBN = "111-1-11-111111-1";
   private static final String BOOK_ID = "predetermined-identification-string";
+  private static final String ID_TOKEN = "Identification Token";
   private static final List<String> testContentWarnings = new ArrayList<>(Arrays.asList("1", "2"));
   private static final Book testBook = Book.newBuilder()
                                            .setTitle(TITLE)
@@ -78,7 +83,7 @@ public class UpdateClubServletTest {
       "{",
       "  \"" + UpdateClubServlet.UPDATE_MASK_FIELD_NAME + "\" : \"" +
       Club.DESCRIPTION_FIELD_NAME + "\",",
-      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + OWNER_ID + "\",",
+      "  \"" + UpdateClubServlet.ID_TOKEN_FIELD_NAME + "\" : \"" + ID_TOKEN + "\",",
       "  \"" + UpdateClubServlet.CLUB_FIELD_NAME + "\" : {",
       "    \"" + Club.NAME_FIELD_NAME + "\" : \"" + ALT_NAME + "\",",
       "    \"" + Club.OWNER_ID_FIELD_NAME + "\" : \"" + OWNER_ID + "\",",
@@ -97,7 +102,7 @@ public class UpdateClubServletTest {
       "{",
       "  \"" + UpdateClubServlet.UPDATE_MASK_FIELD_NAME + "\" : \"" +
       Club.CURRENT_BOOK_FIELD_NAME + "." + Book.TITLE_FIELD_NAME + "\",",
-      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + OWNER_ID + "\",",
+      "  \"" + UpdateClubServlet.ID_TOKEN_FIELD_NAME + "\" : \"" + ID_TOKEN + "\",",
       "  \"" + UpdateClubServlet.CLUB_FIELD_NAME + "\" : {",
       "    \"" + Club.NAME_FIELD_NAME + "\" : \"" + ALT_NAME + "\",",
       "    \"" + Club.OWNER_ID_FIELD_NAME + "\" : \"" + OWNER_ID + "\",",
@@ -114,7 +119,7 @@ public class UpdateClubServletTest {
       "}");
   private static final String NO_MASK = String.join("\n",
       "{",
-      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + OWNER_ID + "\",",
+      "  \"" + UpdateClubServlet.ID_TOKEN_FIELD_NAME + "\" : \"" + ID_TOKEN + "\",",
       "  \"" + UpdateClubServlet.CLUB_FIELD_NAME + "\" : {",
       "    \"" + Club.NAME_FIELD_NAME + "\" : \"" + ALT_NAME + "\",",
       "    \"" + Club.OWNER_ID_FIELD_NAME + "\" : \"" + OWNER_ID + "\",",
@@ -129,29 +134,10 @@ public class UpdateClubServletTest {
       "    }",
       "  }",
       "}");
-  private static final String NO_USER_ID = String.join("\n",
+  private static final String NO_ID_TOKEN = String.join("\n",
       "{",
       "  \"" + UpdateClubServlet.UPDATE_MASK_FIELD_NAME + "\" : \"" +
       Club.DESCRIPTION_FIELD_NAME + "\",",
-      "  \"" + UpdateClubServlet.CLUB_FIELD_NAME + "\" : {",
-      "    \"" + Club.NAME_FIELD_NAME + "\" : \"" + ALT_NAME + "\",",
-      "    \"" + Club.OWNER_ID_FIELD_NAME + "\" : \"" + OWNER_ID + "\",",
-      "    \"" + Club.CLUB_ID_FIELD_NAME + "\" : \"" + CLUB_ID + "\",",
-      "    \"" + Club.DESCRIPTION_FIELD_NAME + "\" : \"" + ALT_DESCRIPTION + "\",",
-      "    \"" + Club.CONTENT_WARNINGS_FIELD_NAME + "\" : [\"3\",\"4\"],",
-      "    \"" + Club.CURRENT_BOOK_FIELD_NAME + "\" : {",
-      "      \"" + Book.BOOK_ID_FIELD_NAME + "\" : \"" + BOOK_ID + "\",",
-      "      \"" + Book.TITLE_FIELD_NAME + "\" : \"" + ALT_TITLE + "\",",
-      "      \"" + Book.AUTHOR_FIELD_NAME + "\" : \"" + ALT_AUTHOR + "\",",
-      "      \"" + Book.ISBN_FIELD_NAME + "\" : \"" + ALT_ISBN + "\"",
-      "    }",
-      "  }",
-      "}");
-  private static final String WRONG_USER_ID = String.join("\n",
-      "{",
-      "  \"" + UpdateClubServlet.UPDATE_MASK_FIELD_NAME + "\" : \"" +
-      Club.DESCRIPTION_FIELD_NAME + "\",",
-      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + ALT_OWNER_ID + "\",",
       "  \"" + UpdateClubServlet.CLUB_FIELD_NAME + "\" : {",
       "    \"" + Club.NAME_FIELD_NAME + "\" : \"" + ALT_NAME + "\",",
       "    \"" + Club.OWNER_ID_FIELD_NAME + "\" : \"" + OWNER_ID + "\",",
@@ -170,7 +156,7 @@ public class UpdateClubServletTest {
       "{",
       "  \"" + UpdateClubServlet.UPDATE_MASK_FIELD_NAME + "\" : \"" +
       Club.DESCRIPTION_FIELD_NAME + "\",",
-      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + OWNER_ID + "\",",
+      "  \"" + UpdateClubServlet.ID_TOKEN_FIELD_NAME + "\" : \"" + OWNER_ID + "\",",
       "  \"" + UpdateClubServlet.CLUB_FIELD_NAME + "\" : {",
       "    \"" + Club.NAME_FIELD_NAME + "\" : \"" + ALT_NAME + "\",",
       "    \"" + Club.OWNER_ID_FIELD_NAME + "\" : \"" + OWNER_ID + "\",",
@@ -193,18 +179,44 @@ public class UpdateClubServletTest {
   @Mock private HttpServletRequest request;
   @Mock private HttpServletResponse response;
   @Mock private StorageHandlerApi handler;
+  @Mock private GoogleIdTokenVerifier correctVerifier;
+  @Mock private GoogleIdTokenVerifier incorrectVerifier;
+  @Mock private GoogleIdTokenVerifier nullVerifier;
+  @Mock private GoogleIdToken correctIdToken;
+  @Mock private GoogleIdToken incorrectIdToken;
+  @Mock private Payload correctPayload;
+  @Mock private Payload incorrectPayload;
 
   @Before
-  public void setUp() throws IOException {
+  public void setUp() throws IOException, GeneralSecurityException {
     helper.setUp();
 
     handler = mock(StorageHandlerApi.class);
     when(handler.fetchClubFromId(anyString())).thenReturn(testClub);
-    updateClubServlet = new UpdateClubServlet(handler);
 
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
     when(response.getWriter()).thenReturn(new PrintWriter(stringWriter));
+
+    // Verification setup that successfully verifies and gives correct userId.
+    correctPayload = mock(Payload.class);
+    when(correctPayload.getSubject()).thenReturn(OWNER_ID);
+    correctIdToken = mock(GoogleIdToken.class);
+    when(correctIdToken.getPayload()).thenReturn(correctPayload);
+    correctVerifier = mock(GoogleIdTokenVerifier.class);
+    when(correctVerifier.verify(anyString())).thenReturn(correctIdToken);
+
+    // Verification setup that successfully verifies and gives incorrect userId.
+    incorrectPayload = mock(Payload.class);
+    when(incorrectPayload.getSubject()).thenReturn(ALT_OWNER_ID);
+    incorrectIdToken = mock(GoogleIdToken.class);
+    when(incorrectIdToken.getPayload()).thenReturn(incorrectPayload);
+    incorrectVerifier = mock(GoogleIdTokenVerifier.class);
+    when(incorrectVerifier.verify(anyString())).thenReturn(incorrectIdToken);
+
+    // Verification setup that does not successfully verify.
+    nullVerifier = mock(GoogleIdTokenVerifier.class);
+    when(nullVerifier.verify(anyString())).thenReturn(null);
   }
 
   @After
@@ -216,6 +228,7 @@ public class UpdateClubServletTest {
   public void doPost_validInputWithMask() throws IOException {
     when(request.getReader()).thenReturn(
         new BufferedReader(new StringReader(MASK_PARTIAL_UPDATE)));
+    updateClubServlet = new UpdateClubServlet(correctVerifier, handler);
     updateClubServlet.doPost(request, response);
     String result = stringWriter.toString();
 
@@ -237,6 +250,7 @@ public class UpdateClubServletTest {
   public void doPost_validInputWithNoMask() throws IOException {
     when(request.getReader()).thenReturn(
         new BufferedReader(new StringReader(NO_MASK)));
+    updateClubServlet = new UpdateClubServlet(correctVerifier, handler);
     updateClubServlet.doPost(request, response);
     String result = stringWriter.toString();
 
@@ -258,6 +272,7 @@ public class UpdateClubServletTest {
   public void doPost_validInputWithBookMask() throws IOException {
     when(request.getReader()).thenReturn(
         new BufferedReader(new StringReader(MASK_BOOK_UPDATE)));
+    updateClubServlet = new UpdateClubServlet(correctVerifier, handler);
     updateClubServlet.doPost(request, response);
     String result = stringWriter.toString();
 
@@ -276,44 +291,58 @@ public class UpdateClubServletTest {
   }
 
   @Test
-  public void doPost_noUserId() throws IOException {
+  public void doPost_noIdToken() throws IOException {
     when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(NO_USER_ID)));
+          new BufferedReader(new StringReader(NO_ID_TOKEN)));
+    updateClubServlet = new UpdateClubServlet(correctVerifier, handler);
     updateClubServlet.doPost(request, response);
     
     verify(response).sendError(
-        HttpServletResponse.SC_BAD_REQUEST,
-        String.format(updateClubServlet.NO_FIELD_ERROR, Person.USER_ID_FIELD_NAME));
+        HttpServletResponse.SC_FORBIDDEN, UpdateClubServlet.INVALID_ID_TOKEN_ERROR);
   }
 
   @Test
   public void doPost_wrongUserId() throws IOException {
     when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(WRONG_USER_ID)));
+          new BufferedReader(new StringReader(NO_MASK)));
+    updateClubServlet = new UpdateClubServlet(incorrectVerifier, handler);
     updateClubServlet.doPost(request, response);
     
     verify(response).sendError(
-        HttpServletResponse.SC_FORBIDDEN, updateClubServlet.LACK_OF_PRIVILEGE_ERROR);
+        HttpServletResponse.SC_FORBIDDEN, UpdateClubServlet.LACK_OF_PRIVILEGE_ERROR);
   }
 
   @Test
   public void doPost_noClubId() throws IOException {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(NO_CLUB_ID)));
+    updateClubServlet = new UpdateClubServlet(correctVerifier, handler);
     updateClubServlet.doPost(request, response);
     
     verify(response).sendError(
         HttpServletResponse.SC_BAD_REQUEST,
-        String.format(updateClubServlet.NO_FIELD_ERROR, Club.CLUB_ID_FIELD_NAME));
+        String.format(UpdateClubServlet.NO_FIELD_ERROR, Club.CLUB_ID_FIELD_NAME));
   }
   
   @Test
   public void doPost_syntacticallyIncorrectInput() throws IOException {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(SYNTACTICALLY_INCORRECT_JSON)));
+    updateClubServlet = new UpdateClubServlet(correctVerifier, handler);
     updateClubServlet.doPost(request, response);
     
     verify(response).sendError(
-        HttpServletResponse.SC_BAD_REQUEST, updateClubServlet.BODY_ERROR);
+        HttpServletResponse.SC_BAD_REQUEST, UpdateClubServlet.BODY_ERROR);
+  }
+
+  @Test
+  public void doPost_failVerification() throws IOException {
+    when(request.getReader()).thenReturn(
+          new BufferedReader(new StringReader(NO_MASK)));
+    updateClubServlet = new UpdateClubServlet(nullVerifier, handler);
+    updateClubServlet.doPost(request, response);
+    
+    verify(response).sendError(
+        HttpServletResponse.SC_FORBIDDEN, UpdateClubServlet.INVALID_ID_TOKEN_ERROR);
   }
 }
