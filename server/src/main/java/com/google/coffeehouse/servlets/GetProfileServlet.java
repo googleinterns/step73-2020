@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
+/** 
  * Servlet to get a {@link Person} from Http GET Request Body (in JSON format)
  * that exists in the database through a call to the Storage Handler API,
  * and return it in JSON format.
@@ -33,14 +33,14 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/api/get-profile")
 public class GetProfileServlet extends HttpServlet {
 
-  /**
+  /** 
    * The error string sent by the response object in doGet when the body of the 
    * GET request cannot be used to fetch a {@link Person} for any reason.
    */
   public static final String BODY_ERROR = "- unable to parse body.";
 
   /** The logged error string when an error parsing the body of the GET request is encountered. */
-  public static final String LOG_BODY_ERROR_MESSAGE =
+  public static final String LOG_BODY_ERROR_MESSAGE = 
       "Body unable to be parsed in GetProfileServlet: ";
 
   /** Message to be logged when the body of the GET request does not have required fields. */
@@ -67,7 +67,7 @@ public class GetProfileServlet extends HttpServlet {
     this.storageHandler = new StorageHandlerApi();
   }
 
-  /**
+  /** 
    * Returns a {@link Person} object in JSON format from information in the database.
    * @param request the GET request that must have a valid JSON representation of the userId to be
    *     passed in order to fetch a person from ID in the database.  If the required "userId"
