@@ -24,10 +24,11 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.coffeehouse.common.Club;
 import com.google.coffeehouse.common.Book;
 import com.google.coffeehouse.common.Person;
+import com.google.coffeehouse.storagehandler.StorageHandlerApi;
+import com.google.coffeehouse.util.AuthenticationHelper;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -298,7 +299,7 @@ public class UpdateClubServletTest {
     updateClubServlet.doPost(request, response);
     
     verify(response).sendError(
-        HttpServletResponse.SC_FORBIDDEN, UpdateClubServlet.INVALID_ID_TOKEN_ERROR);
+        HttpServletResponse.SC_FORBIDDEN, AuthenticationHelper.INVALID_ID_TOKEN_ERROR);
   }
 
   @Test
@@ -343,6 +344,6 @@ public class UpdateClubServletTest {
     updateClubServlet.doPost(request, response);
     
     verify(response).sendError(
-        HttpServletResponse.SC_FORBIDDEN, UpdateClubServlet.INVALID_ID_TOKEN_ERROR);
+        HttpServletResponse.SC_FORBIDDEN, AuthenticationHelper.INVALID_ID_TOKEN_ERROR);
   }
 }
