@@ -23,18 +23,22 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.coffeehouse.common.Club;
 import com.google.coffeehouse.common.MembershipConstants;
-import com.google.coffeehouse.common.Person;
+import com.google.coffeehouse.servlets.JoinClubServlet;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
-import com.google.coffeehouse.storagehandler.StorageHandler;
+import com.google.coffeehouse.util.AuthenticationHelper;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.security.GeneralSecurityException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.After;
@@ -49,21 +53,22 @@ import org.mockito.Spy;
 public class JoinClubServletTest {
   private static final String USER_ID = "predetermined-user-identification-string";
   private static final String CLUB_ID = "predetermined-club-identification-string";
+  private static final String ID_TOKEN = "Identification Token";
   private static final String JSON = String.join("\n",
       "{",
-      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\",",
+      "  \"" + JoinClubServlet.ID_TOKEN_FIELD_NAME + "\" : \"" + ID_TOKEN + "\",",
       "  \"" + Club.CLUB_ID_FIELD_NAME + "\" : \"" + CLUB_ID + "\"",
       "}");
-  private static final String NO_USER_ID_JSON = String.join("\n",
+  private static final String NO_TOKEN_ID_JSON = String.join("\n",
       "{",
       "  \"" + Club.CLUB_ID_FIELD_NAME + "\" : \"" + CLUB_ID + "\"",
       "}");
   private static final String NO_CLUB_ID_JSON = String.join("\n",
       "{",
-      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\"",
+      "  \"" + JoinClubServlet.ID_TOKEN_FIELD_NAME + "\" : \"" + ID_TOKEN + "\"",
       "}");
   private static final String SYNTACTICALLY_INCORRECT_JSON =
-      "{\"" + Person.USER_ID_FIELD_NAME + "\"";
+      "{\"" + JoinClubServlet.ID_TOKEN_FIELD_NAME + "\"";
 
   private JoinClubServlet joinClubServlet;
   private JoinClubServlet failingJoinClubServlet;
@@ -74,6 +79,10 @@ public class JoinClubServletTest {
   @Mock private HttpServletResponse response;
   @Mock private StorageHandlerApi failingHandler;
   @Spy private StorageHandlerApi successfulHandlerSpy;
+  @Mock private GoogleIdTokenVerifier correctVerifier;
+  @Mock private GoogleIdTokenVerifier nullVerifier;
+  @Mock private GoogleIdToken correctIdToken;
+  @Mock private Payload correctPayload;
 
   @Before
   public void setUp() throws IOException {
@@ -82,7 +91,6 @@ public class JoinClubServletTest {
     // The addMembership method is a void function, and thus requires the use of a spy.
     successfulHandlerSpy = spy(StorageHandlerApi.class);
     doNothing().when(successfulHandlerSpy).addMembership(anyString(), anyString());
-    joinClubServlet = new JoinClubServlet(successfulHandlerSpy);
 
     failingHandler = mock(StorageHandlerApi.class);
     doThrow(new IllegalArgumentException(MembershipConstants.PERSON_ALREADY_IN_CLUB))
@@ -92,6 +100,18 @@ public class JoinClubServletTest {
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
     when(response.getWriter()).thenReturn(new PrintWriter(stringWriter));
+
+    // Verification setup that successfully verifies and gives correct userId.
+    correctPayload = mock(Payload.class);
+    when(correctPayload.getSubject()).thenReturn(USER_ID);
+    correctIdToken = mock(GoogleIdToken.class);
+    when(correctIdToken.getPayload()).thenReturn(correctPayload);
+    correctVerifier = mock(GoogleIdTokenVerifier.class);
+    when(correctVerifier.verify(anyString())).thenReturn(correctIdToken);
+
+    // Verification setup that does not successfully verify.
+    nullVerifier = mock(GoogleIdTokenVerifier.class);
+    when(nullVerifier.verify(anyString())).thenReturn(null);
   }
 
   @After
@@ -103,27 +123,29 @@ public class JoinClubServletTest {
   public void doPost_validInput() throws IOException {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(JSON)));
+    joinClubServlet = new JoinClubServlet(correctVerifier, successfulHandlerSpy);
 
     joinClubServlet.doPost(request, response);
     verify(response).setStatus(200);
   }
 
   @Test
-  public void doPost_noUserId() throws IOException {
+  public void doPost_noIdToken() throws IOException {
     when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(NO_USER_ID_JSON)));
+          new BufferedReader(new StringReader(NO_TOKEN_ID_JSON)));
+    joinClubServlet = new JoinClubServlet(correctVerifier, successfulHandlerSpy);
     joinClubServlet.doPost(request, response);
 
     verify(response).sendError(
-        HttpServletResponse.SC_BAD_REQUEST,
-        String.format(joinClubServlet.NO_FIELD_ERROR,
-                      Person.USER_ID_FIELD_NAME));
+        HttpServletResponse.SC_FORBIDDEN,
+        AuthenticationHelper.INVALID_ID_TOKEN_ERROR);
   }
 
   @Test
   public void doPost_noClubId() throws IOException {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(NO_CLUB_ID_JSON)));
+    joinClubServlet = new JoinClubServlet(correctVerifier, successfulHandlerSpy);
     joinClubServlet.doPost(request, response);
 
     verify(response).sendError(
@@ -136,6 +158,7 @@ public class JoinClubServletTest {
   public void doPost_userAlreadyInClub() throws IOException {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(JSON)));
+    failingLeaveClubServlet = new LeaveClubServlet(correctVerifier, failingHandler);
     failingJoinClubServlet.doPost(request, response);
 
     verify(response).sendError(
@@ -147,10 +170,22 @@ public class JoinClubServletTest {
   public void doPost_syntacticallyIncorrectInput() throws IOException {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(SYNTACTICALLY_INCORRECT_JSON)));
+    joinClubServlet = new JoinClubServlet(correctVerifier, successfulHandlerSpy);
     joinClubServlet.doPost(request, response);
 
     verify(response).sendError(
         HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
         joinClubServlet.BODY_ERROR);
+  }
+
+  @Test
+  public void doPost_failVerification() throws IOException {
+    when(request.getReader()).thenReturn(
+          new BufferedReader(new StringReader(JSON)));
+    joinClubServlet = new JoinClubServlet(nullVerifier, successfulHandlerSpy);
+    joinClubServlet.doPost(request, response);
+
+    verify(response).sendError(
+        HttpServletResponse.SC_FORBIDDEN, AuthenticationHelper.INVALID_ID_TOKEN_ERROR);
   }
 }
