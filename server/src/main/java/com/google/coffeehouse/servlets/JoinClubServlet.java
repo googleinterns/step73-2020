@@ -75,12 +75,15 @@ public class JoinClubServlet extends HttpServlet {
 
   /** 
    * Adds a membership to the database using user ID and club ID.
-   * @param request the POST request that must have a valid JSON representation of the userId and clubID
+   * @param request the POST request that must have a valid JSON representation of the userId and clubId
    *     to be passed in order to add a membership to the Memberships table in the database. If this is
-   *     not the case the response will send a "400 Bad Request error"
+   *     not the case the response will send a "400 Bad Request error".
    * @param response the response from this method, will set the status to 200 (OK).
-   *     If the request object does not have a valid JSON body representation of the userId and clubID,
-   *     the response will send a "400 Bad Request error"
+   *     If the request object does not have a valid JSON body representation of the required fields
+   *     userId and clubId, the response will send a "400 Bad Request error".
+   *     If the request object is attempting to add a membership which already exists in the database,
+   *     the response will send a "500 Internal Server error".
+   *     If the request object is unable to be parsed, the response will send a "409 Conflict" status.
    * @throws IOException if an input or output error is detected when the servlet handles the request
    */
   @Override
