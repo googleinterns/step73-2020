@@ -30,6 +30,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/** 
+ * Servlet to update a {@link Club} from Http POST Request Body (in JSON format),
+ * save it in database, and return it in JSON format.
+ */
 @WebServlet("/api/update-club")
 public class UpdateClubServlet extends HttpServlet {
   /** The fields of the Club object that can be updated. */
