@@ -27,7 +27,6 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.coffeehouse.common.MembershipConstants;
 import com.google.coffeehouse.servlets.LeaveClubServlet;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
-import com.google.coffeehouse.storagehandler.StorageHandler;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
