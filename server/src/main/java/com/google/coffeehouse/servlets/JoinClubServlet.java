@@ -50,6 +50,13 @@ public class JoinClubServlet extends HttpServlet {
   public static final String LOG_BODY_ERROR_MESSAGE =
       "Body unable to be parsed in JoinClubServlet: ";
 
+  /**
+   * Message to be logged when an invalid ID token is passed in or a valid ID token that is
+   * associated with a user who does not have the permissions to update the Club is passed in.
+   */
+  public static final String LOG_SECURITY_MESSAGE =
+      "Forbidden action attempted: ";
+
   /** 
    * The error string sent by the response object in doPost when the body of the 
    * POST request does not have a required field.
