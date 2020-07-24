@@ -64,17 +64,6 @@ public class GetClubServletTest {
                               .setDescription(DESCRIPTION)
                               .setContentWarnings(testContentWarnings)
                               .build();
-  private static final String VALID_JSON = String.join("\n",
-      "{",
-      "  \"" + Club.CLUB_ID_FIELD_NAME + "\" : \"" + CLUB_ID + "\"",
-      "}");
-  private static final String NO_CLUB_ID_JSON = "{}";
-  private static final String CLUB_NOT_FOUND_JSON = String.join("\n",
-      "{",
-      "  \"" + Club.CLUB_ID_FIELD_NAME + "\" : \"\"",
-      "}");
-  private static final String SYNTACTICALLY_INCORRECT_JSON =
-      "{\"" + Club.CLUB_ID_FIELD_NAME + "\"";
 
   private GetClubServlet getClubServlet;
   private GetClubServlet failingGetClubServlet;
@@ -112,8 +101,7 @@ public class GetClubServletTest {
 
   @Test
   public void doGet_validInput() throws IOException {
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(VALID_JSON)));
+    when(request.getParameter(eq(Club.CLUB_ID_FIELD_NAME))).thenReturn(CLUB_ID);
 
     getClubServlet.doGet(request, response);
     String result = stringWriter.toString();
@@ -132,8 +120,8 @@ public class GetClubServletTest {
 
   @Test
   public void doGet_noClubId() throws IOException {
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(NO_CLUB_ID_JSON)));
+    when(request.getParameter(eq(Club.CLUB_ID_FIELD_NAME))).thenReturn(null);
+
     getClubServlet.doGet(request, response);
     
     verify(response).sendError(
@@ -143,23 +131,12 @@ public class GetClubServletTest {
 
   @Test
   public void doGet_noClubFound() throws IOException {
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(CLUB_NOT_FOUND_JSON)));
+    when(request.getParameter(eq(Club.CLUB_ID_FIELD_NAME))).thenReturn(CLUB_ID);
+
     failingGetClubServlet.doGet(request, response);
     
     verify(response).sendError(
         HttpServletResponse.SC_NOT_FOUND,
         StorageHandler.CLUB_DOES_NOT_EXIST);
-  }
-
-  @Test
-  public void doGet_syntacticallyIncorrectInput() throws IOException {
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(SYNTACTICALLY_INCORRECT_JSON)));
-    getClubServlet.doGet(request, response);
-    
-    verify(response).sendError(
-        HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-        GetClubServlet.BODY_ERROR);
   }
 }

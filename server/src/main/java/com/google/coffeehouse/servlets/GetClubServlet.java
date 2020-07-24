@@ -19,30 +19,22 @@ import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.coffeehouse.storagehandler.StorageHandler;
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.util.Map;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** 
- * Servlet to get a {@link Club} from Http GET Request Body (in JSON format)
+ * Servlet to get a {@link Club} from Http GET Request URL parameters
  * that exists in the database through a call to the Storage Handler API,
  * and return it in JSON format.
  */
 @WebServlet("/api/get-club")
 public class GetClubServlet extends HttpServlet {
-  /** 
-   * The error string sent by the response object in doGet when the body of the
-   * GET request cannot be used to fetch a {@link Club} for any reason.
-   */
-  public static final String BODY_ERROR = "- unable to parse body.";
-  /** The logged error string when an error parsing the body of the GET request is encountered. */
-  public static final String LOG_BODY_ERROR_MESSAGE =
-      "Body unable to be parsed in GetClubServlet: ";
   /** Message to be logged when the body of the GET request does not have required fields. */
-  public static final String LOG_INPUT_ERROR_MESSAGE =
-      "Error with JSON input in GetClubServlet: No \"%s\" found in JSON.";
+  public static final String LOG_INPUT_ERROR_MESSAGE = "No \"%s\" parameter found.";
+  /** Message to be logged when a non-security related exception is thrown in the servlet. */
+  public static final String GENERAL_LOG_ERROR = "Exception encountered in GetClubServlet: ";
 
   private static final Gson gson = new Gson();
   private final StorageHandlerApi storageHandler;
@@ -66,32 +58,27 @@ public class GetClubServlet extends HttpServlet {
   
   /** 
    * Returns a {@link Club} object in JSON format from information in the database.
-   * @param request the GET request that must have a valid JSON representation of the "clubId" to
-   *     be passed in order to fetch a Club from ID in the database. If this is not the case the
-   *     response will send a "400 Bad Request error". If the "clubId" does not exist in the
-   *     database, the response will send a "404 Not Found error". If some other error occurs
-   *     while attempting to fetch the Club from the database, the response will send a
-   *     "500 Internal Server error"
+   * @param request the GET request that must have a {@code "clubId"} URL parameter corresponding
+   *     to the desired club's club ID. If this parameter does not exist, the response object will
+   *     send a "400 Bad Request error". If the "clubId" does not exist in the database, the
+   *     response object will send a "404 Not Found error"
    * @param response the response from this method, will contain the object in JSON format.
-   *     If the request object does not have a valid JSON body that describes the Club, this object
-   *     will send a "400 Bad Request error". If the "clubId" does not exist in the
-   *     database, this object will send a "404 Not Found error". If some other error occurs
-   *     while attempting to fetch the Club from the database, this object will send a
-   *     "500 Internal Server error"
+   *     If the request object has no "clubId" parameter, this object will send a
+   *     "400 Bad Request error". If the "clubId" does not exist in the database, this object will
+   *     send a "404 Not Found error"
    * @throws IOException if an input or output error is detected when the servlet handles the request
    */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Club club;
     try {
-      Map requestInfo = gson.fromJson(request.getReader(), Map.class);
-      String clubId = (String) requestInfo.get(Club.CLUB_ID_FIELD_NAME);
+      String clubId = request.getParameter(Club.CLUB_ID_FIELD_NAME);
       if (clubId == null) {
         throw new IllegalArgumentException(
             String.format(LOG_INPUT_ERROR_MESSAGE, Club.CLUB_ID_FIELD_NAME));
       }
       club = storageHandler.fetchClubFromId(clubId);
-    } catch (IllegalArgumentException e) {
+    } catch (Exception e) {
       System.out.println(e.getMessage());
       if (e.getMessage().equals(StorageHandler.CLUB_DOES_NOT_EXIST)) {
         response.sendError(HttpServletResponse.SC_NOT_FOUND,
@@ -99,10 +86,6 @@ public class GetClubServlet extends HttpServlet {
       } else {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
       }
-      return;
-    } catch (Exception e) {
-      System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());
-      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, BODY_ERROR);
       return;
     }
     response.setContentType("application/json;");
