@@ -98,10 +98,10 @@ public class UpdatePersonServlet extends HttpServlet {
   /** 
    * Updates a Person object in the database and returns that object in JSON format.
    * @param request the POST request that must have a valid JSON representation of the Person to be
-   *     updated, a {@code "idToken"} key that corresponds to the OpenID ID token of the user
+   *     updated, an {@code "idToken"} key that corresponds to the OpenID ID token of the user
    *     who wants to update their Person, as well as an optional mask of fields that will be
    *     updated as its body. The Person to be updated must be represnted by a {@code "person"}
-   *     key, who's value is an object that represents the updated Person. The update mask must
+   *     key, whose value is an object that represents the updated Person. The update mask must
    *     have the key {@code "updateMask"} and the value of a comma separated list of the fields to
    *     be updated from the "person" key. If no update mask exists, all fields from the "person"
    *     key will be used to update the Person. If the request does not have a "person" key,
