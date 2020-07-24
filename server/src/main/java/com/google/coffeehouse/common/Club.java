@@ -14,6 +14,9 @@
 
 package com.google.coffeehouse.common;
 
+import com.google.cloud.spanner.Mutation;
+import com.google.cloud.spanner.Value;
+import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +42,7 @@ public class Club implements Saveable {
   private String ownerId;
   private String description;
   private List<String> contentWarnings;
+  private StorageHandlerApi handler;
 
   private Club(Builder builder) {
     this.name = builder.name;
@@ -47,6 +51,7 @@ public class Club implements Saveable {
     this.description = builder.description;
     this.contentWarnings = builder.contentWarnings;
     this.ownerId = builder.ownerId;
+    this.handler = builder.handler;
   }
 
   /** 
@@ -114,7 +119,6 @@ public class Club implements Saveable {
   }
 
   public void setBook(Book book) {
-    // TODO: add the old book to book history @linamontes10
     this.currentBook = book;
   }
 
@@ -124,6 +128,10 @@ public class Club implements Saveable {
 
   public void setContentWarnings(List<String> contentWarnings) {
     this.contentWarnings = contentWarnings;
+  }
+
+  public void setStorageHandler(StorageHandlerApi handler) {
+    this.handler = handler;
   }
 
   /** Starts the building process of a new Club object. */
@@ -141,7 +149,21 @@ public class Club implements Saveable {
 
   @Override
   public void save() {
-    // TODO: implement saving @linamontes10
+    currentBook.save();
+
+    List<Mutation> mutations = new ArrayList<>();
+    Mutation.WriteBuilder clubMutation = 
+        Mutation.newInsertOrUpdateBuilder("Clubs")
+                .set("clubId").to(clubId)
+                .set("bookId").to(currentBook.getBookId())
+                .set("description").to(description)
+                .set("contentWarning").to(String.join("\n", contentWarnings))
+                .set("name").to(name)
+                .set("ownerId").to(ownerId)
+                .set("timestamp").to(Value.COMMIT_TIMESTAMP);
+    
+    mutations.add(clubMutation.build());
+    handler.writeMutations(mutations);
   }
 
   public static class Builder {
@@ -152,6 +174,7 @@ public class Club implements Saveable {
     private String ownerId = null;
     private List<String> contentWarnings = new ArrayList<>();
     private static final String DEFAULT_DESCRIPTION = "A book club about %s.";
+    private StorageHandlerApi handler = new StorageHandlerApi();
         
     public Builder setCurrentBook(Book currentBook) {
       this.currentBook = currentBook;
@@ -180,6 +203,11 @@ public class Club implements Saveable {
 
     public Builder setContentWarnings(List<String> contentWarnings) {
       this.contentWarnings = contentWarnings;
+      return this;
+    }
+
+    public Builder setStorageHandler(StorageHandlerApi handler) {
+      this.handler = handler;
       return this;
     }
 
