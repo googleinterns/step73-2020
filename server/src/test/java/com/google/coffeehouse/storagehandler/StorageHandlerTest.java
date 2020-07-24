@@ -19,7 +19,10 @@ import static org.junit.Assert.*;
 import com.google.cloud.spanner.Database;
 import com.google.cloud.spanner.DatabaseClient;
 import com.google.cloud.spanner.ReadContext;
+import com.google.coffeehouse.common.Book;
+import com.google.coffeehouse.common.Club;
 import com.google.coffeehouse.common.MembershipConstants;
+import com.google.coffeehouse.common.Person;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,6 +48,139 @@ public class StorageHandlerTest {
   public void setUp() {
     dbClient = StorageHandlerTestHelper.setUpHelper();
     StorageHandlerTestHelper.setUpClearDb();
+  }
+
+  @Test
+  public void getPerson_doesNotExistInDb() throws Exception {
+    assertThrows(RuntimeException.class, () -> {
+      StorageHandler.getPerson(dbClient, "personNotInDb");
+    });
+  }
+
+  @Test
+  public void getPerson_existsWithPronouns() throws Exception {
+    StorageHandlerTestHelper.insertPersonWithPronouns("person");
+    Person actual = StorageHandler.getPerson(dbClient, "person");
+    Person expected = StorageHandlerTestHelper.createTestPersonObject(
+      "person", /**pronouns = **/true);
+    assertEquals(actual.getNickname(), expected.getNickname());
+    assertEquals(actual.getEmail(), expected.getEmail());
+    assertEquals(actual.getUserId(), expected.getUserId());
+    assertEquals(actual.getPronouns().get(), expected.getPronouns().get());
+  }
+
+  @Test
+  public void getPerson_existsWithNullPronouns() throws Exception {
+    StorageHandlerTestHelper.insertPersonWithNullPronouns("personWithNullPronouns");
+    Person actual = StorageHandler.getPerson(dbClient, "personWithNullPronouns");
+    Person expected = StorageHandlerTestHelper.createTestPersonObject(
+      "personWithNullPronouns", /**pronouns = **/false);
+    assertEquals(actual.getNickname(), expected.getNickname());
+    assertEquals(actual.getEmail(), expected.getEmail());
+    assertEquals(actual.getUserId(), expected.getUserId());
+    assertFalse(actual.getPronouns().isPresent());
+  }
+
+  @Test
+  public void getBook_doesNotExistInDb() throws Exception {
+    assertThrows(RuntimeException.class, () -> {
+      StorageHandler.getBook(dbClient, "bookNotInDb");
+    });
+  }
+
+  @Test
+  public void getBook_existsWithAuthorAndIsbn() throws Exception {
+    StorageHandlerTestHelper.insertBookWithAuthorAndIsbn("book");
+    Book actual = StorageHandler.getBook(dbClient, "book");
+    Book expected = StorageHandlerTestHelper.createTestBookObject(
+                                                "book",
+                                                /** isbnExists = **/true,
+                                                 /** authorExists = **/true);
+    assertEquals(actual.getTitle(), expected.getTitle());
+    assertEquals(actual.getBookId(), expected.getBookId());
+    assertEquals(actual.getAuthor(), expected.getAuthor());
+    assertEquals(actual.getIsbn(), expected.getIsbn());
+  }
+
+  @Test
+  public void getBook_existsWithAuthorAndNoIsbn() throws Exception {
+    StorageHandlerTestHelper.insertBookWithNullIsbn("bookNullIsbn");
+    Book actual = StorageHandler.getBook(dbClient, "bookNullIsbn");
+    Book expected = StorageHandlerTestHelper.createTestBookObject(
+                                                "bookNullIsbn",
+                                                /** isbnExists = **/false,
+                                                 /** authorExists = **/true);
+    assertEquals(actual.getTitle(), expected.getTitle());
+    assertEquals(actual.getBookId(), expected.getBookId());
+    assertEquals(actual.getAuthor(), expected.getAuthor());
+    assertFalse(actual.getIsbn().isPresent());
+  }
+
+  @Test
+  public void getBook_existsWithIsbnAndNoAuthor() throws Exception {
+    StorageHandlerTestHelper.insertBookWithNullAuthor("bookNullAuthor");
+    Book actual = StorageHandler.getBook(dbClient, "bookNullAuthor");
+    Book expected = StorageHandlerTestHelper.createTestBookObject(
+                                                "bookNullAuthor",
+                                                /** isbnExists = **/true,
+                                                 /** authorExists = **/false);
+    assertEquals(actual.getTitle(), expected.getTitle());
+    assertEquals(actual.getBookId(), expected.getBookId());
+    assertEquals(actual.getIsbn(), expected.getIsbn());
+    assertFalse(actual.getAuthor().isPresent());
+  }
+
+  @Test
+  public void getBook_existsWithNoIsbnAndNoAuthor() throws Exception {
+    StorageHandlerTestHelper.insertBookWithNullAuthorAndNullIsbn("bookNullAuthorNullIsbn");
+    Book actual = StorageHandler.getBook(dbClient, "bookNullAuthorNullIsbn");
+    Book expected = StorageHandlerTestHelper.createTestBookObject(
+                                                "bookNullAuthorNullIsbn",
+                                                /** isbnExists = **/false,
+                                                 /** authorExists = **/false);
+    assertEquals(actual.getTitle(), expected.getTitle());
+    assertEquals(actual.getBookId(), expected.getBookId());
+    assertFalse(actual.getAuthor().isPresent());
+    assertFalse(actual.getIsbn().isPresent());
+  }
+
+  @Test
+  public void getClub_doesNotExistInDb() throws Exception {
+    assertThrows(RuntimeException.class, () -> {
+      StorageHandler.getClub(dbClient, "clubNotInDb");
+    });
+  }
+
+  @Test
+  public void getClub_existsWithContentWarnings() throws Exception {
+    StorageHandlerTestHelper.insertBook("book");
+    StorageHandlerTestHelper.insertClubWithContentWarnings("clubWithContentWarnings");
+    Club actual = StorageHandler.getClub(dbClient, "clubWithContentWarnings");
+    Club expected = StorageHandlerTestHelper.createTestClubObject(
+      "clubWithContentWarnings", /**contentWarnings = **/true);
+    assertEquals(actual.getName(), expected.getName());
+    assertEquals(actual.getOwnerId(), expected.getOwnerId());
+    assertEquals(actual.getClubId(), expected.getClubId());
+    assertEquals(actual.getDescription(), expected.getDescription());
+    assertEquals(actual.getCurrentBook().getTitle(), expected.getCurrentBook().getTitle());
+    assertArrayEquals(actual.getContentWarnings().toArray(new String[0]), 
+                      expected.getContentWarnings().toArray(new String[0]));
+  }
+
+  @Test
+  public void getClub_existsWithNoContentWarnings() throws Exception {
+    StorageHandlerTestHelper.insertBook("book");
+    StorageHandlerTestHelper.insertClubWithNoContentWarnings("clubWithNoContentWarnings");
+    Club actual = StorageHandler.getClub(dbClient, "clubWithNoContentWarnings");
+    Club expected = StorageHandlerTestHelper.createTestClubObject(
+      "clubWithNoContentWarnings", /**contentWarnings = **/false);
+    assertEquals(actual.getName(), expected.getName());
+    assertEquals(actual.getOwnerId(), expected.getOwnerId());
+    assertEquals(actual.getClubId(), expected.getClubId());
+    assertEquals(actual.getDescription(), expected.getDescription());
+    assertEquals(actual.getCurrentBook().getTitle(), expected.getCurrentBook().getTitle());
+    assertArrayEquals(actual.getContentWarnings().toArray(new String[0]), 
+                      expected.getContentWarnings().toArray(new String[0]));
   }
 
   @Test

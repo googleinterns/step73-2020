@@ -15,6 +15,9 @@
 package com.google.coffeehouse.storagehandler;
 
 import com.google.coffeehouse.common.MembershipConstants;
+import com.google.coffeehouse.common.Book;
+import com.google.coffeehouse.common.Club;
+import com.google.coffeehouse.common.Person;
 import com.google.cloud.spanner.DatabaseClient;
 import com.google.cloud.spanner.DatabaseId;
 import com.google.cloud.spanner.Mutation;
@@ -22,6 +25,7 @@ import com.google.cloud.spanner.KeySet;
 import com.google.cloud.spanner.Spanner;
 import com.google.cloud.spanner.SpannerOptions;
 import com.google.cloud.spanner.Value;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +38,7 @@ public class StorageHandlerTestHelper {
   private static final String DATABASE_ID = "coffeehouse-db-test";
 
   public static DatabaseClient setUpHelper() {
+
     // Create spanner service and database client
     SpannerOptions options = SpannerOptions.newBuilder().build();
     Spanner spanner = options.getService();
@@ -68,7 +73,7 @@ public class StorageHandlerTestHelper {
     dbClient.write(mutations);
   }
 
-  public static void insertClub(String club_id) {
+  public static void insertClubWithNoContentWarnings(String club_id) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Clubs")
@@ -77,11 +82,34 @@ public class StorageHandlerTestHelper {
         .set("bookId")
         .to("book")
         .set("description")
-        .to("A club")
+        .to("description")
         .set("name")
-        .to("Club")
+        .to("club")
         .set("ownerId")
         .to("owner")
+        .set("timestamp")
+        .to(Value.COMMIT_TIMESTAMP)
+        .build());
+    dbClient.write(mutations);
+  }
+
+  public static void insertClubWithContentWarnings(String club_id) {
+    List<String> testContentWarnings = new ArrayList<>(Arrays.asList("test"));
+    List<Mutation> mutations = new ArrayList<>();
+    mutations.add(
+      Mutation.newInsertOrUpdateBuilder("Clubs")
+        .set("clubId")
+        .to(club_id)
+        .set("bookId")
+        .to("book")
+        .set("description")
+        .to("description")
+        .set("name")
+        .to("club")
+        .set("ownerId")
+        .to("owner")
+        .set("contentWarning")
+        .to(String.join("\n", testContentWarnings))
         .set("timestamp")
         .to(Value.COMMIT_TIMESTAMP)
         .build());
@@ -111,190 +139,135 @@ public class StorageHandlerTestHelper {
         .set("bookId")
         .to("book")
         .set("author")
-        .to("book")
+        .to("author")
         .set("isbn")
-        .to("97800609459470")
+        .to("isbn")
         .set("title")
-        .to("book")
+        .to("title")
         .build());
     dbClient.write(mutations);
   }
 
-  public void insertPersonWithPronouns(String person_id) {
+  public static void insertPersonWithPronouns(String person_id) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Persons")
         .set("userId")
         .to(person_id)
         .set("email")
-        .to("pronouns@test.com")
+        .to("person@test.com")
         .set("nickname")
-        .to("Pro-Test")
+        .to("person")
         .set("pronouns")
         .to("she/he/they")
         .build());
     dbClient.write(mutations);
   }
 
-  public void insertPersonWithNullPronouns(String person_id) {
+  public static void insertPersonWithNullPronouns(String person_id) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Persons")
         .set("userId")
         .to(person_id)
         .set("email")
-        .to("null@test.com")
+        .to("person@test.com")
         .set("nickname")
-        .to("Null-Test")
+        .to("person")
         .build());
     dbClient.write(mutations);
   }
 
-  public void insertPersonWithEmptyPronouns(String person_id) {
-    List<Mutation> mutations = new ArrayList<>();
-    mutations.add(
-      Mutation.newInsertOrUpdateBuilder("Persons")
-        .set("userId")
-        .to(person_id)
-        .set("email")
-        .to("empty@test.com")
-        .set("nickname")
-        .to("Empty-Test")
-        .set("pronouns")
-        .to("")
-        .build());
-    dbClient.write(mutations);
-  }
-
-  public void insertBookWithAuthorAndIsbn(String book_id, String author, String isbn, String title) {
+  public static void insertBookWithAuthorAndIsbn(String book_id) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Books")
         .set("bookId")
         .to(book_id)
         .set("author")
-        .to(author)
+        .to("author")
         .set("isbn")
-        .to(isbn)
+        .to("isbn")
         .set("title")
-        .to(title)
+        .to("title")
         .build());
     dbClient.write(mutations);
   }
 
-  public void insertBookWithNullAuthor(String book_id, String isbn, String title) {
+  public static void insertBookWithNullAuthor(String book_id) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Books")
         .set("bookId")
         .to(book_id)
         .set("isbn")
-        .to(isbn)
+        .to("isbn")
         .set("title")
-        .to(title)
+        .to("title")
         .build());
     dbClient.write(mutations);
   }
 
-  public void insertBookWithNullIsbn(String book_id, String author, String title) {
+  public static void insertBookWithNullIsbn(String book_id) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Books")
         .set("bookId")
         .to(book_id)
         .set("author")
-        .to(author)
+        .to("author")
         .set("title")
-        .to(title)
+        .to("title")
         .build());
     dbClient.write(mutations);
   }
 
-  public void insertBookWithNullAuthorAndNullIsbn(String book_id, String title) {
+  public static void insertBookWithNullAuthorAndNullIsbn(String book_id) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertOrUpdateBuilder("Books")
         .set("bookId")
         .to(book_id)
         .set("title")
-        .to(title)
+        .to("title")
         .build());
     dbClient.write(mutations);
   }
 
-  public void insertBookWithEmptyAuthor(String book_id, String isbn, String title) {
-    List<Mutation> mutations = new ArrayList<>();
-    mutations.add(
-      Mutation.newInsertOrUpdateBuilder("Books")
-        .set("bookId")
-        .to(book_id)
-        .set("author")
-        .to("")
-        .set("isbn")
-        .to(isbn)
-        .set("title")
-        .to(title)
-        .build());
-    dbClient.write(mutations);
+  public static Person createTestPersonObject(String person_id, Boolean pronouns_exist) {
+    Person.Builder personBuilder = Person.newBuilder()
+                                         .setEmail("person@test.com")
+                                         .setNickname("person")
+                                         .setUserId(person_id);
+    if (pronouns_exist) {
+      personBuilder.setPronouns("she/he/they");
+    }
+    return personBuilder.build();
   }
 
-  public void insertBookWithEmptyIsbn(String book_id, String author, String title) {
-    List<Mutation> mutations = new ArrayList<>();
-    mutations.add(
-      Mutation.newInsertOrUpdateBuilder("Books")
-        .set("bookId")
-        .to(book_id)
-        .set("author")
-        .to(author)
-        .set("isbn")
-        .to("")
-        .set("title")
-        .to(title)
-        .build());
-    dbClient.write(mutations);
+  public static Book createTestBookObject(String book_id, Boolean isbn_exists,
+                                            Boolean author_exists) {
+    Book.Builder bookBuilder = Book.newBuilder()
+                                   .setTitle("title")
+                                   .setBookId(book_id);
+    if (isbn_exists) { bookBuilder.setIsbn("isbn"); }
+    if (author_exists) { bookBuilder.setAuthor("author"); }
+    return bookBuilder.build();
   }
 
-  public void insertBookWithEmptyAuthorAndEmptyIsbn(String book_id, String title) {
-    List<Mutation> mutations = new ArrayList<>();
-    mutations.add(
-      Mutation.newInsertOrUpdateBuilder("Books")
-        .set("bookId")
-        .to(book_id)
-        .set("author")
-        .to("")
-        .set("isbn")
-        .to("")
-        .set("title")
-        .to(title)
-        .build());
-    dbClient.write(mutations);
-  }
-
-  public void insertBookWithEmptyAuthorAndNullIsbn(String book_id, String title) {
-    List<Mutation> mutations = new ArrayList<>();
-    mutations.add(
-      Mutation.newInsertOrUpdateBuilder("Books")
-        .set("bookId")
-        .to(book_id)
-        .set("author")
-        .to("")
-        .set("title")
-        .to(title)
-        .build());
-    dbClient.write(mutations);
-  }
-
-  public void insertBookWithNullAuthorAndEmptyIsbn(String book_id, String title) {
-    List<Mutation> mutations = new ArrayList<>();
-    mutations.add(
-      Mutation.newInsertOrUpdateBuilder("Books")
-        .set("bookId")
-        .to(book_id)
-        .set("isbn")
-        .to("")
-        .set("title")
-        .to(title)
-        .build());
-    dbClient.write(mutations);
+  public static Club createTestClubObject(String club_id, Boolean content_warnings_exist) {
+    List<String> testContentWarnings = new ArrayList<>(Arrays.asList("test"));
+    Book testBook = createTestBookObject("book", /** isbnExists = **/true,
+                                                 /** authorExists = **/true);
+    Club.Builder clubBuilder = Club.newBuilder()
+                                   .setName("club")
+                                   .setCurrentBook(testBook)
+                                   .setOwnerId("owner")
+                                   .setClubId(club_id)
+                                   .setDescription("description");
+    if (content_warnings_exist) {
+      clubBuilder.setContentWarnings(testContentWarnings);
+    }
+    return clubBuilder.build();
   }
 }
