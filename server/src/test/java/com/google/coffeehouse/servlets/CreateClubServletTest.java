@@ -15,13 +15,17 @@
 package com.google.coffeehouse.servlets;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.coffeehouse.common.Book;
 import com.google.coffeehouse.common.Club;
+import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.coffeehouse.util.IdentifierGenerator;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
@@ -90,14 +94,18 @@ public class CreateClubServletTest {
 
   @Mock private HttpServletRequest request;
   @Mock private HttpServletResponse response;
+  @Mock private StorageHandlerApi handler;
 
   @Before
   public void setUp() throws IOException {
     helper.setUp();
 
+    handler = spy(StorageHandlerApi.class);
+    doNothing().when(handler).addOwnership(anyString(), anyString());
+
     IdentifierGenerator idGen = mock(IdentifierGenerator.class);
     when(idGen.generateId()).thenReturn(CLUB_ID);
-    CreateClubServlet = new CreateClubServlet(idGen);
+    CreateClubServlet = new CreateClubServlet(handler, idGen);
 
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
@@ -122,6 +130,7 @@ public class CreateClubServletTest {
 
     assertEquals(NAME, c.getName());
     assertEquals(CLUB_ID, c.getClubId());
+    assertEquals(OWNER_ID, c.getOwnerId());
     assertEquals(new ArrayList<String>(), c.getContentWarnings());
     assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
     assertEquals(CLUB_ID, c.getCurrentBook().getBookId());
@@ -142,6 +151,31 @@ public class CreateClubServletTest {
 
     assertEquals(NAME, c.getName());
     assertEquals(CLUB_ID, c.getClubId());
+    assertEquals(OWNER_ID, c.getOwnerId());
+    assertEquals(testContentWarnings, c.getContentWarnings());
+    assertEquals(DESCRIPTION, c.getDescription());
+    assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
+    assertEquals(CLUB_ID, c.getCurrentBook().getBookId());
+    assertTrue(c.getCurrentBook().getAuthor().isPresent());
+    assertEquals(BOOK_AUTHOR, c.getCurrentBook().getAuthor().get());
+    assertTrue(c.getCurrentBook().getIsbn().isPresent());
+    assertEquals(BOOK_ISBN, c.getCurrentBook().getIsbn().get());
+  }
+
+  @Test
+  public void doPost_addOwnershipWithMaximumValidInput() throws IOException {
+    when(request.getReader()).thenReturn(
+          new BufferedReader(new StringReader(MAXIMUM_JSON)));
+
+    CreateClubServlet.doPost(request, response);
+    String result = stringWriter.toString();
+
+    Gson gson = new Gson();
+    Club c = gson.fromJson(result, Club.class);
+
+    assertEquals(NAME, c.getName());
+    assertEquals(CLUB_ID, c.getClubId());
+    assertEquals(OWNER_ID, c.getOwnerId());
     assertEquals(testContentWarnings, c.getContentWarnings());
     assertEquals(DESCRIPTION, c.getDescription());
     assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());

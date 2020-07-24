@@ -16,6 +16,7 @@ package com.google.coffeehouse.servlets;
 
 import com.google.coffeehouse.common.Club;
 import com.google.coffeehouse.common.Book;
+import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.coffeehouse.util.IdentifierGenerator;
 import com.google.coffeehouse.util.UuidWrapper;
 import com.google.gson.Gson;
@@ -50,16 +51,19 @@ public class CreateClubServlet extends HttpServlet {
   /** Message to be logged when the body of the POST request does not have required fields. */
   public static final String LOG_INPUT_ERROR_MESSAGE =
       "Error with JSON input in CreateClubServlet: ";
+  private final StorageHandlerApi handler;
   private static IdentifierGenerator idGen;
   private static final Gson gson = new Gson();
 
   /** 
    * Overloaded constructor for dependency injection.
    * @param idGen the {@link IdentifierGenerator} that is used when constructing the Club
+   * @param handler the {@link StorageHandlerApi} that is used when saving the Club
    */
-  public CreateClubServlet(IdentifierGenerator idGen) {
+  public CreateClubServlet(StorageHandlerApi handler, IdentifierGenerator idGen) {
     super();
     this.idGen = idGen;
+    this.handler = handler;
   }
 
   /** 
@@ -68,6 +72,7 @@ public class CreateClubServlet extends HttpServlet {
   public CreateClubServlet() {
     super();
     this.idGen = new UuidWrapper();
+    this.handler = new StorageHandlerApi();
   }
 
   /** 
@@ -107,7 +112,7 @@ public class CreateClubServlet extends HttpServlet {
 
     newClub.save();
 
-    // TODO: Once membership table is implemented, create a membership for the person who made Club
+    handler.addOwnership(newClub.getOwnerId(), newClub.getClubId());
 
     response.setContentType("application/json;");
     response.getWriter().println(gson.toJson(newClub));
