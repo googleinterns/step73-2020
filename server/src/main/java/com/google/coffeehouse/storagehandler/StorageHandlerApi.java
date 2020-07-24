@@ -19,6 +19,7 @@ import com.google.coffeehouse.common.MembershipConstants;
 import com.google.coffeehouse.common.Person;
 
 import com.google.cloud.spanner.DatabaseClient;
+import com.google.cloud.spanner.Mutation;
 import com.google.cloud.spanner.Spanner;
 import java.util.List;
 
@@ -107,5 +108,14 @@ public class StorageHandlerApi {
   */
   public List<Club> listClubsFromUserId(String userId, MembershipConstants.MembershipStatus membershipStatus) {
     return StorageHandler.getListOfClubs(dbClient, userId, membershipStatus);
+  }
+
+  /**
+   * Writes a list of mutations to the database.
+   *
+   * @param  mutations   the List of Mutations to be written to the database
+   */
+  public void writeMutations(List<Mutation> mutations) {
+    dbClient.write(mutations);
   }
 }

@@ -14,6 +14,10 @@
 
 package com.google.coffeehouse.common;
 
+import com.google.cloud.spanner.Mutation;
+import com.google.coffeehouse.storagehandler.StorageHandlerApi;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -34,12 +38,14 @@ public class Book implements Saveable {
   private String author;
   private String isbn;
   private String bookId;
+  private StorageHandlerApi handler;
 
   private Book(Builder builder) {
     this.title = builder.title;
     this.author = builder.author;
     this.isbn = builder.isbn;
     this.bookId = builder.bookId;
+    this.handler = builder.handler;
   }
 
   /** 
@@ -104,9 +110,26 @@ public class Book implements Saveable {
     return new Builder();
   }
 
+  public void setStorageHandler(StorageHandlerApi handler) {
+    this.handler = handler;
+  }
+
   @Override
   public void save() {
-    // TODO: implement saving @linamontes10
+    List<Mutation> mutations = new ArrayList<>();
+    Mutation.WriteBuilder bookMutation = 
+        Mutation.newInsertOrUpdateBuilder("Books")
+                .set("bookId").to(bookId)
+                .set("title").to(title);
+    if (getAuthor().isPresent()) {
+      bookMutation.set("author").to(author);
+    }
+    if (getIsbn().isPresent()) {
+      bookMutation.set("isbn").to(isbn);
+    }
+
+    mutations.add(bookMutation.build());
+    handler.writeMutations(mutations);
   }
 
   @Override
@@ -120,6 +143,7 @@ public class Book implements Saveable {
     private String author = null;
     private String isbn = null;
     private String bookId = null;
+    private StorageHandlerApi handler = new StorageHandlerApi();
 
     public Builder setTitle(String title) {
       this.title = title;
@@ -138,6 +162,11 @@ public class Book implements Saveable {
 
     public Builder setBookId(String bookId) {
       this.bookId = bookId;
+      return this;
+    }
+
+    public Builder setStorageHandler(StorageHandlerApi handler) {
+      this.handler = handler;
       return this;
     }
 

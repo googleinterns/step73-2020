@@ -59,6 +59,7 @@ public class CreateClubServlet extends HttpServlet {
    * Overloaded constructor for dependency injection.
    * @param handler the {@link StorageHandlerApi} that is used when saving the Club
    * @param idGen the {@link IdentifierGenerator} that is used when constructing the Club
+   * @param handler the {@link StorageHandlerApi} that is used when saving the Club
    */
   public CreateClubServlet(StorageHandlerApi handler, IdentifierGenerator idGen) {
     super();
@@ -109,7 +110,8 @@ public class CreateClubServlet extends HttpServlet {
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, BODY_ERROR);
       return;
     }
-
+    
+    newClub.setStorageHandler(handler);
     newClub.save();
 
     handler.addOwnership(newClub.getOwnerId(), newClub.getClubId());

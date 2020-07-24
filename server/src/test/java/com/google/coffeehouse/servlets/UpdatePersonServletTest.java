@@ -15,10 +15,13 @@
 package com.google.coffeehouse.servlets;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Matchers.*;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
@@ -144,8 +147,9 @@ public class UpdatePersonServletTest {
   public void setUp() throws IOException, GeneralSecurityException {
     helper.setUp();
 
-    handler = mock(StorageHandlerApi.class);
-    when(handler.fetchPersonFromId(anyString())).thenReturn(testPerson);
+    handler = spy(StorageHandlerApi.class);
+    doNothing().when(handler).writeMutations(anyList());
+    doReturn(testPerson).when(handler).fetchPersonFromId(anyString());
 
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);

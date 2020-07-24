@@ -101,6 +101,7 @@ public class CreateClubServletTest {
     helper.setUp();
 
     handler = spy(StorageHandlerApi.class);
+    doNothing().when(handler).writeMutations(anyList());
     doNothing().when(handler).addOwnership(anyString(), anyString());
 
     IdentifierGenerator idGen = mock(IdentifierGenerator.class);

@@ -14,6 +14,10 @@
 
 package com.google.coffeehouse.common;
 
+import com.google.cloud.spanner.Mutation;
+import com.google.coffeehouse.storagehandler.StorageHandlerApi;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional; 
 
@@ -37,12 +41,14 @@ public class Person implements Saveable {
   private String email;
   private String pronouns;
   private String userId;
+  private StorageHandlerApi handler;
 
   private Person(Builder builder) {
     this.nickname = builder.nickname;
     this.email = builder.email;
     this.userId = builder.userId;
     this.pronouns = builder.pronouns;
+    this.handler = builder.handler;
   }
 
   /** 
@@ -104,6 +110,10 @@ public class Person implements Saveable {
     this.nickname = nickname;
   }
 
+  public void setStorageHandler(StorageHandlerApi handler) {
+    this.handler = handler;
+  }
+
   /** Starts the building process of a new Person object. */
   public static Builder newBuilder() {
     return new Builder();
@@ -116,7 +126,18 @@ public class Person implements Saveable {
 
   @Override
   public void save() {
-    // TODO: implement saving @linamontes10
+    List<Mutation> mutations = new ArrayList<>();
+    Mutation.WriteBuilder personMutation = 
+        Mutation.newInsertOrUpdateBuilder("Persons")
+                .set("userId").to(userId)
+                .set("email").to(email)
+                .set("nickname").to(nickname);
+    if (getPronouns().isPresent()) {
+      personMutation.set("pronouns").to(pronouns);
+    }
+
+    mutations.add(personMutation.build());
+    handler.writeMutations(mutations);
   }
 
   /** A builder class to create a Person object. */
@@ -125,6 +146,7 @@ public class Person implements Saveable {
     private String nickname = null;
     private String pronouns = null;
     private String userId = null;
+    private StorageHandlerApi handler = new StorageHandlerApi();
 
     public Builder setNickname(String nickname) {
       this.nickname = nickname;
@@ -143,6 +165,11 @@ public class Person implements Saveable {
 
     public Builder setPronouns(String pronouns) {
       this.pronouns = pronouns;
+      return this;
+    }
+
+    public Builder setStorageHandler(StorageHandlerApi handler) {
+      this.handler = handler;
       return this;
     }
 

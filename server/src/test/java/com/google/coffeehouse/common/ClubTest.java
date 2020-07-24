@@ -15,14 +15,23 @@
 package com.google.coffeehouse.common;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
+import com.google.cloud.spanner.DatabaseClient;
+import com.google.cloud.spanner.Mutation;
+import com.google.coffeehouse.storagehandler.StorageHandler;
+import com.google.coffeehouse.storagehandler.StorageHandlerApi;
+import com.google.coffeehouse.storagehandler.StorageHandlerTestHelper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -42,6 +51,7 @@ public final class ClubTest {
   private static final String BOOK_TITLE = "Book Name";
   private static final String BOOK_ID = "predetermined-book-identification-string";
   private static final String ALT_BOOK_TITLE = "New Book Name";
+  private static DatabaseClient dbClient;
   private List<String> testContentWarnings;
   private Club.Builder clubBuilder;
   private Book testBook;
@@ -49,8 +59,20 @@ public final class ClubTest {
   private Map clubInfo;
   private Map bookInfo;
 
+  @Mock private StorageHandlerApi handler;
+
   @Before
   public void setUp() {
+    dbClient = StorageHandlerTestHelper.setUpHelper();
+    StorageHandlerTestHelper.setUpClearDb();
+
+    handler = spy(StorageHandlerApi.class);
+    doAnswer(i -> {
+      List<Mutation> called = (List<Mutation>) i.getArguments()[0];
+      dbClient.write(called);
+      return null;
+    }).when(handler).writeMutations(anyListOf(Mutation.class));
+
     testContentWarnings = new ArrayList<>(Arrays.asList("1", "2"));
 
     clubInfo = new HashMap();
@@ -58,13 +80,56 @@ public final class ClubTest {
     bookInfo.put(Book.TITLE_FIELD_NAME, BOOK_TITLE);
     bookInfo.put(Book.BOOK_ID_FIELD_NAME, BOOK_ID);
 
-    testBook = Book.newBuilder().setTitle(BOOK_TITLE).setBookId(BOOK_ID).build();
-    altTestBook = Book.newBuilder().setTitle(ALT_BOOK_TITLE).setBookId(BOOK_ID).build();
+    testBook = Book.newBuilder()
+                   .setTitle(BOOK_TITLE)
+                   .setBookId(BOOK_ID)
+                   .setStorageHandler(handler)
+                   .build();
+    altTestBook = Book.newBuilder()
+                      .setTitle(ALT_BOOK_TITLE)
+                      .setBookId(BOOK_ID)
+                      .setStorageHandler(handler)
+                      .build();
     clubBuilder = Club.newBuilder()
                       .setName(NAME)
                       .setCurrentBook(testBook)
                       .setOwnerId(OWNER_ID)
-                      .setClubId(CLUB_ID);
+                      .setClubId(CLUB_ID)
+                      .setStorageHandler(handler);
+  }
+
+  @After
+  public void tearDown() {
+    StorageHandlerTestHelper.setUpClearDb();
+  }
+
+  @Test
+  public void save_insert() {
+    Club c = clubBuilder.build();
+    c.save();
+    Club retrieved = StorageHandler.getClub(dbClient, CLUB_ID);
+    assertEquals(c.getName(), retrieved.getName());
+    assertEquals(c.getClubId(), retrieved.getClubId());
+    assertEquals(c.getOwnerId(), retrieved.getOwnerId());
+    assertEquals(c.getDescription(), retrieved.getDescription());
+    assertEquals(c.getCurrentBook().getTitle(), retrieved.getCurrentBook().getTitle());
+  }
+
+  @Test
+  public void save_update() {
+    Club c = clubBuilder.setContentWarnings(testContentWarnings).build();
+    c.save();
+    c.setDescription(ALT_DESCRIPTION);
+    c.save();
+
+    Club retrieved = StorageHandler.getClub(dbClient, CLUB_ID);
+    assertEquals(c.getName(), retrieved.getName());
+    assertEquals(c.getClubId(), retrieved.getClubId());
+    assertEquals(c.getOwnerId(), retrieved.getOwnerId());
+    assertArrayEquals(c.getContentWarnings().toArray(new String[0]), 
+                      retrieved.getContentWarnings().toArray(new String[0]));
+    assertEquals(c.getDescription(), retrieved.getDescription());
+    assertEquals(c.getCurrentBook().getTitle(), retrieved.getCurrentBook().getTitle());
   }
 
   @Test

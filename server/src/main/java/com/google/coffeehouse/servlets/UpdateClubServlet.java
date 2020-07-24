@@ -213,6 +213,8 @@ public class UpdateClubServlet extends HttpServlet {
       return;
     }
 
+    club.setStorageHandler(storageHandler);
+    club.getCurrentBook().setStorageHandler(storageHandler);
     club.save();
 
     response.setContentType("application/json;");

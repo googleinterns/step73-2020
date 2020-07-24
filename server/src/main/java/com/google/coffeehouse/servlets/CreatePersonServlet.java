@@ -15,6 +15,7 @@
 package com.google.coffeehouse.servlets;
 
 import com.google.coffeehouse.common.Person;
+import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.Map;
@@ -40,6 +41,24 @@ public class CreatePersonServlet extends HttpServlet {
   public static final String LOG_BODY_ERROR_MESSAGE = 
       "Body unable to be parsed in CreatePersonServlet: ";
   private static final Gson gson = new Gson();
+  private final StorageHandlerApi handler;
+
+  /** 
+   * Overloaded constructor for dependency injection.
+   * @param handler the {@link StorageHandlerApi} that is used when saving the Person
+   */
+  public CreatePersonServlet(StorageHandlerApi handler) {
+    super();
+    this.handler = handler;
+  }
+
+  /** 
+   * Explicit default constructor used for instantiating the servlet when not testing.
+   */
+  public CreatePersonServlet() {
+    super();
+    this.handler = new StorageHandlerApi();
+  }
 
   /** 
    * Creates a {@link Person} object, saves it in the database and returns it in JSON format.
@@ -63,6 +82,7 @@ public class CreatePersonServlet extends HttpServlet {
       return;
     }
 
+    newPerson.setStorageHandler(handler);
     newPerson.save();
 
     response.setContentType("application/json;");
