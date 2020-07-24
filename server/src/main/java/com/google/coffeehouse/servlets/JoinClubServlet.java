@@ -51,9 +51,7 @@ public class JoinClubServlet extends HttpServlet {
       "Body unable to be parsed in JoinClubServlet: ";
 
   /**
-   * Message to be logged when an invalid ID token is passed in or a valid ID token that is
-   * associated with a user who does not have the permissions to update the Club is passed in.
-   */
+   * Message to be logged when an invalid ID token is passed in. */
   public static final String LOG_SECURITY_MESSAGE =
       "Forbidden action attempted: ";
 
