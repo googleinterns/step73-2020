@@ -15,11 +15,21 @@
 package com.google.coffeehouse.common;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
+import com.google.cloud.spanner.DatabaseClient;
+import com.google.cloud.spanner.Mutation;
+import com.google.coffeehouse.storagehandler.StorageHandler;
+import com.google.coffeehouse.storagehandler.StorageHandlerApi;
+import com.google.coffeehouse.storagehandler.StorageHandlerTestHelper;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -40,11 +50,57 @@ public final class BookTest {
   private static final String BOOK_ID = "predetermined-identification-string";
   private Book.Builder bookBuilder;
   private Map bookInfo;
+  private static DatabaseClient dbClient;
+
+  @Mock private StorageHandlerApi handler;
 
   @Before
   public void setUp() {
+    dbClient = StorageHandlerTestHelper.setUpHelper();
+    StorageHandlerTestHelper.setUpClearDb();
+
+    handler = spy(StorageHandlerApi.class);
+    doAnswer(i -> {
+      List<Mutation> called = (List<Mutation>) i.getArguments()[0];
+      dbClient.write(called);
+      return null;
+    }).when(handler).writeMutations(anyListOf(Mutation.class));
+
     bookInfo = new HashMap<String, String>();
-    bookBuilder = Book.newBuilder().setTitle(TITLE).setBookId(BOOK_ID);
+    bookBuilder = Book.newBuilder()
+                      .setTitle(TITLE)
+                      .setBookId(BOOK_ID)
+                      .setStorageHandler(handler);
+  }
+  
+  @After
+  public void tearDown() {
+    StorageHandlerTestHelper.setUpClearDb();
+  }
+
+  @Test
+  public void save_insert() {
+    Book b = bookBuilder.build();
+    b.save();
+    Book retrieved = StorageHandler.getBook(dbClient, BOOK_ID);
+    assertEquals(b.getTitle(), retrieved.getTitle());
+    assertEquals(b.getBookId(), retrieved.getBookId());
+    assertEquals(b.getAuthor().isPresent(), retrieved.getAuthor().isPresent());
+    assertEquals(b.getIsbn().isPresent(), retrieved.getIsbn().isPresent());
+  }
+
+  @Test
+  public void save_update() {
+    Book b = bookBuilder.build();
+    b.save();
+    b.setAuthor(ALT_AUTHOR);
+    b.setIsbn(ALT_ISBN);
+    b.save();
+    Book retrieved = StorageHandler.getBook(dbClient, BOOK_ID);
+    assertEquals(b.getTitle(), retrieved.getTitle());
+    assertEquals(b.getBookId(), retrieved.getBookId());
+    assertEquals(b.getAuthor().get(), retrieved.getAuthor().get());
+    assertEquals(b.getIsbn().get(), retrieved.getIsbn().get());
   }
 
   @Test
