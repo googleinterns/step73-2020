@@ -31,7 +31,7 @@ public class StorageHandlerHelper {
 
   /**
   * Returns a Boolean that indicates whether or not a person is in a club (member or owner).
-  * This method creates a Struct that holds a single row from a database read row transacation.
+  * This method creates a Struct that holds a single row from a database read row transaction.
   * It returns false if the Struct is null, indicating the membership does not exist.
   * It returns true if the Struct is not null, indicating the membership does exist.
   *
@@ -54,7 +54,8 @@ public class StorageHandlerHelper {
   * Returns a Boolean that indicates whether or not a person is the owner of a club.
   * This method creates a Struct that holds a single row from a database read row transacation.
   * It returns false if the Struct is null, indicating the membership does not exist.
-  * It returns true if the Struct is not null, indicating the membership does exist.
+  * It returns true if the Struct is not null (indicating that the membership does exist), and that
+  * the membership is of type OWNER.
   *
   * @param  readContext  the context for an attempt to perform a transaction
   * @param  userId       the user ID string of the user we are checking is in a club
