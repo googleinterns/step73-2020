@@ -71,7 +71,7 @@ public class StorageHandler {
                                            .setNickname(row.getString(/* nicknameIndex= */1))
                                            .setUserId(userId);
 
-      if (!row.isNull(/* index= */2) || !row.getString(/* index= */2).isEmpty()) {
+      if (!row.isNull(/* index= */2)) {
         personBuilder.setPronouns(row.getString(/* pronounsIndex= */2));
       }
       return personBuilder.build();
@@ -97,12 +97,14 @@ public class StorageHandler {
               Key.of(bookId),
               Arrays.asList("title", "author", "isbn"));
     if (row != null) {
-      Book.Builder bookBuilder = Book.newBuilder().setTitle(row.getString(/* titleIndex= */ 0));
+      Book.Builder bookBuilder = Book.newBuilder()
+                                     .setTitle(row.getString(/* titleIndex= */ 0))
+                                     .setBookId(bookId);
 
-      if (!row.isNull(/* authorIndex= */ 1) || !row.getString(/* authorIndex= */ 1).isEmpty()) {
+      if (!row.isNull(/* authorIndex= */ 1)) {
         bookBuilder.setAuthor(row.getString(/* authorIndex= */ 1));
       }
-      if (!row.isNull(/* isbnIndex= */ 2) || !row.getString(/* isbnIndex= */ 2).isEmpty()) {
+      if (!row.isNull(/* isbnIndex= */ 2)) {
         bookBuilder.setIsbn(row.getString(/* isbnIndex= */ 2));
       }
       return bookBuilder.build();
@@ -135,10 +137,9 @@ public class StorageHandler {
                                      .setClubId(clubId)
                                      .setDescription(row.getString(/* descriptionIndex= */ 2))
                                      .setOwnerId(row.getString(/* ownerIdIndex= */ 3));                       
-      if (!row.isNull(/* contentWarningIndex =*/ 4)||
-          !row.getString(/* contentWarningIndex =*/ 4).isEmpty()) {
+      if (!row.isNull(/* contentWarningIndex=*/ 4)) {
         List<String> contentWarnings =
-            Arrays.asList(row.getString(/* contentWarningIndex =*/ 4).split("\\n"));
+            Arrays.asList(row.getString(/* contentWarningIndex=*/ 4).split("\\n"));
         clubBuilder.setContentWarnings(contentWarnings);
       }
       return clubBuilder.build();
