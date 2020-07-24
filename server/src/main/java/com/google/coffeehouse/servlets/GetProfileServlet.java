@@ -96,9 +96,9 @@ public class GetProfileServlet extends HttpServlet {
    * Returns a {@link Person} object in JSON format from information in the database.
    * @param request the GET request that must have a valid JSON representation of the
    *     {@code "idToken"} of the user to be passed in order to fetch a person from ID in the
-   *     database.  If the required "userId" field doesn't exist, the response object will
-   *     send a "400 Bad Request error". If the person with the userId passed in does not
-   *     exist, the response object will send a "404 Not Found error". If the JSON
+   *     database.  If the required "idToken" field doesn't exist, the response object will
+   *     send a "400 Bad Request error". If the person's userdId with the idToken passed in does
+   *     not exist, the response object will send a "404 Not Found error". If the JSON
    *     body is not valid, and unable to be parsed, the response object will send a
    *     "500 Internal Server error". If the user does not have a valid ID token, the
    *     response object will send a "403 Forbidden error"
