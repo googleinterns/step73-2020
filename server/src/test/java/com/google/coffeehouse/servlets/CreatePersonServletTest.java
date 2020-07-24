@@ -15,12 +15,16 @@
 package com.google.coffeehouse.servlets;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.coffeehouse.common.Person;
+import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -80,12 +84,16 @@ public class CreatePersonServletTest {
 
   @Mock private HttpServletRequest request;
   @Mock private HttpServletResponse response;
+  @Mock private StorageHandlerApi handler;
   
   @Before
   public void setUp() throws IOException {
     helper.setUp();
 
-    CreatePersonServlet = new CreatePersonServlet();
+    handler = spy(StorageHandlerApi.class);
+    doNothing().when(handler).writeMutations(anyList());
+
+    CreatePersonServlet = new CreatePersonServlet(handler);
 
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
