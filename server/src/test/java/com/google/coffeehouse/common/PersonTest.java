@@ -15,13 +15,22 @@
 package com.google.coffeehouse.common;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
+import com.google.cloud.spanner.DatabaseClient;
+import com.google.cloud.spanner.Mutation;
+import com.google.coffeehouse.storagehandler.StorageHandler;
+import com.google.coffeehouse.storagehandler.StorageHandlerApi;
+import com.google.coffeehouse.storagehandler.StorageHandlerTestHelper;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.function.ThrowingRunnable;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.junit.Test;
@@ -41,12 +50,58 @@ public final class PersonTest {
   private static final String USER_ID = "predetermined-identification-string";
   private Person.Builder personBuilder;
   private Map personInfo;
+  private static DatabaseClient dbClient;
+
+  @Mock private StorageHandlerApi handler;
   
   @Before
   public void setUp() {
+    dbClient = StorageHandlerTestHelper.setUpHelper();
+    StorageHandlerTestHelper.setUpClearDb();
     personInfo = new HashMap<String, String>();
 
-    personBuilder = Person.newBuilder().setEmail(EMAIL).setNickname(NICKNAME).setUserId(USER_ID);
+    handler = spy(StorageHandlerApi.class);
+    doAnswer(i -> {
+      List<Mutation> called = (List<Mutation>) i.getArguments()[0];
+      dbClient.write(called);
+      return null;
+    }).when(handler).writeMutations(anyListOf(Mutation.class));
+
+    personBuilder = Person.newBuilder()
+                          .setEmail(EMAIL)
+                          .setNickname(NICKNAME)
+                          .setUserId(USER_ID)
+                          .setStorageHandler(handler);
+  }
+
+  @After
+  public void tearDown() {
+    StorageHandlerTestHelper.setUpClearDb();
+  }
+
+  @Test
+  public void save_insert() {
+    Person p = personBuilder.setPronouns("they").build();
+    p.save();
+    Person retrieved = StorageHandler.getPerson(dbClient, USER_ID);
+    assertEquals(p.getNickname(), retrieved.getNickname());
+    assertEquals(p.getUserId(), retrieved.getUserId());
+    assertEquals(p.getPronouns().isPresent(), retrieved.getPronouns().isPresent());
+    assertEquals(p.getEmail(), retrieved.getEmail());
+  }
+
+  @Test
+  public void save_update() {
+    Person p = personBuilder.build();
+    p.save();
+    p.setNickname(ALT_NICKNAME);
+    p.setPronouns(ALT_PRONOUNS);
+    p.save();
+    Person retrieved = StorageHandler.getPerson(dbClient, USER_ID);
+    assertEquals(p.getNickname(), retrieved.getNickname());
+    assertEquals(p.getUserId(), retrieved.getUserId());
+    assertEquals(p.getPronouns().isPresent(), retrieved.getPronouns().isPresent());
+    assertEquals(p.getEmail(), retrieved.getEmail());
   }
 
   @Test
