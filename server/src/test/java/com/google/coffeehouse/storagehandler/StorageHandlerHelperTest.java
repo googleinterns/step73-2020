@@ -18,6 +18,7 @@ import static org.junit.Assert.*;
 
 import com.google.cloud.spanner.DatabaseClient;
 import com.google.cloud.spanner.ReadContext;
+import com.google.coffeehouse.common.MembershipConstants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,20 +46,63 @@ public class StorageHandlerHelperTest {
   }
 
   @Test
-  public void checkMembership_personInClub() throws Exception {
+  public void checkAnyMembership_memberFailsToBecomeOwner() throws Exception {
+    StorageHandlerTestHelper.insertPerson("person");
+    StorageHandlerTestHelper.insertClubWithContentWarnings("club");
+    StorageHandlerTestHelper.insertMembership("person", "club", MembershipConstants.MEMBER);
+    assertThrows(RuntimeException.class, () -> {
+      StorageHandlerTestHelper.insertMembership("person", "club", MembershipConstants.OWNER);;
+    });
+  }
+
+  @Test
+  public void checkAnyMembership_personInClub() throws Exception {
     StorageHandlerTestHelper.insertPerson("person");
     StorageHandlerTestHelper.insertClub("club");
-    StorageHandlerTestHelper.insertMembership("person", "club");
+    StorageHandlerTestHelper.insertMembership("person", "club", MembershipConstants.MEMBER);
     ReadContext readContext = dbClient.singleUse();
-    Boolean actual = StorageHandlerHelper.checkMembership(readContext, "person", "club");
+    Boolean actual = StorageHandlerHelper.checkAnyMembership(readContext, "person", "club");
     assertTrue(actual);
   }
 
   @Test
-  public void checkMembership_personNotInClub() throws Exception {
+  public void checkAnyMembership_personNotInClub() throws Exception {
     StorageHandlerTestHelper.insertClub("club");
     ReadContext readContext = dbClient.singleUse();
-    Boolean actual = StorageHandlerHelper.checkMembership(readContext, "personNotInClub", "club");
+    Boolean actual = StorageHandlerHelper.checkAnyMembership(readContext, "personNotInClub", "club");
+    assertFalse(actual);
+  }
+
+  @Test
+  public void checkOwnership_personIsOwner() throws Exception {
+    StorageHandlerTestHelper.insertPerson("person");
+    StorageHandlerTestHelper.insertClub("club");
+    StorageHandlerTestHelper.insertMembership("person", "club", MembershipConstants.OWNER);
+    ReadContext readContext = dbClient.singleUse();
+    Boolean actual = StorageHandlerHelper.checkOwnership(readContext, "person", "club");
+    assertTrue(actual);
+  }
+
+  @Test
+  public void checkOwnership_personIsNotOwnerNorMember() throws Exception {
+    StorageHandlerTestHelper.insertPerson("person");
+    StorageHandlerTestHelper.insertPerson("owner");
+    StorageHandlerTestHelper.insertClub("club");
+    StorageHandlerTestHelper.insertMembership("owner", "club", MembershipConstants.OWNER);
+    ReadContext readContext = dbClient.singleUse();
+    Boolean actual = StorageHandlerHelper.checkOwnership(readContext, "person", "club");
+    assertFalse(actual);
+  }
+
+  @Test
+  public void checkOwnership_personIsMemberButNotOwner() throws Exception {
+    StorageHandlerTestHelper.insertPerson("person");
+    StorageHandlerTestHelper.insertPerson("owner");
+    StorageHandlerTestHelper.insertClub("club");
+    StorageHandlerTestHelper.insertMembership("person", "club", MembershipConstants.MEMBER);
+    StorageHandlerTestHelper.insertMembership("owner", "club", MembershipConstants.OWNER);
+    ReadContext readContext = dbClient.singleUse();
+    Boolean actual = StorageHandlerHelper.checkOwnership(readContext, "person", "club");
     assertFalse(actual);
   }
 
@@ -66,7 +110,7 @@ public class StorageHandlerHelperTest {
   public void getMemberCount_oneMember() throws Exception {
     StorageHandlerTestHelper.insertPerson("person");
     StorageHandlerTestHelper.insertClub("club");
-    StorageHandlerTestHelper.insertMembership("person", "club");
+    StorageHandlerTestHelper.insertMembership("person", "club", MembershipConstants.MEMBER);
     ReadContext readContext = dbClient.singleUse();
     long actual = StorageHandlerHelper.getMemberCount(readContext, "club");
     assertEquals(1, actual);
