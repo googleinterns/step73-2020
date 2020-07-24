@@ -54,6 +54,9 @@ public class UpdatePersonServlet extends HttpServlet {
       "Body unable to be parsed in UpdatePersonServlet: ";
   /** Message to be logged when an invalid ID token is passed in. */
   public static final String LOG_SECURITY_MESSAGE = "Forbidden action attempted: ";
+  /** Message logged when the user ID from the token is different from the one in the "person". */
+  public static final String LOG_USER_ID_MISMATCH =
+      "Token userId does not match userId on Person object: ";
   /** 
    * The error string sent by the response object in doPost when the body of the 
    * POST request does not have a required field.
@@ -106,13 +109,16 @@ public class UpdatePersonServlet extends HttpServlet {
    *     be updated from the "person" key. If no update mask exists, all fields from the "person"
    *     key will be used to update the Person. If the request does not have a "person" key,
    *     or is syntactically incorrect, the response object will send a "400 Bad Request error". If
-   *     the request does not have an "idToken" key or has an invalid ID token associated with that
-   *     key, the response object will send a "403 Forbidden error"
+   *     the user ID extracted from the token does not match the "userId" in the Person to be
+   *     update, the response object will send a "400 Bad Request error". If the request does not
+   *     have an "idToken" key or has an invalid ID token associated with that key, the response
+   *     object will send a "403 Forbidden error"
    * @param response the response from this method, will contain the updated Person in JSON format.
    *     If the request object does not have a valid "person" key (or is syntactically incorrect)
-   *     this object will send a "400 Bad Request error". If the request does not have an "idToken"
-   *     key or has an invalid ID token associated with that key, the response object will send a
-   *     "403 Forbidden error"
+   *     this object will send a "400 Bad Request error". If the user ID extracted from the token
+   *     does not match the "userId" in the Person to be update, the response object will send a
+   *     "400 Bad Request error". If the request does not have an "idToken" key or has an invalid
+   *     ID token associated with that key, the response object will send a "403 Forbidden error"
    * @throws IOException if an input or output error is detected when the servlet handles the request
    */
   @Override
@@ -130,6 +136,10 @@ public class UpdatePersonServlet extends HttpServlet {
       // Get the Person from the database and convert it to JSON for easy manipulation.
       String idToken = (String) mappedRequest.get(ID_TOKEN_FIELD_NAME);
       String userId = AuthenticationHelper.getUserIdFromIdToken(idToken, verifier);
+
+      if (!userId.equals((String) personInfo.get(Person.USER_ID_FIELD_NAME))) {
+        throw new IllegalArgumentException(LOG_USER_ID_MISMATCH);
+      }
 
       personToUpdate = storageHandler.fetchPersonFromId(userId);
       JsonObject personToUpdateJson = gson.toJsonTree(personToUpdate).getAsJsonObject();

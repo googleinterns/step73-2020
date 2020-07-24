@@ -69,7 +69,7 @@ public class UpdatePersonServletTest {
       "    \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + ALT_NICKNAME + "\",",
       "    \"" + Person.EMAIL_FIELD_NAME + "\" : \"" + ALT_EMAIL + "\",",
       "    \"" + Person.PRONOUNS_FIELD_NAME + "\" : \"" + ALT_PRONOUNS + "\",",
-      "    \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + ALT_USER_ID + "\"",
+      "    \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\"",
       "  }",
       "}");
   private static final String NO_MASK_UPDATE = String.join("\n",
@@ -79,7 +79,7 @@ public class UpdatePersonServletTest {
       "    \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + ALT_NICKNAME + "\",",
       "    \"" + Person.EMAIL_FIELD_NAME + "\" : \"" + ALT_EMAIL + "\",",
       "    \"" + Person.PRONOUNS_FIELD_NAME + "\" : \"" + ALT_PRONOUNS + "\",",
-      "    \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + ALT_USER_ID + "\"",
+      "    \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\"",
       "  }",
       "}");
   private static final String MASK_ALL_UPDATE = String.join("\n",
@@ -92,7 +92,7 @@ public class UpdatePersonServletTest {
       "    \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + ALT_NICKNAME + "\",",
       "    \"" + Person.EMAIL_FIELD_NAME + "\" : \"" + ALT_EMAIL + "\",",
       "    \"" + Person.PRONOUNS_FIELD_NAME + "\" : \"" + ALT_PRONOUNS + "\",",
-      "    \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + ALT_USER_ID + "\"",
+      "    \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\"",
       "  }",
       "}");
   private static final String NO_ID_TOKEN = String.join("\n",
@@ -114,6 +114,18 @@ public class UpdatePersonServletTest {
       Person.EMAIL_FIELD_NAME + "," + Person.USER_ID_FIELD_NAME + "\"",
       "}");
   private static final String SYNTACTICALLY_INCORRECT_JSON = "{\"{";
+  private static final String ID_MISMATCH_JSON = String.join("\n",
+      "{",
+      "  \"" + UpdatePersonServlet.ID_TOKEN_FIELD_NAME + "\" : \"" + ID_TOKEN + "\",",
+      "  \"" + UpdatePersonServlet.UPDATE_MASK_FIELD_NAME + "\" : \"" +
+      Person.NICKNAME_FIELD_NAME + "," + Person.PRONOUNS_FIELD_NAME + "\",",
+      "  \"" + UpdatePersonServlet.PERSON_FIELD_NAME + "\" : {",
+      "    \"" + Person.NICKNAME_FIELD_NAME + "\" : \"" + ALT_NICKNAME + "\",",
+      "    \"" + Person.EMAIL_FIELD_NAME + "\" : \"" + ALT_EMAIL + "\",",
+      "    \"" + Person.PRONOUNS_FIELD_NAME + "\" : \"" + ALT_PRONOUNS + "\",",
+      "    \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + ALT_USER_ID + "\"",
+      "  }",
+      "}");
 
   private UpdatePersonServlet updatePersonServlet;
   private UpdatePersonServlet failingUpdatePersonServlet;
@@ -246,5 +258,15 @@ public class UpdatePersonServletTest {
     failingUpdatePersonServlet.doPost(request, response);
     verify(response).sendError(
         HttpServletResponse.SC_FORBIDDEN, AuthenticationHelper.INVALID_ID_TOKEN_ERROR);
+  }
+
+  @Test
+  public void doPost_userIdMismatch() throws IOException {
+    when(request.getReader()).thenReturn(
+          new BufferedReader(new StringReader(ID_MISMATCH_JSON)));
+    updatePersonServlet.doPost(request, response);
+    
+    verify(response).sendError(
+        HttpServletResponse.SC_BAD_REQUEST, updatePersonServlet.LOG_USER_ID_MISMATCH);
   }
 }
