@@ -63,7 +63,7 @@ public class StorageHandlerTest {
     StorageHandler.runAddAnyMembershipTypeTransaction(
       dbClient, "person", "club", MembershipConstants.OWNER);
     ReadContext readContext = dbClient.singleUse();
-    Boolean actual = StorageHandlerHelper.checkAnyMembership(readContext, "person", "club");
+    Boolean actual = StorageHandlerHelper.checkOwnership(readContext, "person", "club");
     assertTrue(actual);
   }
 
