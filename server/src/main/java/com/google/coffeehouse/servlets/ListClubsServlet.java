@@ -58,29 +58,24 @@ public class ListClubsServlet extends HttpServlet {
   /**
    * Message to be logged when an invalid ID token is passed in or a no ID token is passed in.
    */
-  public static final String LOG_SECURITY_MESSAGE =
-      "Forbidden action attempted: ";
+  public static final String LOG_SECURITY_MESSAGE = "Forbidden action attempted: ";
   /** Name of the key in the input JSON that corresponds to the ID token. */
-  public static final String ID_TOKEN_FIELD_NAME =
-      "idToken";
+  public static final String ID_TOKEN_FIELD_NAME = "idToken";
   /**
    * Name of the key in the input JSON that corresponds to if we are searching for clubs the user
    * is a member of, or clubs that the user is not a member of.
    */
-  public static final String MEMBERSHIP_STATUS_FIELD_NAME =
-      "membershipStatus";
+  public static final String MEMBERSHIP_STATUS_FIELD_NAME = "membershipStatus";
   /**
    * A possible value for the MEMBERSHIP_STATUS_FIELD_NAME key that means we are searching for
    * clubs that the user is a member of.
    */
-  public static final String MEMBER =
-      "member";
+  public static final String MEMBER = "member";
   /**
    * A possible value for the MEMBERSHIP_STATUS_FIELD_NAME key that means we are searching for
    * clubs that the user is not a member of.
    */
-  public static final String NOT_MEMBER =
-      "not member";
+  public static final String NOT_MEMBER = "not member";
 
   private static final Gson gson = new Gson();
   private static final HttpTransport transport = new NetHttpTransport();
