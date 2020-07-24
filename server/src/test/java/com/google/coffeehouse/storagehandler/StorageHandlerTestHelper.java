@@ -257,8 +257,8 @@ public class StorageHandlerTestHelper {
 
   public static Club createTestClubObject(String club_id, Boolean content_warnings_exist) {
     List<String> testContentWarnings = new ArrayList<>(Arrays.asList("test"));
-    Book testBook = createTestBookObject("book", /* isbnExists = */true,
-                                                 /* authorExists = */true);
+    Book testBook = createTestBookObject("book", /* isbnExists= */true,
+                                                 /* authorExists= */true);
     Club.Builder clubBuilder = Club.newBuilder()
                                    .setName("club")
                                    .setCurrentBook(testBook)
