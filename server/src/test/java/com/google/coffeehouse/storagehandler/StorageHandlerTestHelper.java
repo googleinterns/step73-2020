@@ -250,8 +250,12 @@ public class StorageHandlerTestHelper {
     Book.Builder bookBuilder = Book.newBuilder()
                                    .setTitle("title")
                                    .setBookId(book_id);
-    if (isbn_exists) { bookBuilder.setIsbn("isbn"); }
-    if (author_exists) { bookBuilder.setAuthor("author"); }
+    if (isbn_exists) {
+      bookBuilder.setIsbn("isbn");
+    }
+    if (author_exists) {
+      bookBuilder.setAuthor("author");
+    }
     return bookBuilder.build();
   }
 
