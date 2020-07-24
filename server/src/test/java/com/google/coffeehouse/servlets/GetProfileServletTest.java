@@ -56,18 +56,6 @@ public class GetProfileServletTest {
   private static final String NICKNAME = "test";
   private static final String PRONOUNS = "they";
   private static final String ID_TOKEN = "Identification Token";
-  private static final String JSON = String.join("\n",
-      "{",
-      "  \"" + GetProfileServlet.ID_TOKEN_FIELD_NAME + "\" : \"" + ID_TOKEN + "\"",
-      "}");
-  private static final String NO_ID_TOKEN_JSON = "{}";
-  private static final String PROFILE_NOT_FOUND_JSON = String.join("\n",
-      "{",
-      "  \"" + GetProfileServlet.ID_TOKEN_FIELD_NAME + "\" : \"\"",
-      "}");
-  private static final String SYNTACTICALLY_INCORRECT_JSON =
-      "{\"" + GetProfileServlet.ID_TOKEN_FIELD_NAME + "\"";
-
   private Person testPerson = Person.newBuilder()
                                     .setEmail(EMAIL)
                                     .setNickname(NICKNAME)
@@ -124,8 +112,8 @@ public class GetProfileServletTest {
 
   @Test
   public void doGet_validInput() throws IOException {
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(JSON)));
+    when(request.getParameter(eq(GetProfileServlet.ID_TOKEN_PARAMETER)))
+        .thenReturn(ID_TOKEN);
     getProfileServlet = new GetProfileServlet(correctVerifier, successfulHandler);
 
     getProfileServlet.doGet(request, response);
@@ -142,20 +130,20 @@ public class GetProfileServletTest {
 
   @Test
   public void doGet_noIdToken() throws IOException {
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(NO_ID_TOKEN_JSON)));
+    when(request.getParameter(eq(GetProfileServlet.ID_TOKEN_PARAMETER)))
+        .thenReturn(null);
     getProfileServlet = new GetProfileServlet(correctVerifier, successfulHandler);
     getProfileServlet.doGet(request, response);
     
     verify(response).sendError(
         HttpServletResponse.SC_BAD_REQUEST,
-        String.format(getProfileServlet.NO_FIELD_ERROR, getProfileServlet.ID_TOKEN_FIELD_NAME));
+        String.format(getProfileServlet.NO_FIELD_ERROR, getProfileServlet.ID_TOKEN_PARAMETER));
   }
 
   @Test
   public void doGet_noProfileFound() throws IOException {
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(PROFILE_NOT_FOUND_JSON)));
+    when(request.getParameter(eq(GetProfileServlet.ID_TOKEN_PARAMETER)))
+        .thenReturn(ID_TOKEN);
     failingGetProfileServlet = new GetProfileServlet(correctVerifier, failingHandler);
     failingGetProfileServlet.doGet(request, response);
     
@@ -165,21 +153,9 @@ public class GetProfileServletTest {
   }
 
   @Test
-  public void doGet_syntacticallyIncorrectInput() throws IOException {
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(SYNTACTICALLY_INCORRECT_JSON)));
-    getProfileServlet = new GetProfileServlet(correctVerifier, successfulHandler);
-    getProfileServlet.doGet(request, response);
-    
-    verify(response).sendError(
-        HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-        GetProfileServlet.BODY_ERROR);
-  }
-
-  @Test
   public void doGet_failVerification() throws IOException {
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(JSON)));
+    when(request.getParameter(eq(GetProfileServlet.ID_TOKEN_PARAMETER)))
+        .thenReturn(ID_TOKEN);
     getProfileServlet = new GetProfileServlet(nullVerifier, successfulHandler);
     getProfileServlet.doGet(request, response);
 
