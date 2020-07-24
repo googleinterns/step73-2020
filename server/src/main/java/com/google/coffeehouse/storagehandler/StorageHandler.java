@@ -148,17 +148,19 @@ public class StorageHandler {
   }
 
   /**
-  * Runs a transaction that adds a membership to the database.
+  * Runs a transaction that adds a membership or ownership to the database.
   * This method checks if a person is already a member of a club by calling a helper function.
   * If the person does not exist, this method will buffer a single mutation that adds
-  * the membership. Otherwise, it will throw an exception indicating that the person
+  * the membership (or owner). Otherwise, it will throw an exception indicating that the person
   * is already a member of the club.
   *
-  * @param  dbClient    the database client
-  * @param  userId      the user ID string used to perform the transaction
-  * @param  clubId      the club ID string used to perform the transaction
+  * @param  dbClient             the database client
+  * @param  userId               the user ID string used to perform the transaction
+  * @param  clubId               the club ID string used to perform the transaction
+  * @param  membershipLevel      the integer representing membership level (member or owner)
   */
-  public static void runAddMembershipTransaction(DatabaseClient dbClient, String userId, String clubId) {
+  public static void runAddMembershipOrOwnershipTransaction(DatabaseClient dbClient, String userId,
+                                                            String clubId, int membershipLevel) {
     dbClient
         .readWriteTransaction()
         .run(
@@ -167,7 +169,9 @@ public class StorageHandler {
             public Void run(TransactionContext transaction) throws Exception {
               Boolean exists = StorageHandlerHelper.checkMembership(transaction, userId, clubId);
               if (!exists) {
-                transaction.buffer(StorageHandlerCommonMutations.addMembershipMutation(userId, clubId));
+                transaction.buffer(
+                  StorageHandlerCommonMutations.addMembershipOrOwnershipMutation(
+                    userId, clubId, membershipLevel));
               } else {
                 throw new IllegalArgumentException(MembershipConstants.PERSON_ALREADY_IN_CLUB);
               }
@@ -178,7 +182,7 @@ public class StorageHandler {
   }
 
   /**
-  * Runs a transaction that deletes a membership from the database.
+  * Runs a transaction that deletes a membership (or ownership) from the database.
   * This method checks if a person is already a member of a club by calling a helper function.
   * If the person does exist, this method will buffer a single mutation that deletes the
   * membership. Otherwise, it will throw an exception indicating that the person is

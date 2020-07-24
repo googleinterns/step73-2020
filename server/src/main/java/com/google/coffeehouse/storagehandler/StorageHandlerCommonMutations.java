@@ -26,27 +26,29 @@ import com.google.cloud.spanner.Value;
 */
 public class StorageHandlerCommonMutations {
   /**
-  * Returns a single Mutation that can add a membership to the database.
+  * Returns a single Mutation that can add a membership or ownership to the database.
   *
-  * @param  userId      the user ID string used to insert the membership into the table
-  * @param  clubId      the club ID string used to insert the membership into the table
-  * @return             the single mutation to add a membership
+  * @param  userId               the user ID string used to insert the membership into the table
+  * @param  clubId               the club ID string used to insert the membership into the table
+  * @param  membershipLevel      the integer representing membership level (member or owner)
+  * @return                      the single mutation to add a membership
   */
-  public static Mutation addMembershipMutation(String userId, String clubId) {
+  public static Mutation addMembershipOrOwnershipMutation(String userId, String clubId,
+                                                          int membershipLevel) {
     return Mutation.newInsertBuilder("Memberships")
                    .set("userId")
                    .to(userId)
                    .set("clubId")
                    .to(clubId)
                    .set("membershipType")
-                   .to(MembershipConstants.MEMBER)
+                   .to(membershipLevel)
                    .set("timestamp")
                    .to(Value.COMMIT_TIMESTAMP)
                    .build();
   }
 
   /**
-  * Returns a single Mutation that can delete a membership from the database.
+  * Returns a single Mutation that can delete a membership (ow ownership) from the database.
   *
   * @param  userId      the user ID string used to query the membership table
   * @param  clubId      the club ID string used to query the membership table

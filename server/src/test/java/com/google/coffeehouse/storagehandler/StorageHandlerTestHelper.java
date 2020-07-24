@@ -88,7 +88,7 @@ public class StorageHandlerTestHelper {
     dbClient.write(mutations);
   }
 
-  public static void insertMembership(String person_id, String club_id) {
+  public static void insertMembership(String person_id, String club_id, int membershipLevel) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(
       Mutation.newInsertBuilder("Memberships")
@@ -97,7 +97,7 @@ public class StorageHandlerTestHelper {
         .set("clubId")
         .to(club_id)
         .set("membershipType")
-        .to(MembershipConstants.MEMBER)
+        .to(membershipLevel)
         .set("timestamp")
         .to(Value.COMMIT_TIMESTAMP)
         .build());

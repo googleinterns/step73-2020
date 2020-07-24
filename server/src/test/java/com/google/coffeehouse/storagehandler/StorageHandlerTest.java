@@ -19,6 +19,7 @@ import static org.junit.Assert.*;
 import com.google.cloud.spanner.Database;
 import com.google.cloud.spanner.DatabaseClient;
 import com.google.cloud.spanner.ReadContext;
+import com.google.coffeehouse.common.MembershipConstants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,9 +48,20 @@ public class StorageHandlerTest {
   }
 
   @Test
-  public void getAddMembershipTransaction() throws Exception {
+  public void runAddMembershipOrOwnershipTransaction_member() throws Exception {
     StorageHandlerTestHelper.insertPerson("person");
-    StorageHandler.runAddMembershipTransaction(dbClient, "person", "club");
+    StorageHandler.runAddMembershipOrOwnershipTransaction(
+      dbClient, "person", "club", MembershipConstants.MEMBER);
+    ReadContext readContext = dbClient.singleUse();
+    Boolean actual = StorageHandlerHelper.checkMembership(readContext, "person", "club");
+    assertTrue(actual);
+  }
+
+  @Test
+  public void runAddMembershipOrOwnershipTransaction_owner() throws Exception {
+    StorageHandlerTestHelper.insertPerson("person");
+    StorageHandler.runAddMembershipOrOwnershipTransaction(
+      dbClient, "person", "club", MembershipConstants.OWNER);
     ReadContext readContext = dbClient.singleUse();
     Boolean actual = StorageHandlerHelper.checkMembership(readContext, "person", "club");
     assertTrue(actual);
@@ -58,7 +70,7 @@ public class StorageHandlerTest {
   @Test
   public void getDeleteMembershipTransaction() throws Exception {
     StorageHandlerTestHelper.insertPerson("person");
-    StorageHandlerTestHelper.insertMembership("person", "club");
+    StorageHandlerTestHelper.insertMembership("person", "club", MembershipConstants.MEMBER);
     StorageHandler.runDeleteMembershipTransaction(dbClient, "person", "club");
     ReadContext readContext = dbClient.singleUse();
     Boolean actual = StorageHandlerHelper.checkMembership(readContext, "person", "club");

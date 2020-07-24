@@ -19,6 +19,7 @@ import com.google.cloud.spanner.ReadContext;
 import com.google.cloud.spanner.ResultSet;
 import com.google.cloud.spanner.Statement;
 import com.google.cloud.spanner.Struct;
+import com.google.coffeehouse.common.MembershipConstants;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,7 +30,7 @@ import java.util.List;
 public class StorageHandlerHelper {
 
   /**
-  * Returns a Boolean that indicates whether or not a person is a member of a club.
+  * Returns a Boolean that indicates whether or not a person is in a club (member or owner).
   * This method creates a Struct that holds a single row from a database read row transacation.
   * It returns false if the Struct is null, indicating the membership does not exist.
   * It returns true if the Struct is not null, indicating the membership does exist.
@@ -47,6 +48,28 @@ public class StorageHandlerHelper {
               Key.of(userId, clubId),
               Arrays.asList("userId"));
     return (row != null) ? true : false;
+  }
+
+  /**
+  * Returns a Boolean that indicates whether or not a person is the owner of a club.
+  * This method creates a Struct that holds a single row from a database read row transacation.
+  * It returns false if the Struct is null, indicating the membership does not exist.
+  * It returns true if the Struct is not null, indicating the membership does exist.
+  *
+  * @param  readContext  the context for an attempt to perform a transaction
+  * @param  userId       the user ID string of the user we are checking is in a club
+  * @param  clubId       the club ID string of the club we are checking the user is in
+  * @return              the Boolean true or false representing if the membership exists or not
+  */
+  public static Boolean checkOwnership(ReadContext readContext, String userId, String clubId) {
+    Struct row =
+          readContext
+            .readRow(
+              "Memberships",
+              Key.of(userId, clubId),
+              Arrays.asList("membershipType"));
+    return ((row != null) && (row.getLong(/** index = **/0) == MembershipConstants.OWNER))
+            ? true : false;
   }
 
   /**
