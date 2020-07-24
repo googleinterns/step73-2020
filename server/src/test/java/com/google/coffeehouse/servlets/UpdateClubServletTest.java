@@ -16,7 +16,10 @@ package com.google.coffeehouse.servlets;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
@@ -192,8 +195,9 @@ public class UpdateClubServletTest {
   public void setUp() throws IOException, GeneralSecurityException {
     helper.setUp();
 
-    handler = mock(StorageHandlerApi.class);
-    when(handler.fetchClubFromId(anyString())).thenReturn(testClub);
+    handler = spy(StorageHandlerApi.class);
+    doNothing().when(handler).writeMutations(anyList());
+    doReturn(testClub).when(handler).fetchClubFromId(anyString());
 
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);

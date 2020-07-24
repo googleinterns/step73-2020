@@ -130,6 +130,7 @@ public class UpdatePersonServlet extends HttpServlet {
       return;
     }
 
+    personToUpdate.setStorageHandler(storageHandler);
     personToUpdate.save();
 
     response.setContentType("application/json;");
