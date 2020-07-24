@@ -137,8 +137,9 @@ public class LeaveClubServletTest {
     leaveClubServlet.doPost(request, response);
 
     verify(response).sendError(
-        HttpServletResponse.SC_FORBIDDEN,
-        AuthenticationHelper.INVALID_ID_TOKEN_ERROR);
+        HttpServletResponse.SC_BAD_REQUEST,
+        String.format(leaveClubServlet.NO_FIELD_ERROR,
+                      leaveClubServlet.ID_TOKEN_FIELD_NAME));
   }
 
   @Test

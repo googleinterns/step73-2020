@@ -51,9 +51,7 @@ public class JoinClubServlet extends HttpServlet {
       "Body unable to be parsed in JoinClubServlet: ";
 
   /**
-   * Message to be logged when an invalid ID token is passed in or a valid ID token that is
-   * associated with a user who does not have the permissions to update the Club is passed in.
-   */
+   * Message to be logged when an invalid ID token is passed in. */
   public static final String LOG_SECURITY_MESSAGE =
       "Forbidden action attempted: ";
 
@@ -118,6 +116,9 @@ public class JoinClubServlet extends HttpServlet {
     try {
       Map clubAndUserInfo = gson.fromJson(request.getReader(), Map.class);
       String idToken = (String) clubAndUserInfo.get(ID_TOKEN_FIELD_NAME);
+      if (idToken == null) {
+        throw new IllegalArgumentException(String.format(NO_FIELD_ERROR, ID_TOKEN_FIELD_NAME));
+      }
       String userId = AuthenticationHelper.getUserIdFromIdToken(idToken, verifier);
       if (userId == null) {
         throw new IllegalArgumentException(String.format(NO_FIELD_ERROR, Person.USER_ID_FIELD_NAME));
