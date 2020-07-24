@@ -40,14 +40,14 @@ public class StorageHandlerHelper {
   * @param  clubId       the club ID string of the club we are checking the user is in
   * @return              the Boolean true or false representing if the membership exists or not
   */
-  public static Boolean checkMembership(ReadContext readContext, String userId, String clubId) {
+  public static Boolean checkAnyMembership(ReadContext readContext, String userId, String clubId) {
     Struct row =
           readContext
             .readRow(
               "Memberships",
               Key.of(userId, clubId),
               Arrays.asList("userId"));
-    return (row != null) ? true : false;
+    return (row != null);
   }
 
   /**
@@ -68,8 +68,7 @@ public class StorageHandlerHelper {
               "Memberships",
               Key.of(userId, clubId),
               Arrays.asList("membershipType"));
-    return ((row != null) && (row.getLong(/** index = **/0) == MembershipConstants.OWNER))
-            ? true : false;
+    return ((row != null) && (row.getLong(/** index = **/0) == MembershipConstants.OWNER));
   }
 
   /**

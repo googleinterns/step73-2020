@@ -48,22 +48,22 @@ public class StorageHandlerTest {
   }
 
   @Test
-  public void runAddMembershipOrOwnershipTransaction_member() throws Exception {
+  public void runAddAnyMembershipTypeTransaction_member() throws Exception {
     StorageHandlerTestHelper.insertPerson("person");
-    StorageHandler.runAddMembershipOrOwnershipTransaction(
+    StorageHandler.runAddAnyMembershipTypeTransaction(
       dbClient, "person", "club", MembershipConstants.MEMBER);
     ReadContext readContext = dbClient.singleUse();
-    Boolean actual = StorageHandlerHelper.checkMembership(readContext, "person", "club");
+    Boolean actual = StorageHandlerHelper.checkAnyMembership(readContext, "person", "club");
     assertTrue(actual);
   }
 
   @Test
-  public void runAddMembershipOrOwnershipTransaction_owner() throws Exception {
+  public void runAddAnyMembershipTypeTransaction_owner() throws Exception {
     StorageHandlerTestHelper.insertPerson("person");
-    StorageHandler.runAddMembershipOrOwnershipTransaction(
+    StorageHandler.runAddAnyMembershipTypeTransaction(
       dbClient, "person", "club", MembershipConstants.OWNER);
     ReadContext readContext = dbClient.singleUse();
-    Boolean actual = StorageHandlerHelper.checkMembership(readContext, "person", "club");
+    Boolean actual = StorageHandlerHelper.checkAnyMembership(readContext, "person", "club");
     assertTrue(actual);
   }
 
@@ -73,7 +73,7 @@ public class StorageHandlerTest {
     StorageHandlerTestHelper.insertMembership("person", "club", MembershipConstants.MEMBER);
     StorageHandler.runDeleteMembershipTransaction(dbClient, "person", "club");
     ReadContext readContext = dbClient.singleUse();
-    Boolean actual = StorageHandlerHelper.checkMembership(readContext, "person", "club");
+    Boolean actual = StorageHandlerHelper.checkAnyMembership(readContext, "person", "club");
     assertFalse(actual);
   }
 }

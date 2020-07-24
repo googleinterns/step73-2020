@@ -159,7 +159,7 @@ public class StorageHandler {
   * @param  clubId               the club ID string used to perform the transaction
   * @param  membershipLevel      the integer representing membership level (member or owner)
   */
-  public static void runAddMembershipOrOwnershipTransaction(DatabaseClient dbClient, String userId,
+  public static void runAddAnyMembershipTypeTransaction(DatabaseClient dbClient, String userId,
                                                             String clubId, int membershipLevel) {
     dbClient
         .readWriteTransaction()
@@ -167,10 +167,10 @@ public class StorageHandler {
           new TransactionCallable<Void>() {
             @Override
             public Void run(TransactionContext transaction) throws Exception {
-              Boolean exists = StorageHandlerHelper.checkMembership(transaction, userId, clubId);
+              Boolean exists = StorageHandlerHelper.checkAnyMembership(transaction, userId, clubId);
               if (!exists) {
                 transaction.buffer(
-                  StorageHandlerCommonMutations.addMembershipOrOwnershipMutation(
+                  StorageHandlerCommonMutations.addAnyMembershipTypeMutation(
                     userId, clubId, membershipLevel));
               } else {
                 throw new IllegalArgumentException(MembershipConstants.PERSON_ALREADY_IN_CLUB);
@@ -199,7 +199,7 @@ public class StorageHandler {
           new TransactionCallable<Void>() {
             @Override
             public Void run(TransactionContext transaction) throws Exception {
-              Boolean exists = StorageHandlerHelper.checkMembership(transaction, userId, clubId);
+              Boolean exists = StorageHandlerHelper.checkAnyMembership(transaction, userId, clubId);
               if (exists) {
                 transaction.buffer(StorageHandlerCommonMutations.deleteMembershipMutation(userId, clubId));
               } else {

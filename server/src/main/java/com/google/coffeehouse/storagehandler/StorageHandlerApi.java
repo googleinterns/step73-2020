@@ -70,7 +70,7 @@ public class StorageHandlerApi {
   * @param  clubId      the club ID string specifying the club a person is being added to
   */
   public void addMembership(String userId, String clubId) {
-    StorageHandler.runAddMembershipOrOwnershipTransaction(
+    StorageHandler.runAddAnyMembershipTypeTransaction(
       dbClient, userId, clubId, MembershipConstants.MEMBER);
   }
 
@@ -82,7 +82,7 @@ public class StorageHandlerApi {
   * @param  clubId      the club ID string specifying the club a person is being added to
   */
   public void addOwnership(String userId, String clubId) {
-    StorageHandler.runAddMembershipOrOwnershipTransaction(
+    StorageHandler.runAddAnyMembershipTypeTransaction(
       dbClient, userId, clubId, MembershipConstants.OWNER);
   }
 

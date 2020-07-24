@@ -33,7 +33,7 @@ public class StorageHandlerCommonMutations {
   * @param  membershipLevel      the integer representing membership level (member or owner)
   * @return                      the single mutation to add a membership
   */
-  public static Mutation addMembershipOrOwnershipMutation(String userId, String clubId,
+  public static Mutation addAnyMembershipTypeMutation(String userId, String clubId,
                                                           int membershipLevel) {
     return Mutation.newInsertBuilder("Memberships")
                    .set("userId")
