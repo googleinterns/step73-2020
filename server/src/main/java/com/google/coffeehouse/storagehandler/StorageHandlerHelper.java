@@ -69,7 +69,7 @@ public class StorageHandlerHelper {
               "Memberships",
               Key.of(userId, clubId),
               Arrays.asList("membershipType"));
-    return ((row != null) && (row.getLong(/** index = **/0) == MembershipConstants.OWNER));
+    return ((row != null) && (row.getLong(/** index= **/0) == MembershipConstants.OWNER));
   }
 
   /**
