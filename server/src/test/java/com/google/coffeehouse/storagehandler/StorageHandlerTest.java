@@ -62,7 +62,7 @@ public class StorageHandlerTest {
     StorageHandlerTestHelper.insertPersonWithPronouns("person");
     Person actual = StorageHandler.getPerson(dbClient, "person");
     Person expected = StorageHandlerTestHelper.createTestPersonObject(
-      "person", /* pronouns = */true);
+      "person", /* pronouns= */true);
     assertEquals(actual.getNickname(), expected.getNickname());
     assertEquals(actual.getEmail(), expected.getEmail());
     assertEquals(actual.getUserId(), expected.getUserId());
@@ -74,7 +74,7 @@ public class StorageHandlerTest {
     StorageHandlerTestHelper.insertPersonWithNullPronouns("personWithNullPronouns");
     Person actual = StorageHandler.getPerson(dbClient, "personWithNullPronouns");
     Person expected = StorageHandlerTestHelper.createTestPersonObject(
-      "personWithNullPronouns", /* pronouns = */false);
+      "personWithNullPronouns", /* pronouns= */false);
     assertEquals(actual.getNickname(), expected.getNickname());
     assertEquals(actual.getEmail(), expected.getEmail());
     assertEquals(actual.getUserId(), expected.getUserId());
@@ -94,8 +94,8 @@ public class StorageHandlerTest {
     Book actual = StorageHandler.getBook(dbClient, "book");
     Book expected = StorageHandlerTestHelper.createTestBookObject(
                                                 "book",
-                                                /* isbnExists = */true,
-                                                 /* authorExists = */true);
+                                                /* isbnExists= */true,
+                                                 /* authorExists= */true);
     assertEquals(actual.getTitle(), expected.getTitle());
     assertEquals(actual.getBookId(), expected.getBookId());
     assertEquals(actual.getAuthor(), expected.getAuthor());
@@ -108,8 +108,8 @@ public class StorageHandlerTest {
     Book actual = StorageHandler.getBook(dbClient, "bookNullIsbn");
     Book expected = StorageHandlerTestHelper.createTestBookObject(
                                                 "bookNullIsbn",
-                                                /* isbnExists = */false,
-                                                 /* authorExists = */true);
+                                                /* isbnExists= */false,
+                                                 /* authorExists= */true);
     assertEquals(actual.getTitle(), expected.getTitle());
     assertEquals(actual.getBookId(), expected.getBookId());
     assertEquals(actual.getAuthor(), expected.getAuthor());
@@ -122,8 +122,8 @@ public class StorageHandlerTest {
     Book actual = StorageHandler.getBook(dbClient, "bookNullAuthor");
     Book expected = StorageHandlerTestHelper.createTestBookObject(
                                                 "bookNullAuthor",
-                                                /* isbnExists = */true,
-                                                 /* authorExists = */false);
+                                                /* isbnExists= */true,
+                                                 /* authorExists= */false);
     assertEquals(actual.getTitle(), expected.getTitle());
     assertEquals(actual.getBookId(), expected.getBookId());
     assertEquals(actual.getIsbn(), expected.getIsbn());
@@ -136,8 +136,8 @@ public class StorageHandlerTest {
     Book actual = StorageHandler.getBook(dbClient, "bookNullAuthorNullIsbn");
     Book expected = StorageHandlerTestHelper.createTestBookObject(
                                                 "bookNullAuthorNullIsbn",
-                                                /* isbnExists = */false,
-                                                 /* authorExists = */false);
+                                                /* isbnExists= */false,
+                                                 /* authorExists= */false);
     assertEquals(actual.getTitle(), expected.getTitle());
     assertEquals(actual.getBookId(), expected.getBookId());
     assertFalse(actual.getAuthor().isPresent());
@@ -157,7 +157,7 @@ public class StorageHandlerTest {
     StorageHandlerTestHelper.insertClubWithContentWarnings("clubWithContentWarnings");
     Club actual = StorageHandler.getClub(dbClient, "clubWithContentWarnings");
     Club expected = StorageHandlerTestHelper.createTestClubObject(
-      "clubWithContentWarnings", /* contentWarnings = */true);
+      "clubWithContentWarnings", /* contentWarnings= */true);
     assertEquals(actual.getName(), expected.getName());
     assertEquals(actual.getOwnerId(), expected.getOwnerId());
     assertEquals(actual.getClubId(), expected.getClubId());
@@ -173,7 +173,7 @@ public class StorageHandlerTest {
     StorageHandlerTestHelper.insertClubWithNoContentWarnings("clubWithNoContentWarnings");
     Club actual = StorageHandler.getClub(dbClient, "clubWithNoContentWarnings");
     Club expected = StorageHandlerTestHelper.createTestClubObject(
-      "clubWithNoContentWarnings", /* contentWarnings = */false);
+      "clubWithNoContentWarnings", /* contentWarnings= */false);
     assertEquals(actual.getName(), expected.getName());
     assertEquals(actual.getOwnerId(), expected.getOwnerId());
     assertEquals(actual.getClubId(), expected.getClubId());

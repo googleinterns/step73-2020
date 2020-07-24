@@ -137,9 +137,9 @@ public class StorageHandler {
                                      .setClubId(clubId)
                                      .setDescription(row.getString(/* descriptionIndex= */ 2))
                                      .setOwnerId(row.getString(/* ownerIdIndex= */ 3));                       
-      if (!row.isNull(/* contentWarningIndex =*/ 4)) {
+      if (!row.isNull(/* contentWarningIndex=*/ 4)) {
         List<String> contentWarnings =
-            Arrays.asList(row.getString(/* contentWarningIndex =*/ 4).split("\\n"));
+            Arrays.asList(row.getString(/* contentWarningIndex=*/ 4).split("\\n"));
         clubBuilder.setContentWarnings(contentWarnings);
       }
       return clubBuilder.build();
