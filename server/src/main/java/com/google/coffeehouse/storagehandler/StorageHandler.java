@@ -136,10 +136,10 @@ public class StorageHandler {
                                      .setName(row.getString(/* nameIndex= */ 1))
                                      .setClubId(clubId)
                                      .setDescription(row.getString(/* descriptionIndex= */ 2))
-                                     .setOwnerId(row.getString(/* ownerIdIndex= */ 3));
-      if (!row.isNull(/* contentWarningIndex =*/ 4)) {
+                                     .setOwnerId(row.getString(/* ownerIdIndex= */ 3));                       
+      if (!row.isNull(/* contentWarningIndex=*/ 4)) {
         List<String> contentWarnings =
-            Arrays.asList(row.getString(/* contentWarningIndex =*/ 4).split("\\n"));
+            Arrays.asList(row.getString(/* contentWarningIndex=*/ 4).split("\\n"));
         clubBuilder.setContentWarnings(contentWarnings);
       }
       return clubBuilder.build();
@@ -149,26 +149,32 @@ public class StorageHandler {
   }
 
   /**
-  * Runs a transaction that adds a membership to the database.
+  * Runs a transaction that adds a membership or ownership to the database.
   * This method checks if a person is already a member of a club by calling a helper function.
   * If the person does not exist, this method will buffer a single mutation that adds
-  * the membership. Otherwise, it will throw an exception indicating that the person
-  * is already a member of the club.
+  * the membership (or owner). Otherwise, it will throw an exception indicating that the person
+  * is already a member of the club. If a person is already a member of a club, and is trying to
+  * become an owner, it will throw an RuntimeException because only one unique key of
+  * (userId, clubId) can exist in the database Memberships table at a time. 
   *
-  * @param  dbClient    the database client
-  * @param  userId      the user ID string used to perform the transaction
-  * @param  clubId      the club ID string used to perform the transaction
+  * @param  dbClient             the database client
+  * @param  userId               the user ID string used to perform the transaction
+  * @param  clubId               the club ID string used to perform the transaction
+  * @param  membershipLevel      the integer representing membership level (member or owner)
   */
-  public static void runAddMembershipTransaction(DatabaseClient dbClient, String userId, String clubId) {
+  public static void runAddAnyMembershipTypeTransaction(DatabaseClient dbClient, String userId,
+                                                            String clubId, int membershipLevel) {
     dbClient
         .readWriteTransaction()
         .run(
           new TransactionCallable<Void>() {
             @Override
             public Void run(TransactionContext transaction) throws Exception {
-              Boolean exists = StorageHandlerHelper.checkMembership(transaction, userId, clubId);
+              Boolean exists = StorageHandlerHelper.checkAnyMembership(transaction, userId, clubId);
               if (!exists) {
-                transaction.buffer(StorageHandlerCommonMutations.addMembershipMutation(userId, clubId));
+                transaction.buffer(
+                  StorageHandlerCommonMutations.addAnyMembershipTypeMutation(
+                    userId, clubId, membershipLevel));
               } else {
                 throw new IllegalArgumentException(MembershipConstants.PERSON_ALREADY_IN_CLUB);
               }
@@ -179,7 +185,7 @@ public class StorageHandler {
   }
 
   /**
-  * Runs a transaction that deletes a membership from the database.
+  * Runs a transaction that deletes a membership (or ownership) from the database.
   * This method checks if a person is already a member of a club by calling a helper function.
   * If the person does exist, this method will buffer a single mutation that deletes the
   * membership. Otherwise, it will throw an exception indicating that the person is
@@ -196,7 +202,7 @@ public class StorageHandler {
           new TransactionCallable<Void>() {
             @Override
             public Void run(TransactionContext transaction) throws Exception {
-              Boolean exists = StorageHandlerHelper.checkMembership(transaction, userId, clubId);
+              Boolean exists = StorageHandlerHelper.checkAnyMembership(transaction, userId, clubId);
               if (exists) {
                 transaction.buffer(StorageHandlerCommonMutations.deleteMembershipMutation(userId, clubId));
               } else {

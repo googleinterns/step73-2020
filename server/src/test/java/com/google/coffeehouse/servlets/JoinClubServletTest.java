@@ -136,8 +136,9 @@ public class JoinClubServletTest {
     joinClubServlet.doPost(request, response);
 
     verify(response).sendError(
-        HttpServletResponse.SC_FORBIDDEN,
-        AuthenticationHelper.INVALID_ID_TOKEN_ERROR);
+        HttpServletResponse.SC_BAD_REQUEST,
+        String.format(joinClubServlet.NO_FIELD_ERROR,
+                      joinClubServlet.ID_TOKEN_FIELD_NAME));
   }
 
   @Test

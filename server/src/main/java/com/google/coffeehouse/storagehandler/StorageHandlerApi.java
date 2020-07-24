@@ -65,14 +65,28 @@ public class StorageHandlerApi {
 
   /**
   * Adds a membership to the database.
-  * This method calls a transacation that adds a membership to the table.
+  * This method calls a transacation that adds a membership to the Memberships table.
   *
   * @param  userId      the user ID string specifying the person who is being added as a member
   * @param  clubId      the club ID string specifying the club a person is being added to
   */
   public void addMembership(String userId, String clubId) {
-    StorageHandler.runAddMembershipTransaction(dbClient, userId, clubId);
+    StorageHandler.runAddAnyMembershipTypeTransaction(
+      dbClient, userId, clubId, MembershipConstants.MEMBER);
   }
+
+  /**
+  * Adds an ownership to the database.
+  * This method calls a transacation that adds an ownership to the Memberships table.
+  *
+  * @param  userId      the user ID string specifying the person who is being added as a member
+  * @param  clubId      the club ID string specifying the club a person is being added to
+  */
+  public void addOwnership(String userId, String clubId) {
+    StorageHandler.runAddAnyMembershipTypeTransaction(
+      dbClient, userId, clubId, MembershipConstants.OWNER);
+  }
+
 
   /**
   * Deletes a membership from the database.

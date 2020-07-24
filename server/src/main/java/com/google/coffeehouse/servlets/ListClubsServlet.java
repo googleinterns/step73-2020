@@ -21,14 +21,12 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.coffeehouse.common.Club;
-import com.google.coffeehouse.common.Person;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.coffeehouse.storagehandler.StorageHandler;
 import com.google.coffeehouse.util.AuthenticationHelper;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Map;
 import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -44,35 +42,28 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/api/list-clubs")
 public class ListClubsServlet extends HttpServlet {
-  /**
-   * The error string sent by the response object in doGet when the body of the 
-   * GET request cannot be be parsed.
-   */
-  public static final String BODY_ERROR = "- unable to parse body.";
-  /** The logged error string when an error parsing the body of the GET request is encountered. */
-  public static final String LOG_BODY_ERROR_MESSAGE =
-      "Body unable to be parsed in ListClubsServlet: ";
-  /** Message to be logged when the body of the GET request does not have required fields. */
-  public static final String LOG_INPUT_ERROR_MESSAGE =
-      "Error with JSON input in ListClubsServlet: No \"%s\" found in JSON.";
+  /** Message to be logged when the GET request does not have a required URL parameter. */
+  public static final String LOG_INPUT_ERROR_MESSAGE = "No \"%s\" parameter found.";
   /**
    * Message to be logged when an invalid ID token is passed in or a no ID token is passed in.
    */
   public static final String LOG_SECURITY_MESSAGE = "Forbidden action attempted: ";
-  /** Name of the key in the input JSON that corresponds to the ID token. */
-  public static final String ID_TOKEN_FIELD_NAME = "idToken";
+  /** Message to be logged when a non-security related exception is thrown in the servlet. */
+  public static final String GENERAL_LOG_ERROR = "Exception encountered in ListClubsServlet: ";
+  /** Name of the URL parameter that corresponds to the ID token. */
+  public static final String ID_TOKEN_PARAMETER = "idToken";
   /**
-   * Name of the key in the input JSON that corresponds to if we are searching for clubs the user
+   * Name of the URL parameter that corresponds to if we are searching for clubs the user
    * is a member of, or clubs that the user is not a member of.
    */
-  public static final String MEMBERSHIP_STATUS_FIELD_NAME = "membershipStatus";
+  public static final String MEMBERSHIP_STATUS_PARAMETER = "membershipStatus";
   /**
-   * A possible value for the MEMBERSHIP_STATUS_FIELD_NAME key that means we are searching for
+   * A possible value for the MEMBERSHIP_STATUS_PARAMETER that means we are searching for
    * clubs that the user is a member of.
    */
   public static final String MEMBER = "member";
   /**
-   * A possible value for the MEMBERSHIP_STATUS_FIELD_NAME key that means we are searching for
+   * A possible value for the MEMBERSHIP_STATUS_PARAMETER that means we are searching for
    * clubs that the user is not a member of.
    */
   public static final String NOT_MEMBER = "not member";
@@ -105,20 +96,17 @@ public class ListClubsServlet extends HttpServlet {
 
   /**
    * Responds with a JSON list of {@link Club} objects that a user is either a member of or not.
-   * @param request the GET request that must have the {@code "idToken"} of the user who wants
-   *     a list of clubs that they are in (or not in) back. It must also have a
-   *     {@code "membershipStatus"} key which is mapped to either "member" or "not member". This
-   *     key determines if we return a list of clubs where the user is a member, or not a member.
-   *     If the required "membershipStatus" field does not exist, the response object
-   *     will send a "400 Bad Request error". If the JSON body is not valid, and unable to be
-   *     parsed, the response object will send a "500 Internal Server error". If the "idToken"
-   *     field is missing or invalid, the response object will send a "403 Forbidden error"
+   * @param request the GET request that must have a {@code "idToken"} URL parameter corresponding
+   *     to the user's OpenID ID token. The request must also have a {@code "membershipStatus"}
+   *     URL parameter, which is mapped to either "member" or "not member". This key determines if
+   *     we return a list of clubs where the user is a member, or not a member. If the required
+   *     "membershipStatus" parameter does not exist, the response object will send a
+   *     "400 Bad Request error". If the "idToken" parameter is missing or invalid, the response
+   *     object will send a "403 Forbidden error"
    * @param response the response from this method, will contain the list of Clubs in JSON format.
-   *     If the required "membershipStatus" field does not exist in the request
-   *     object, this object will send a "400 Bad Request error". If the JSON body is not valid,
-   *     and unable to be parsed, this object will send a "500 Internal Server error". If the
-   *     "idToken" field is missing or invalid, the response object will send a
-   *     "403 Forbidden error"
+   *     If the required "membershipStatus" parameter does not exist, this object will send a
+   *     "400 Bad Request error". If the "idToken" parameter is missing or invalid, this object
+   *     will send a "403 Forbidden error"
    * @throws IOException if an input or output error is detected when the servlet handles the request
    */
   @Override
@@ -126,14 +114,13 @@ public class ListClubsServlet extends HttpServlet {
     List<Club> clubs;
     try {
       // Get the userId after validating the user's ID token.
-      Map requestInfo = gson.fromJson(request.getReader(), Map.class);
-      String idToken = (String) requestInfo.get(ID_TOKEN_FIELD_NAME);
+      String idToken = request.getParameter(ID_TOKEN_PARAMETER);
       String userId = AuthenticationHelper.getUserIdFromIdToken(idToken, verifier);
 
-      String status = (String) requestInfo.get(MEMBERSHIP_STATUS_FIELD_NAME);
+      String status = request.getParameter(MEMBERSHIP_STATUS_PARAMETER);
       if (status == null || !(status.equals(MEMBER) || status.equals(NOT_MEMBER))) {
         throw new IllegalArgumentException(
-            String.format(LOG_INPUT_ERROR_MESSAGE, MEMBERSHIP_STATUS_FIELD_NAME));
+            String.format(LOG_INPUT_ERROR_MESSAGE, MEMBERSHIP_STATUS_PARAMETER));
       }
 
       MembershipStatus membershipStatus = status.equals(MEMBER)
@@ -141,17 +128,13 @@ public class ListClubsServlet extends HttpServlet {
           : MembershipStatus.NOT_MEMBER;
       
       clubs = storageHandler.listClubsFromUserId(userId, membershipStatus);
-    } catch (IllegalArgumentException e) {
-      System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());
-      response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-      return;
     } catch (GeneralSecurityException e) {
       System.out.println(LOG_SECURITY_MESSAGE + e.getMessage());
       response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
       return;
     } catch (Exception e) {
-      System.out.println(LOG_BODY_ERROR_MESSAGE + e.getMessage());
-      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, BODY_ERROR);
+      System.out.println(GENERAL_LOG_ERROR + e.getMessage());
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
       return;
     }
     response.setContentType("application/json;");

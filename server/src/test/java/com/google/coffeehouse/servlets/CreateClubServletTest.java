@@ -102,6 +102,7 @@ public class CreateClubServletTest {
 
     handler = spy(StorageHandlerApi.class);
     doNothing().when(handler).writeMutations(anyList());
+    doNothing().when(handler).addOwnership(anyString(), anyString());
 
     IdentifierGenerator idGen = mock(IdentifierGenerator.class);
     when(idGen.generateId()).thenReturn(CLUB_ID);
@@ -130,6 +131,7 @@ public class CreateClubServletTest {
 
     assertEquals(NAME, c.getName());
     assertEquals(CLUB_ID, c.getClubId());
+    assertEquals(OWNER_ID, c.getOwnerId());
     assertEquals(new ArrayList<String>(), c.getContentWarnings());
     assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
     assertEquals(CLUB_ID, c.getCurrentBook().getBookId());
@@ -150,6 +152,31 @@ public class CreateClubServletTest {
 
     assertEquals(NAME, c.getName());
     assertEquals(CLUB_ID, c.getClubId());
+    assertEquals(OWNER_ID, c.getOwnerId());
+    assertEquals(testContentWarnings, c.getContentWarnings());
+    assertEquals(DESCRIPTION, c.getDescription());
+    assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
+    assertEquals(CLUB_ID, c.getCurrentBook().getBookId());
+    assertTrue(c.getCurrentBook().getAuthor().isPresent());
+    assertEquals(BOOK_AUTHOR, c.getCurrentBook().getAuthor().get());
+    assertTrue(c.getCurrentBook().getIsbn().isPresent());
+    assertEquals(BOOK_ISBN, c.getCurrentBook().getIsbn().get());
+  }
+
+  @Test
+  public void doPost_maximumValidInput() throws IOException {
+    when(request.getReader()).thenReturn(
+          new BufferedReader(new StringReader(MAXIMUM_JSON)));
+
+    CreateClubServlet.doPost(request, response);
+    String result = stringWriter.toString();
+
+    Gson gson = new Gson();
+    Club c = gson.fromJson(result, Club.class);
+
+    assertEquals(NAME, c.getName());
+    assertEquals(CLUB_ID, c.getClubId());
+    assertEquals(OWNER_ID, c.getOwnerId());
     assertEquals(testContentWarnings, c.getContentWarnings());
     assertEquals(DESCRIPTION, c.getDescription());
     assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());

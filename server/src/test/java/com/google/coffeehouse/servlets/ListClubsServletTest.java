@@ -31,10 +31,8 @@ import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.coffeehouse.storagehandler.StorageHandler;
 import com.google.coffeehouse.util.AuthenticationHelper;
 import com.google.gson.Gson;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -71,30 +69,6 @@ public class ListClubsServletTest {
                               .setDescription(DESCRIPTION)
                               .setContentWarnings(testContentWarnings)
                               .build();
-  private static final String VALID_JSON_MEMBER = String.join("\n",
-      "{",
-      "  \"" + UpdateClubServlet.ID_TOKEN_FIELD_NAME + "\" : \"" + ID_TOKEN + "\",",
-      "  \"" + ListClubsServlet.MEMBERSHIP_STATUS_FIELD_NAME + "\" : \"" 
-             + ListClubsServlet.MEMBER + "\"",
-      "}");
-  private static final String VALID_JSON_NOT_MEMBER = String.join("\n",
-      "{",
-      "  \"" + UpdateClubServlet.ID_TOKEN_FIELD_NAME + "\" : \"" + ID_TOKEN + "\",",
-      "  \"" + ListClubsServlet.MEMBERSHIP_STATUS_FIELD_NAME + "\" : \"" 
-             + ListClubsServlet.NOT_MEMBER + "\"",
-      "}");
-  private static final String NO_MEMBERSHIP_STATUS = String.join("\n",
-      "{",
-      "  \"" + UpdateClubServlet.ID_TOKEN_FIELD_NAME + "\" : \"" + ID_TOKEN + "\"",
-      "}");
-  private static final String NO_ID_TOKEN = String.join("\n",
-      "{",
-      "  \"" + ListClubsServlet.MEMBERSHIP_STATUS_FIELD_NAME + "\" : \"" 
-             + ListClubsServlet.NOT_MEMBER + "\"",
-      "}");
-  private static final String SYNTACTICALLY_INCORRECT_JSON =
-      "{\"" + UpdateClubServlet.ID_TOKEN_FIELD_NAME + "\"";
-
   private ListClubsServlet listClubsServlet;
   private final LocalServiceTestHelper helper = new LocalServiceTestHelper();
   private StringWriter stringWriter = new StringWriter();
@@ -145,8 +119,9 @@ public class ListClubsServletTest {
   @Test
   public void doGet_validInputMember() throws IOException {
     listClubsServlet = new ListClubsServlet(verifier, memberHandler);
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(VALID_JSON_MEMBER)));
+    when(request.getParameter(eq(ListClubsServlet.ID_TOKEN_PARAMETER))).thenReturn(ID_TOKEN);
+    when(request.getParameter(eq(ListClubsServlet.MEMBERSHIP_STATUS_PARAMETER)))
+        .thenReturn(ListClubsServlet.MEMBER);
 
     listClubsServlet.doGet(request, response);
     String result = stringWriter.toString();
@@ -168,8 +143,9 @@ public class ListClubsServletTest {
   @Test
   public void doGet_validInputNotMember() throws IOException {
     listClubsServlet = new ListClubsServlet(verifier, notMemberHandler);
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(VALID_JSON_NOT_MEMBER)));
+    when(request.getParameter(eq(ListClubsServlet.ID_TOKEN_PARAMETER))).thenReturn(ID_TOKEN);
+    when(request.getParameter(eq(ListClubsServlet.MEMBERSHIP_STATUS_PARAMETER)))
+        .thenReturn(ListClubsServlet.NOT_MEMBER);
 
     listClubsServlet.doGet(request, response);
     String result = stringWriter.toString();
@@ -191,20 +167,21 @@ public class ListClubsServletTest {
   @Test
   public void doGet_noMembershipStatus() throws IOException {
     listClubsServlet = new ListClubsServlet(verifier, memberHandler);
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(NO_MEMBERSHIP_STATUS)));
+    when(request.getParameter(eq(ListClubsServlet.ID_TOKEN_PARAMETER))).thenReturn(ID_TOKEN);
+    
     listClubsServlet.doGet(request, response);
 
     verify(response).sendError(HttpServletResponse.SC_BAD_REQUEST,
         String.format(ListClubsServlet.LOG_INPUT_ERROR_MESSAGE,
-                      ListClubsServlet.MEMBERSHIP_STATUS_FIELD_NAME));
+                      ListClubsServlet.MEMBERSHIP_STATUS_PARAMETER));
   }
 
   @Test
   public void doGet_noIdToken() throws IOException {
     listClubsServlet = new ListClubsServlet(verifier, memberHandler);
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(NO_ID_TOKEN)));
+    when(request.getParameter(eq(ListClubsServlet.MEMBERSHIP_STATUS_PARAMETER)))
+        .thenReturn(ListClubsServlet.NOT_MEMBER);
+    
     listClubsServlet.doGet(request, response);
 
     verify(response).sendError(
@@ -213,22 +190,11 @@ public class ListClubsServletTest {
   }
 
   @Test
-  public void doGet_syntacticallyIncorrectInput() throws IOException {
-    listClubsServlet = new ListClubsServlet(verifier, memberHandler);
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(SYNTACTICALLY_INCORRECT_JSON)));
-    listClubsServlet.doGet(request, response);
-
-    verify(response).sendError(
-        HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-        ListClubsServlet.BODY_ERROR);
-  }
-
-  @Test
   public void doGet_failVerification() throws IOException {
     listClubsServlet = new ListClubsServlet(nullVerifier, memberHandler);
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(VALID_JSON_MEMBER)));
+    when(request.getParameter(eq(ListClubsServlet.ID_TOKEN_PARAMETER))).thenReturn(ID_TOKEN);
+    when(request.getParameter(eq(ListClubsServlet.MEMBERSHIP_STATUS_PARAMETER)))
+        .thenReturn(ListClubsServlet.NOT_MEMBER);
 
     listClubsServlet.doGet(request, response);
 

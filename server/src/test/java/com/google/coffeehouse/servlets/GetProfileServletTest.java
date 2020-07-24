@@ -22,16 +22,22 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.coffeehouse.common.Person;
+import com.google.coffeehouse.servlets.GetProfileServlet;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.coffeehouse.storagehandler.StorageHandler;
+import com.google.coffeehouse.util.AuthenticationHelper;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.security.GeneralSecurityException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.After;
@@ -49,17 +55,7 @@ public class GetProfileServletTest {
   private static final String EMAIL = "email@test.com";
   private static final String NICKNAME = "test";
   private static final String PRONOUNS = "they";
-  private static final String JSON = String.join("\n",
-      "{",
-      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"" + USER_ID + "\"",
-      "}");
-  private static final String NO_USER_ID_JSON = "{}";
-  private static final String PROFILE_NOT_FOUND_JSON = String.join("\n",
-      "{",
-      "  \"" + Person.USER_ID_FIELD_NAME + "\" : \"\"",
-      "}");
-  private static final String SYNTACTICALLY_INCORRECT_JSON = "{\"" + Person.USER_ID_FIELD_NAME + "\"";
-
+  private static final String ID_TOKEN = "Identification Token";
   private Person testPerson = Person.newBuilder()
                                     .setEmail(EMAIL)
                                     .setNickname(NICKNAME)
@@ -75,24 +71,38 @@ public class GetProfileServletTest {
   @Mock private HttpServletResponse response;
   @Mock private StorageHandlerApi successfulHandler;
   @Mock private StorageHandlerApi failingHandler;
+  @Mock private GoogleIdTokenVerifier correctVerifier;
+  @Mock private GoogleIdTokenVerifier nullVerifier;
+  @Mock private GoogleIdToken correctIdToken;
+  @Mock private Payload correctPayload;
   
   @Before
-  public void setUp() throws IOException {
+  public void setUp() throws IOException, GeneralSecurityException {
     helper.setUp();
 
     successfulHandler = mock(StorageHandlerApi.class);
     when(successfulHandler.fetchPersonFromId(anyString())).thenReturn(testPerson);
-    getProfileServlet = new GetProfileServlet(successfulHandler);
 
     failingHandler = mock(StorageHandlerApi.class);
     when(failingHandler.fetchPersonFromId(anyString()))
                        .thenThrow(new IllegalArgumentException(
                                       StorageHandler.PERSON_DOES_NOT_EXIST));
-    failingGetProfileServlet = new GetProfileServlet(failingHandler);
 
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
     when(response.getWriter()).thenReturn(new PrintWriter(stringWriter));
+
+    // Verification setup that successfully verifies and gives correct userId.
+    correctPayload = mock(Payload.class);
+    when(correctPayload.getSubject()).thenReturn(USER_ID);
+    correctIdToken = mock(GoogleIdToken.class);
+    when(correctIdToken.getPayload()).thenReturn(correctPayload);
+    correctVerifier = mock(GoogleIdTokenVerifier.class);
+    when(correctVerifier.verify(anyString())).thenReturn(correctIdToken);
+
+    // Verification setup that does not successfully verify.
+    nullVerifier = mock(GoogleIdTokenVerifier.class);
+    when(nullVerifier.verify(anyString())).thenReturn(null);
   }
 
   @After
@@ -102,8 +112,9 @@ public class GetProfileServletTest {
 
   @Test
   public void doGet_validInput() throws IOException {
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(JSON)));
+    when(request.getParameter(eq(GetProfileServlet.ID_TOKEN_PARAMETER)))
+        .thenReturn(ID_TOKEN);
+    getProfileServlet = new GetProfileServlet(correctVerifier, successfulHandler);
 
     getProfileServlet.doGet(request, response);
     String result = stringWriter.toString();
@@ -118,20 +129,22 @@ public class GetProfileServletTest {
   }
 
   @Test
-  public void doGet_noUserId() throws IOException {
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(NO_USER_ID_JSON)));
+  public void doGet_noIdToken() throws IOException {
+    when(request.getParameter(eq(GetProfileServlet.ID_TOKEN_PARAMETER)))
+        .thenReturn(null);
+    getProfileServlet = new GetProfileServlet(correctVerifier, successfulHandler);
     getProfileServlet.doGet(request, response);
     
     verify(response).sendError(
         HttpServletResponse.SC_BAD_REQUEST,
-        GetProfileServlet.LOG_INPUT_ERROR_MESSAGE);
+        String.format(getProfileServlet.NO_FIELD_ERROR, getProfileServlet.ID_TOKEN_PARAMETER));
   }
 
   @Test
   public void doGet_noProfileFound() throws IOException {
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(PROFILE_NOT_FOUND_JSON)));
+    when(request.getParameter(eq(GetProfileServlet.ID_TOKEN_PARAMETER)))
+        .thenReturn(ID_TOKEN);
+    failingGetProfileServlet = new GetProfileServlet(correctVerifier, failingHandler);
     failingGetProfileServlet.doGet(request, response);
     
     verify(response).sendError(
@@ -140,13 +153,13 @@ public class GetProfileServletTest {
   }
 
   @Test
-  public void doGet_syntacticallyIncorrectInput() throws IOException {
-    when(request.getReader()).thenReturn(
-          new BufferedReader(new StringReader(SYNTACTICALLY_INCORRECT_JSON)));
+  public void doGet_failVerification() throws IOException {
+    when(request.getParameter(eq(GetProfileServlet.ID_TOKEN_PARAMETER)))
+        .thenReturn(ID_TOKEN);
+    getProfileServlet = new GetProfileServlet(nullVerifier, successfulHandler);
     getProfileServlet.doGet(request, response);
-    
+
     verify(response).sendError(
-        HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-        GetProfileServlet.BODY_ERROR);
+        HttpServletResponse.SC_FORBIDDEN, AuthenticationHelper.INVALID_ID_TOKEN_ERROR);
   }
 }
