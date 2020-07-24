@@ -110,7 +110,6 @@ public class CreateClubServlet extends HttpServlet {
       return;
     }
     
-    newClub.getCurrentBook().setStorageHandler(handler);
     newClub.setStorageHandler(handler);
     newClub.save();
 

@@ -149,6 +149,7 @@ public class Club implements Saveable {
 
   @Override
   public void save() {
+    currentBook.setStorageHandler(handler);
     currentBook.save();
 
     List<Mutation> mutations = new ArrayList<>();
