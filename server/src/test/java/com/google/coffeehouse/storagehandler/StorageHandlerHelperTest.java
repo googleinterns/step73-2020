@@ -46,16 +46,6 @@ public class StorageHandlerHelperTest {
   }
 
   @Test
-  public void checkAnyMembership_memberFailsToBecomeOwner() throws Exception {
-    StorageHandlerTestHelper.insertPerson("person");
-    StorageHandlerTestHelper.insertClubWithContentWarnings("club");
-    StorageHandlerTestHelper.insertMembership("person", "club", MembershipConstants.MEMBER);
-    assertThrows(RuntimeException.class, () -> {
-      StorageHandlerTestHelper.insertMembership("person", "club", MembershipConstants.OWNER);;
-    });
-  }
-
-  @Test
   public void checkAnyMembership_personNotInClub() throws Exception {
     StorageHandlerTestHelper.insertClubWithContentWarnings("club");
     ReadContext readContext = dbClient.singleUse();

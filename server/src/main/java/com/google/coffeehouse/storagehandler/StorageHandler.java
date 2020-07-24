@@ -153,9 +153,7 @@ public class StorageHandler {
   * This method checks if a person is already a member of a club by calling a helper function.
   * If the person does not exist, this method will buffer a single mutation that adds
   * the membership (or owner). Otherwise, it will throw an exception indicating that the person
-  * is already a member of the club. If a person is already a member of a club, and is trying to
-  * become an owner, it will throw an RuntimeException because only one unique key of
-  * (userId, clubId) can exist in the database Memberships table at a time. 
+  * is already a member of the club.
   *
   * @param  dbClient             the database client
   * @param  userId               the user ID string used to perform the transaction
