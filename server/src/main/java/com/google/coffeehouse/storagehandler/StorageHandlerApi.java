@@ -97,10 +97,10 @@ public class StorageHandlerApi {
   }
 
   /**
-  * Writes a list of mutations to the database.
-  *
-  * @param  mutations     the List of Mutations to be written to the database
-  */
+   * Writes a list of mutations to the database.
+   *
+   * @param  mutations   the List of Mutations to be written to the database
+   */
   public void writeMutations(List<Mutation> mutations) {
     dbClient.write(mutations);
   }
