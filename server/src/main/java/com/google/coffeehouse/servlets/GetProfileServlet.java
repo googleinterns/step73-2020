@@ -117,6 +117,9 @@ public class GetProfileServlet extends HttpServlet {
     try {
       Map userInfo = gson.fromJson(request.getReader(), Map.class);
       String idToken = (String) userInfo.get(ID_TOKEN_FIELD_NAME);
+      if (idToken == null) {
+        throw new IllegalArgumentException(String.format(NO_FIELD_ERROR, ID_TOKEN_FIELD_NAME));
+      }
       String userId = AuthenticationHelper.getUserIdFromIdToken(idToken, verifier);
       if (userId == null) {
         throw new IllegalArgumentException(String.format(NO_FIELD_ERROR, Person.USER_ID_FIELD_NAME));
