@@ -163,7 +163,7 @@ public class CreateClubServletTest {
   }
 
   @Test
-  public void doPost_addOwnershipWithMaximumValidInput() throws IOException {
+  public void doPost_maximumValidInput() throws IOException {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(MAXIMUM_JSON)));
 
