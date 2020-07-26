@@ -31,7 +31,7 @@ export class FailureToCreatePersonError extends Error {
 }
 
 /**
- * Communicated with backend to retrieve, update, and create profiles.
+ * Communicates with backend to retrieve, update, and create profiles.
  */
 export class ProfileHandlerService {
   /** Backend is responsible for holding all profile information. */
