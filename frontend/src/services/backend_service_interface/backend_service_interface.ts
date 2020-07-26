@@ -1,18 +1,19 @@
 export interface PersonInterface {
-  userId: string,
+  userId?: string,
   nickname: string,
   email: string,
   pronouns?: string,
 }
 
 export interface BookInterface {
-  bookId: string,
+  bookId?: string,
   title: string,
   author: string,
   isbn?: string,
 }
 
 export interface ClubInterface {
+  name: string,
   clubId: string,
   ownerId: string,
   contentWarnings: string[],
@@ -28,12 +29,13 @@ export interface BackendProfileServiceInterface {
 }
 
 export interface BackendYourClubsServiceInterface {
-  createClub(ClubInterface: string): Promise<ClubInterface>,
+  createClub(club: ClubInterface): Promise<ClubInterface>,
   listClubs(
     token: string,
     membership: "member" | "not member"): Promise<ClubInterface[]>,
-  leaveClub(clubId: string, token: string): Promise<boolean>,
-  joinClub(clubId: string, token: string): Promise<boolean>,
+  leaveClub(clubId: string, token: string): Promise<number>,
+  joinClub(clubId: string, token: string): Promise<number>,
+  getClub(clubId: string): Promise<ClubInterface>,
 }
 
 export interface BackendAuthenticationInterface {
