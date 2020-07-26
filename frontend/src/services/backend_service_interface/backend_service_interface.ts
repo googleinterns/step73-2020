@@ -1,7 +1,30 @@
+export interface PersonInterface {
+  userId: string,
+  nickname: string,
+  email: string,
+  pronouns?: string,
+}
+
+export interface IBook {
+  bookId: string,
+  title: string,
+  author: string,
+  isbn?: string,
+}
+
+export interface IClub {
+  clubId: string,
+  ownerId: string,
+  contentWarnings: string[],
+  description: string,
+  currentBook: IBook,
+}
+
 export interface BackendProfileServiceInterface {
-  loadProfile(id: string): Promise<string>,
-  updateProfile(personJson: string): Promise<boolean>,
-  deleteProfile(id: string): Promise<boolean>,
+  createPerson(person: PersonInterface): Promise<PersonInterface>,
+  loadProfile(token: string): Promise<PersonInterface>,
+  updateProfile(
+      person: PersonInterface, token: string): Promise<PersonInterface>,
 }
 
 export interface BackendYourClubsServiceInterface {
