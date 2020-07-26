@@ -23,6 +23,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.coffeehouse.common.Person;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.coffeehouse.util.AuthenticationHelper;
+import com.google.coffeehouse.util.TokenVerifier;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
@@ -75,7 +76,7 @@ public class UpdatePersonServlet extends HttpServlet {
   private static final Gson gson = new Gson();
   private static final HttpTransport transport = new NetHttpTransport();
   private static final GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
-  private final GoogleIdTokenVerifier verifier;
+  private final TokenVerifier verifier;
   private final StorageHandlerApi storageHandler;
 
   /** 
@@ -83,7 +84,7 @@ public class UpdatePersonServlet extends HttpServlet {
    * @param verifier the class that verifies the validity of the ID token
    * @param storageHandler the {@link StorageHandlerApi} that is used when fetching the Person
    */
-  public UpdatePersonServlet(GoogleIdTokenVerifier verifier, StorageHandlerApi storageHandler) {
+  public UpdatePersonServlet(TokenVerifier verifier, StorageHandlerApi storageHandler) {
     super();
     this.storageHandler = storageHandler;
     this.verifier = verifier;
@@ -95,7 +96,7 @@ public class UpdatePersonServlet extends HttpServlet {
   public UpdatePersonServlet() {
     super();
     this.storageHandler = new StorageHandlerApi();
-    this.verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory).build();
+    this.verifier = new TokenVerifier();
   }
 
   /** 

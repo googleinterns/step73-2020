@@ -16,7 +16,6 @@ package com.google.coffeehouse.servlets;
 
 import static com.google.coffeehouse.common.MembershipConstants.MembershipStatus;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
@@ -24,6 +23,7 @@ import com.google.coffeehouse.common.Club;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.coffeehouse.storagehandler.StorageHandler;
 import com.google.coffeehouse.util.AuthenticationHelper;
+import com.google.coffeehouse.util.TokenVerifier;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -71,7 +71,7 @@ public class ListClubsServlet extends HttpServlet {
   private static final Gson gson = new Gson();
   private static final HttpTransport transport = new NetHttpTransport();
   private static final GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
-  private final GoogleIdTokenVerifier verifier;
+  private final TokenVerifier verifier;
   private final StorageHandlerApi storageHandler;
 
   /** 
@@ -79,7 +79,7 @@ public class ListClubsServlet extends HttpServlet {
    * @param verifier the class that verifies the validity of the ID token
    * @param storageHandler the {@link StorageHandlerApi} that is used when fetching the Clubs
    */
-  public ListClubsServlet(GoogleIdTokenVerifier verifier, StorageHandlerApi storageHandler) {
+  public ListClubsServlet(TokenVerifier verifier, StorageHandlerApi storageHandler) {
     super();
     this.storageHandler = storageHandler;
     this.verifier = verifier;
@@ -91,7 +91,7 @@ public class ListClubsServlet extends HttpServlet {
   public ListClubsServlet() {
     super();
     this.storageHandler = new StorageHandlerApi();
-    this.verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory).build();
+    this.verifier = new TokenVerifier();
   }
 
   /**

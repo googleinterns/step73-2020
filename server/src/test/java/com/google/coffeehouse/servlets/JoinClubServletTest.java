@@ -25,13 +25,13 @@ import static org.mockito.Mockito.verify;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.coffeehouse.common.Club;
 import com.google.coffeehouse.common.MembershipConstants;
 import com.google.coffeehouse.servlets.JoinClubServlet;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.coffeehouse.util.AuthenticationHelper;
+import com.google.coffeehouse.util.TokenVerifier;
 import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -79,10 +79,8 @@ public class JoinClubServletTest {
   @Mock private HttpServletResponse response;
   @Mock private StorageHandlerApi failingHandler;
   @Spy private StorageHandlerApi successfulHandlerSpy;
-  @Mock private GoogleIdTokenVerifier correctVerifier;
-  @Mock private GoogleIdTokenVerifier nullVerifier;
-  @Mock private GoogleIdToken correctIdToken;
-  @Mock private Payload correctPayload;
+  @Mock private TokenVerifier correctVerifier;
+  @Mock private TokenVerifier nullVerifier;
 
   @Before
   public void setUp() throws IOException, GeneralSecurityException {
@@ -101,16 +99,12 @@ public class JoinClubServletTest {
     when(response.getWriter()).thenReturn(new PrintWriter(stringWriter));
 
     // Verification setup that successfully verifies and gives correct userId.
-    correctPayload = mock(Payload.class);
-    when(correctPayload.getSubject()).thenReturn(USER_ID);
-    correctIdToken = mock(GoogleIdToken.class);
-    when(correctIdToken.getPayload()).thenReturn(correctPayload);
-    correctVerifier = mock(GoogleIdTokenVerifier.class);
-    when(correctVerifier.verify(anyString())).thenReturn(correctIdToken);
+    correctVerifier = mock(TokenVerifier.class);
+    when(correctVerifier.getSubject(anyString())).thenReturn(USER_ID);
 
     // Verification setup that does not successfully verify.
-    nullVerifier = mock(GoogleIdTokenVerifier.class);
-    when(nullVerifier.verify(anyString())).thenReturn(null);
+    nullVerifier = mock(TokenVerifier.class);
+    when(nullVerifier.getSubject(anyString())).thenReturn(null);
   }
 
   @After

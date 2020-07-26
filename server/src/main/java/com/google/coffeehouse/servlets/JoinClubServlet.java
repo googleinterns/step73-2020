@@ -25,6 +25,7 @@ import com.google.coffeehouse.common.MembershipConstants;
 import com.google.coffeehouse.common.Person;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.coffeehouse.util.AuthenticationHelper;
+import com.google.coffeehouse.util.TokenVerifier;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -69,7 +70,7 @@ public class JoinClubServlet extends HttpServlet {
   private static final Gson gson = new Gson();
   private static final HttpTransport transport = new NetHttpTransport();
   private static final GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
-  private final GoogleIdTokenVerifier verifier;
+  private final TokenVerifier verifier;
   private final StorageHandlerApi storageHandler;
 
   /**
@@ -77,7 +78,7 @@ public class JoinClubServlet extends HttpServlet {
    * @param verifier the class that verifies the validity of the ID token
    * @param storageHandler the {@link StorageHandlerApi} that is used when adding the membership
    */
-  public JoinClubServlet(GoogleIdTokenVerifier verifier, StorageHandlerApi storageHandler) {
+  public JoinClubServlet(TokenVerifier verifier, StorageHandlerApi storageHandler) {
     super();
     this.storageHandler = storageHandler;
     this.verifier = verifier;
@@ -89,7 +90,7 @@ public class JoinClubServlet extends HttpServlet {
   public JoinClubServlet() {
     super();
     this.storageHandler = new StorageHandlerApi();
-    this.verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory).build();
+    this.verifier = new TokenVerifier();
   }
 
   /**

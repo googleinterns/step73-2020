@@ -23,13 +23,13 @@ import static org.mockito.Mockito.verify;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.coffeehouse.common.Book;
 import com.google.coffeehouse.common.Club;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.coffeehouse.storagehandler.StorageHandler;
 import com.google.coffeehouse.util.AuthenticationHelper;
+import com.google.coffeehouse.util.TokenVerifier;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -77,10 +77,8 @@ public class ListClubsServletTest {
   @Mock private HttpServletResponse response;
   @Mock private StorageHandlerApi memberHandler;
   @Mock private StorageHandlerApi notMemberHandler;
-  @Mock private GoogleIdTokenVerifier verifier;
-  @Mock private GoogleIdTokenVerifier nullVerifier;
-  @Mock private GoogleIdToken idToken;
-  @Mock private Payload payload;
+  @Mock private TokenVerifier verifier;
+  @Mock private TokenVerifier nullVerifier;
 
   @Before
   public void setUp() throws IOException, GeneralSecurityException {
@@ -99,16 +97,12 @@ public class ListClubsServletTest {
     when(response.getWriter()).thenReturn(new PrintWriter(stringWriter));
     
     // Verification setup that successfully verifies and gives userId.
-    payload = mock(Payload.class);
-    when(payload.getSubject()).thenReturn(OWNER_ID);
-    idToken = mock(GoogleIdToken.class);
-    when(idToken.getPayload()).thenReturn(payload);
-    verifier = mock(GoogleIdTokenVerifier.class);
-    when(verifier.verify(anyString())).thenReturn(idToken);
+    verifier = mock(TokenVerifier.class);
+    when(verifier.getSubject(anyString())).thenReturn(OWNER_ID);
 
     // Verification setup that does not successfully verify.
-    nullVerifier = mock(GoogleIdTokenVerifier.class);
-    when(nullVerifier.verify(anyString())).thenReturn(null);
+    nullVerifier = mock(TokenVerifier.class);
+    when(nullVerifier.getSubject(anyString())).thenReturn(null);
   }
 
   @After

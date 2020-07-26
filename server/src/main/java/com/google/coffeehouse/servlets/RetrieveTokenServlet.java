@@ -128,7 +128,10 @@ public class RetrieveTokenServlet extends HttpServlet {
 
     try {
       // Perform basic security to make sure the ID token is valid.
-      AuthenticationHelper.getUserIdFromIdToken(idToken, verifier);
+      GoogleIdToken partialIdToken = verifier.verify(idToken);
+      if (partialIdToken == null) {
+        throw new GeneralSecurityException(idToken);
+      }
     } catch (Exception e) {
       System.out.println(LOG_INVALID_ID_TOKEN_MESSAGE + e.getMessage());
       response.sendError(HttpServletResponse.SC_FORBIDDEN, INVALID_ID_TOKEN);

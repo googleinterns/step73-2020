@@ -16,7 +16,6 @@ package com.google.coffeehouse.servlets;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
@@ -25,6 +24,7 @@ import com.google.coffeehouse.common.Club;
 import com.google.coffeehouse.common.Person;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.coffeehouse.util.AuthenticationHelper;
+import com.google.coffeehouse.util.TokenVerifier;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -90,7 +90,7 @@ public class UpdateClubServlet extends HttpServlet {
   private static final Gson gson = new Gson();
   private static final HttpTransport transport = new NetHttpTransport();
   private static final GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
-  private final GoogleIdTokenVerifier verifier;
+  private final TokenVerifier verifier;
   private final StorageHandlerApi storageHandler;
 
   /** 
@@ -98,7 +98,7 @@ public class UpdateClubServlet extends HttpServlet {
    * @param verifier the class that verifies the validity of the ID token
    * @param storageHandler the {@link StorageHandlerApi} that is used when fetching the Club/Book
    */
-  public UpdateClubServlet(GoogleIdTokenVerifier verifier, StorageHandlerApi storageHandler) {
+  public UpdateClubServlet(TokenVerifier verifier, StorageHandlerApi storageHandler) {
     super();
     this.storageHandler = storageHandler;
     this.verifier = verifier;
@@ -110,7 +110,7 @@ public class UpdateClubServlet extends HttpServlet {
   public UpdateClubServlet() {
     super();
     this.storageHandler = new StorageHandlerApi();
-    this.verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory).build();
+    this.verifier = new TokenVerifier();
   }
 
   /** 
