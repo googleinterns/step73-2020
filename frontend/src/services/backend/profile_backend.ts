@@ -1,30 +1,40 @@
+import { PersonInterface } from "../backend_service_interface/backend_service_interface"
+
 /**
- * Communicates with the backend to load, update, and delete user profiles.
+ * Directly connects with the servlet backend to perform profile operations.
  */
 export class ProfileBackendService {
-
-  loadProfile(id: string): Promise<string> {
-    /** TODO: Upon OAuth and GetProfile being implemented, fetch /get-profile. */
-    const returnMessage = "TODO: Implement loadProfile upon OAuth being implemented.";
-    return Promise.resolve(returnMessage);
+  /** Returns a profile given their ID token. */
+  async loadProfile(token: string): Promise<PersonInterface> {
+    const getProfileURL = "/api/get-profile?" + new URLSearchParams({
+      idToken: token,
+    });
+    const response = await fetch(getProfileURL, {
+      method: "GET",
+    });
+    return response.json();
   }
 
-  /** TODO: Make sure you're updating person, not just adding them.  */
-  async updateProfile(personAndChangeFieldsJson: string): Promise<string> {
-    try {
-      const response = await fetch('/update-person', {
-        method: 'POST',
-        body: personAndChangeFieldsJson,
-      })
-      return response.json();
-    } catch(err) {
-      /** TODO: Add and return different types of errors. */
-      return Promise.resolve(personAndChangeFieldsJson);
+  /** Updates a profile given the updated person and their ID token. */
+  async updateProfile(
+      person: PersonInterface, token: string): Promise<PersonInterface> {
+    const bodyContents = {
+      idToken: token,
+      person: person,
     }
+    const response = await fetch("/api/update-person", {
+      method: "POST",
+      body: JSON.stringify(bodyContents),
+    });
+    return response.json();
   }
 
-  deleteProfile(id: string): Promise<boolean> {
-    /** TODO: Upon /delete-profile being implemented, fetdch /delete-profile. */
-    return Promise.resolve(false);
+  /** Creates a new person object in the backend. */
+  async createPerson(person: PersonInterface): Promise<PersonInterface> {
+    const response = await fetch("/api/create-person", {
+      method: "POST",
+      body: JSON.stringify(person),
+    });
+    return response.json();
   }
 }
