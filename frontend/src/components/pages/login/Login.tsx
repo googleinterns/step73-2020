@@ -55,8 +55,7 @@ export const Login = (props: LoginProps) => {
   }
 
   const failureCallback = () => {
-    // Temporary: console.logs when we fail sign in
-    console.log("Failure!");
+    // TODO: make this function handle login failure.
   }
 
   return (

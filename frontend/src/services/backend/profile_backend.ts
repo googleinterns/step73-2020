@@ -8,7 +8,7 @@ export class ProfileBackendService {
   async loadProfile(token: string): Promise<PersonInterface> {
     const getProfileURL = "/api/get-profile?" + new URLSearchParams({
       idToken: token,
-    });
+    }).toString();
     const response = await fetch(getProfileURL, {
       method: "GET",
     });
@@ -20,7 +20,7 @@ export class ProfileBackendService {
       person: PersonInterface, token: string): Promise<PersonInterface> {
     const bodyContents = {
       idToken: token,
-      person: person,
+      person,
     }
     const response = await fetch("/api/update-person", {
       method: "POST",

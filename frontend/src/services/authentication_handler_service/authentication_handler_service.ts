@@ -34,7 +34,7 @@ export class AuthenticationHandlerService {
    * @throws FailureToSignInError if sign in fails
    */
   async signIn(scopes: string): Promise<string> {
-    let code: string | undefined = await this.getAuthCode({scope: scopes});
+    const code: string | undefined = await this.getAuthCode({scope: scopes});
     if (code === undefined) {
       throw new FailureToSignInError();
     }

@@ -57,9 +57,9 @@ export default function Profile() {
 
   React.useEffect(() => {
     (async() => {
-      const person = await profileHandlerService.getPerson(
+      const personResponse = await profileHandlerService.getPerson(
           loginStatusHandlerService.getUserToken());
-      setPerson(person);
+      setPerson(personResponse);
     })();
   }, []);
 
