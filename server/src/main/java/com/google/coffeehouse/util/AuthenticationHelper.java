@@ -15,10 +15,10 @@
 package com.google.coffeehouse.util;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.cloud.secretmanager.v1.AccessSecretVersionResponse;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
 import com.google.cloud.secretmanager.v1.SecretVersionName;
+import com.google.coffeehouse.util.TokenVerifier;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
@@ -51,16 +51,16 @@ public class AuthenticationHelper {
    * @throws GeneralSecurityException if the ID token is invalid or null
    * @throws IOException if an input or output error is detected when the ID token is verified
    */
-  public static String getUserIdFromIdToken(String idTokenString, GoogleIdTokenVerifier verifier)
-    throws GeneralSecurityException, IOException {
+  public static String getUserIdFromIdToken(String idTokenString, TokenVerifier verifier)
+    throws GeneralSecurityException {
     if (idTokenString == null) {
       throw new GeneralSecurityException(INVALID_ID_TOKEN_ERROR);
     }
-    GoogleIdToken idToken = verifier.verify(idTokenString);
-    if (idToken == null) {
+    String subject = verifier.getSubject(idTokenString);
+    if (subject == null) {
       throw new GeneralSecurityException(INVALID_ID_TOKEN_ERROR);
     }
-    return (String) idToken.getPayload().getSubject();
+    return subject;
   }
 
   // Private constructor to enforce that it should not be instantiated.
