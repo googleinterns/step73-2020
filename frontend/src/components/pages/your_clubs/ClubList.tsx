@@ -1,8 +1,8 @@
 import * as React from "react";
-import { BookProps } from "../../../services/mock_backend/mock_your_clubs_backend";
+import { BookInterface } from "../../../services/backend_service_interface/backend_service_interface";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import { ClubProps } from "../../../services/mock_backend/mock_your_clubs_backend";
+import { ClubInterface } from "../../../services/backend_service_interface/backend_service_interface";
 import { createStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -78,8 +78,9 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface ClubListProps {
-  clubsToDisplay: ClubProps[],
+  clubsToDisplay: ClubInterface[],
   handleLeaveClub(clubId: string): void,
+  userId: string,
 }
 
 /**
@@ -127,15 +128,19 @@ export function ClubList(props: ClubListProps) {
                     >
                       View Club
                     </Button>
-                    <Button
-                      className={classes.button}
-                      color="secondary"
-                      endIcon={<HighlightOffIcon />}
-                      onClick={() => (openAlertWindow(item.name))}
-                      variant="contained"
-                    >
-                      Leave Club
-                    </Button>
+                    {item.ownerId !== props.userId ? (
+                      <Button
+                        className={classes.button}
+                        color="secondary"
+                        endIcon={<HighlightOffIcon />}
+                        onClick={() => (openAlertWindow(item.name))}
+                        variant="contained"
+                      >
+                        Leave Club
+                      </Button>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </div>
                 <div className={classes.clubContent} >
@@ -146,7 +151,8 @@ export function ClubList(props: ClubListProps) {
                   <ContentWarnings contentWarnings={item.contentWarnings} />
                 </div>
                 <LeaveClubAlertWindow
-                  clubId={item.name}
+                  clubName={item.name}
+                  clubId={item.clubId}
                   nameOfClubLeaving={nameOfClubAlert}
                   alertOpen={leaveClubAlertOpen}
                   handleAlertWindowClose={closeAlertWindow}
@@ -184,7 +190,7 @@ function ClubDescription(props: ClubDescriptionProps) {
 }
 
 interface BookInfoProps {
-  book: BookProps;
+  book: BookInterface;
 };
 
 /** Displays the title and author of the club's current book. */
@@ -231,6 +237,7 @@ function ContentWarnings(props) {
 
 interface LeaveClubAlertWindowProps {
   clubId: string,
+  clubName: string,
   nameOfClubLeaving: string,
   alertOpen: boolean,
   handleAlertWindowClose(): void,
@@ -239,12 +246,12 @@ interface LeaveClubAlertWindowProps {
 
 function LeaveClubAlertWindow(props: LeaveClubAlertWindowProps) {
   return (
-    <Dialog open={props.alertOpen && (props.clubId === props.nameOfClubLeaving)}>
-      <DialogTitle>Leave Club '{props.clubId}'?</DialogTitle>
+    <Dialog open={props.alertOpen && (props.clubName === props.nameOfClubLeaving)}>
+      <DialogTitle>Leave Club '{props.clubName}'?</DialogTitle>
       <DialogContent>
         <DialogContentText>
           By pressing 'Confirm', you will no longer be a member of Club
-          '{props.clubId}'. This means that you will no longer have access
+          '{props.clubName}'. This means that you will no longer have access
           to its content, including discussion forums and material.
         </DialogContentText>
         <DialogActions>

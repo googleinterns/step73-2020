@@ -1,8 +1,8 @@
 import * as React from "react";
 import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button";
+import { ClubInterface } from "../../../services/backend_service_interface/backend_service_interface";
 import { ClubList } from "./ClubList";
-import { ClubProps } from "../../../services/mock_backend/mock_your_clubs_backend";
 import { CreateNewClubWindow } from "./CreateNewClub";
 import { createStyles } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
@@ -52,9 +52,10 @@ export const YourClubs = () => {
    */
   const contextServices = React.useContext(ServiceContext);
   const yourClubsHandlerService = contextServices.yourClubsHandlerService;
+  const loginStatusHandlerService = contextServices.loginStatusHandlerService;
 
   const [listedClubs, setListedClubs] =
-    React.useState<ClubProps[]|undefined>(undefined);
+    React.useState<ClubInterface[]|undefined>(undefined);
   const [numClubsDisplayed, setNumClubsDisplayed] =
     React.useState<number|undefined>(DEFAULT_NUM_DISPLAYED);
   const [createNewClub, setCreateNewClub] = React.useState<boolean>(false);
@@ -75,7 +76,8 @@ export const YourClubs = () => {
 
   const updateClubList = async () => {
     const listedClubsPromise =
-      await yourClubsHandlerService.listClubs(numClubsDisplayed);
+      await yourClubsHandlerService.listClubs(
+          loginStatusHandlerService.getUserToken(), "member");
     setListedClubs(listedClubsPromise);
   }
 
@@ -84,7 +86,8 @@ export const YourClubs = () => {
    *       backend implementation.
    */
   const updateClubListAfterLeaving = async (clubId: string) => {
-    const success = await yourClubsHandlerService.leaveClub(clubId);
+    const success:boolean = await yourClubsHandlerService.leaveClub(
+        clubId, loginStatusHandlerService.getUserToken());
     if (success) {
       updateClubList();
     }
@@ -92,6 +95,12 @@ export const YourClubs = () => {
 
   const openCreateClubWindow = () => {
     setCreateNewClub(true);
+  }
+
+  const getUserId = () => {
+    const parsedToken = JSON.parse(atob(
+    loginStatusHandlerService.getUserToken().split(".")[1]));
+    return parsedToken.sub;
   }
 
   const closeCreateClubWindow = (successfulCreation: boolean) => {
@@ -137,6 +146,7 @@ export const YourClubs = () => {
       <ClubList
         clubsToDisplay={listedClubs}
         handleLeaveClub={updateClubListAfterLeaving}
+        userId={getUserId()}
       />
       <CreateNewClubWindow
         closeWindow={closeCreateClubWindow}
