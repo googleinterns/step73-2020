@@ -1,5 +1,6 @@
 import * as React from "react";
 import GoogleSignInButton from "../../sign_in/GoogleSignInButton";
+import { PersonInterface } from "../../../services/backend_service_interface/backend_service_interface";
 import { ServiceContext } from "../../contexts/contexts";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
@@ -29,6 +30,7 @@ interface LoginProps {
 export const Login = (props: LoginProps) => {
   const contextServices = React.useContext(ServiceContext)
   const loginStatusHandlerService = contextServices.loginStatusHandlerService;
+  const profileHandlerService = contextServices.profileHandlerService;
 
   const classes = useStyles();
 
@@ -39,23 +41,16 @@ export const Login = (props: LoginProps) => {
     loginStatusHandlerService.setUserToken(token);
     loginStatusHandlerService.setUserLoginStatus(/*Successfully logged in*/ true);
     props.handleUserLogin();
-
-    // Determine if user profile exists; if not, create it.
-    const getProfileURL = "/api/get-profile?" + new URLSearchParams({idToken: token});
-    const getProfileResponse = await fetch(getProfileURL, {
-      method: "GET",
-    });
-    if (getProfileResponse.status != 200) {
-      const parsedToken = JSON.parse(atob(token.split('.')[1]));
-      const person = {
+    try {
+      await profileHandlerService.getPerson(loginStatusHandlerService.getUserToken());
+    } catch (err) {
+      const parsedToken = JSON.parse(atob(token.split(".")[1]));
+      const person: PersonInterface = {
         nickname: parsedToken.name,
         email: parsedToken.email,
         userId: parsedToken.sub,
       }
-      const createPersonResponse = await fetch("/api/create-person", {
-        method: "POST",
-        body: JSON.stringify(person),
-      });
+      profileHandlerService.createPerson(person);
     }
   }
 
@@ -66,21 +61,21 @@ export const Login = (props: LoginProps) => {
 
   return (
     <>
-    <div className={classes.loginContainer}>
-      <div className={classes.loginContent}>
-        <h2 className={classes.header}>CoffeeHouse</h2>
+      <div className={classes.loginContainer}>
+        <div className={classes.loginContent}>
+          <h2 className={classes.header}>CoffeeHouse</h2>
+        </div>
       </div>
-    </div>
-    <div className={classes.loginContainer}>
-      <div className={classes.loginContent}>
-          <GoogleSignInButton
-            onFailure={failureCallback}
-            scope="profile email openid"
-            text="Sign in with Google"
-            tokenConsumer={tokenConsumer}
-          />
+      <div className={classes.loginContainer}>
+        <div className={classes.loginContent}>
+            <GoogleSignInButton
+              onFailure={failureCallback}
+              scope="profile email openid"
+              text="Sign in with Google"
+              tokenConsumer={tokenConsumer}
+            />
+        </div>
       </div>
-    </div>
     </>
   );
 }
