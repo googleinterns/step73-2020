@@ -1,10 +1,13 @@
-import * as React from 'react';
+import * as React from "react";
+import { ClubInterface } from "../../../services/backend_service_interface/backend_service_interface";
 
-export const Club = () => {
+export const Club = (props) => {
+  const [handle, setHandle] = React.useState<string>(props.match.params.handle);
+  const [club, setClub] = React.useState<ClubInterface>(props.location.state.club);
+
   return (
     <div>
-      <h2>Club</h2>
-      <p>This is the Club page.</p>
+      <p style={{marginTop: "100px"}}>{handle}</p>
     </div>
   );
 }
