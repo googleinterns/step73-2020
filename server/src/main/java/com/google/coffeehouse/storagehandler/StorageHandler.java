@@ -162,8 +162,12 @@ public class StorageHandler {
   * @param  clubId               the club ID string used to perform the transaction
   * @param  membershipLevel      the integer representing membership level (member or owner)
   */
-  public static void runAddAnyMembershipTypeTransaction(DatabaseClient dbClient, String userId,
-                                                            String clubId, int membershipLevel) {
+  public static void runAddAnyMembershipTypeTransaction(
+    DatabaseClient dbClient,
+    String userId,
+    String clubId,
+    int membershipLevel
+  ) {
     dbClient
         .readWriteTransaction()
         .run(
@@ -266,8 +270,11 @@ public class StorageHandler {
   * @param  membershipStatus  the enum specifying whether the user is a member or not
   * @return                   the list of Clubs objects
   */
-  public static List<Club> getListOfClubs(DatabaseClient dbClient, String userId,
-                                          MembershipConstants.MembershipStatus membershipStatus) {
+  public static List<Club> getListOfClubs(
+    DatabaseClient dbClient,
+    String userId,
+    MembershipConstants.MembershipStatus membershipStatus
+  ) {
     ResultSet resultSet;
     List<Club> clubs = new ArrayList<>();
     ReadOnlyTransaction transaction = dbClient.readOnlyTransaction();
