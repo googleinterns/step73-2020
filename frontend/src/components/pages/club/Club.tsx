@@ -40,19 +40,16 @@ const useStyles = makeStyles((theme: Theme) =>
 export const Club = (props) => {
   const classes = useStyles();
 
-  const [handle, setHandle] = React.useState<string>(props.match.params.handle);
-  const [club, setClub] = React.useState<ClubInterface>(props.location.state.club);
-
   return (
     <div className={classes.clubContainer}>
       <div className={classes.club}>
         <Box border={1} borderColor="text.primary" borderRadius={16}>
           <div className={classes.contentContainer}>
-            <h1>{handle}</h1>
-            <ClubDescription description={club.description} />
+            <h1>{props.match.params.handle}</h1>
+            <ClubDescription description={props.location.state.club.description} />
             <div className={classes.infoAndWarnings}>
-              <BookInfo book={club.currentBook} />
-              <ContentWarnings contentWarnings={club.contentWarnings} />
+              <BookInfo book={props.location.state.club.currentBook} />
+              <ContentWarnings contentWarnings={props.location.state.club.contentWarnings} />
             </div>
           </div>
         </Box>
