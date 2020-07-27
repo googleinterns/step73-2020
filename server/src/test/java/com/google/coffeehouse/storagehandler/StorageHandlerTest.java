@@ -308,7 +308,7 @@ public class StorageHandlerTest {
 
     assertEquals(3, actual.size());
     assertEquals(expected.size(), actual.size());
-    for (int i =0; i < actual.size(); i++) {
+    for (int i = 0; i < actual.size(); i++) {
       assertEquals(actual.get(i).getName(), expected.get(i).getName());
       assertEquals(actual.get(i).getOwnerId(), expected.get(i).getOwnerId());
       assertEquals(actual.get(i).getClubId(), expected.get(i).getClubId());
@@ -356,7 +356,7 @@ public class StorageHandlerTest {
                                              MembershipConstants.MembershipStatus.NOT_MEMBER));
     assertEquals(3, actual.size());
     assertEquals(expected.size(), actual.size());
-    for (int i =0; i < actual.size(); i++) {
+    for (int i = 0; i < actual.size(); i++) {
       assertEquals(actual.get(i).getName(), expected.get(i).getName());
       assertEquals(actual.get(i).getOwnerId(), expected.get(i).getOwnerId());
       assertEquals(actual.get(i).getClubId(), expected.get(i).getClubId());
