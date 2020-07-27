@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 /**
- * Displays information for viewing a club.
+ * Displays information of a club that the user is a member of.
  */
 export const Club = (props) => {
   const classes = useStyles();
