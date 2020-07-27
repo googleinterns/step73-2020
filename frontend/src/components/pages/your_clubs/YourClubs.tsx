@@ -97,12 +97,6 @@ export const YourClubs = () => {
     setCreateNewClub(true);
   }
 
-  const getUserId = () => {
-    const parsedToken = JSON.parse(atob(
-    loginStatusHandlerService.getUserToken().split(".")[1]));
-    return parsedToken.sub;
-  }
-
   const closeCreateClubWindow = (successfulCreation: boolean) => {
     setCreateNewClub(false);
     if (successfulCreation) {
@@ -146,7 +140,7 @@ export const YourClubs = () => {
       <ClubList
         clubsToDisplay={listedClubs}
         handleLeaveClub={updateClubListAfterLeaving}
-        userId={getUserId()}
+        userId={loginStatusHandlerService.getParsedToken().sub}
       />
       <CreateNewClubWindow
         closeWindow={closeCreateClubWindow}

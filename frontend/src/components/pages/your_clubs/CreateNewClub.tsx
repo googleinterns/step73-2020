@@ -92,8 +92,7 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
       setSubmitSuccess(false);
     } else {
       setMissingField(false);
-      const parsedToken = JSON.parse(atob(
-          loginStatusHandlerService.getUserToken().split(".")[1]));
+      const parsedToken = loginStatusHandlerService.getParsedToken();
       club.ownerId = parsedToken.sub;
       const success = await yourClubsHandlerService.createClub(club);
       if (success) {
