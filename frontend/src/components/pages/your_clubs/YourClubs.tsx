@@ -5,12 +5,9 @@ import { ClubInterface } from "../../../services/backend_service_interface/backe
 import { ClubList } from "./ClubList";
 import { CreateNewClubWindow } from "./CreateNewClub";
 import { createStyles } from "@material-ui/core/styles";
-import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import InputLabel from "@material-ui/core/InputLabel";
+import { DEFAULT_NUM_DISPLAYED } from "../club_display/club_display_consts";
 import { makeStyles } from "@material-ui/core/styles";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
+import { NumClubsToDisplay } from "../club_display/NumClubsToDisplay";
 import { ServiceContext } from "../../contexts/contexts";
 import { Theme } from "@material-ui/core/styles";
 
@@ -44,7 +41,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const YourClubs = () => {
   const classes = useStyles();
-  const DEFAULT_NUM_DISPLAYED = 10;
 
   /**
    * ServiceHandlers is an object containing various TS Handlers and provides
@@ -57,10 +53,10 @@ export const YourClubs = () => {
   const [listedClubs, setListedClubs] =
     React.useState<ClubInterface[]|undefined>(undefined);
   const [numClubsDisplayed, setNumClubsDisplayed] =
-    React.useState<number|undefined>(DEFAULT_NUM_DISPLAYED);
+    React.useState<number>(DEFAULT_NUM_DISPLAYED);
   const [createNewClub, setCreateNewClub] = React.useState<boolean>(false);
 
-  /* Re-renders Profile only when number of displayed clubs changes. */
+  /* Re-renders YourClubs only when number of displayed clubs changes. */
   React.useEffect(() => {
     (async() => {
       const numClubsToDisplay = numClubsDisplayed
@@ -107,26 +103,11 @@ export const YourClubs = () => {
   return (
     <div className={classes.root}>
       <div className={classes.topUtilitiesContainer}>
-        <FormControl className={classes.formControl}>
-          <InputLabel id="number-of-displayed-clubs-label">
-            Number of Displayed Clubs
-          </InputLabel>
-          <Select
-            labelId="number-of-displayed-clubs-label"
-            id="number-of-displayed-clubs"
-            value={numClubsDisplayed ? numClubsDisplayed : DEFAULT_NUM_DISPLAYED}
-            onChange={handleNumClubsChange}
-            label="Age"
-          >
-            <MenuItem value={10}>10</MenuItem>
-            <MenuItem value={25}>25</MenuItem>
-            <MenuItem value={50}>50</MenuItem>
-            <MenuItem value={100}>100</MenuItem>
-          </Select>
-          <FormHelperText>
-            The number of clubs of which you are a member to be displayed.
-          </FormHelperText>
-        </FormControl>
+        <NumClubsToDisplay
+          handleNumClubsChange={handleNumClubsChange}
+          numClubsDisplayed={numClubsDisplayed}
+          showClubsMemberOf={true}
+        />
         <Button
           className={classes.button}
           color="primary"
