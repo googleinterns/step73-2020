@@ -1,8 +1,11 @@
 import * as React from "react";
+import { BookInfo } from "../club_display/BookInfo";
 import { BookInterface } from "../../../services/backend_service_interface/backend_service_interface";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import { ClubDescription } from "../club_display/ClubDescription";
 import { ClubInterface } from "../../../services/backend_service_interface/backend_service_interface";
+import { ContentWarnings } from "../club_display/ContentWarnings";
 import { createStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -10,16 +13,13 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import { Theme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    boldTextElement: {
-      fontWeight: 'bold',
-      marginBottom: theme.spacing(0),
-    },
     button : {
       marginLeft: theme.spacing(1),
       marginTop: theme.spacing(1),
@@ -53,26 +53,15 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(0),
       maxWidth: '500px',
     },
+    link: {
+      color: theme.palette.text.primary,
+      textDecoration: 'none',
+    },
     listedClubsContainer: {
       alignItems: 'center',
       display: 'flex',
       flexDirection: 'column',
       marginBottom: theme.spacing(3),
-    },
-    textElement: {
-      marginBottom: theme.spacing(0),
-      marginTop: theme.spacing(0),
-    },
-    warningsHeader: {
-      fontWeight: 'bold',
-      marginBottom: theme.spacing(0),
-      marginLeft: '-17px',
-    },
-    warningsList: {
-      fontWeight: 'bold',
-      justifyContent: 'left',
-      marginBottom: theme.spacing(0),
-      marginTop: theme.spacing(0),
     },
   }),
 );
@@ -120,14 +109,22 @@ export function ClubList(props: ClubListProps) {
                 <div className={classes.clubHeader}>
                   <h2 className={classes.clubTitle}>{item.name}</h2>
                   <div className={classes.buttonContainer}>
-                    <Button
-                      className={classes.button}
-                      color="primary"
-                      endIcon={<PageviewIcon />}
-                      variant="contained"
+                    <Link to={{
+                      pathname:'/Club/' + item.name,
+                      state: {club: item}
+                      }}
+                      className={classes.link}
+                      key={item.name}
                     >
-                      View Club
-                    </Button>
+                      <Button
+                        className={classes.button}
+                        color="primary"
+                        endIcon={<PageviewIcon />}
+                        variant="contained"
+                      >
+                        View Club
+                      </Button>
+                    </Link>
                     {item.ownerId !== props.userId ? (
                       <Button
                         className={classes.button}
@@ -166,72 +163,6 @@ export function ClubList(props: ClubListProps) {
     );
   } else {
     return (<div></div>);
-  }
-}
-
-interface ClubDescriptionProps {
-  description: string,
-}
-
-/** Displays the club's description. */
-function ClubDescription(props: ClubDescriptionProps) {
-  const classes = useStyles();
-
-  return (
-    <>
-      <div className={classes.boldTextElement}>
-        Description:
-      </div>
-      <p className={classes.textElement}>
-        {props.description}
-      </p>
-    </>
-  );
-}
-
-interface BookInfoProps {
-  book: BookInterface,
-}
-
-/** Displays the title and author of the club's current book. */
-function BookInfo(props: BookInfoProps) {
-  const classes = useStyles();
-
-  return (
-    <div>
-      <div className={classes.boldTextElement}>
-        Current Book:
-      </div>
-      <p className={classes.textElement}>
-        <div>{props.book.title}</div>
-        <div>by {props.book.author}</div>
-      </p>
-    </div>
-  );
-}
-
-/** Displays content warnings associated with the club's current book. */
-function ContentWarnings(props) {
-  const classes = useStyles();
-  const contentWarnings = props.contentWarnings;
-
-  if (contentWarnings) {
-    return (
-        <div>
-          <ul className={classes.warningsList}>
-            <div className={classes.warningsHeader}>Content Warnings:</div>
-            {contentWarnings.map((item, index) => (
-              <li>{item}</li>
-            ))}
-          </ul>
-        </div>
-    );
-  } else {
-    return (
-      <p className={classes.warningsList}>
-        No Content Warnings
-      </p>
-    );
   }
 }
 
