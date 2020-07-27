@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     link: {
       color: theme.palette.text.primary,
-      textDecoration: 'none'
+      textDecoration: 'none',
     },
     listedClubsContainer: {
       alignItems: 'center',
