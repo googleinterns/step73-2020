@@ -250,7 +250,7 @@ public class StorageHandlerTest {
     StorageHandlerTestHelper.insertPerson("owner");
     StorageHandlerTestHelper.insertClub("club", /* owner_id= */ "owner");
     StorageHandlerTestHelper.insertMembership("owner", "club", MembershipConstants.OWNER);
-    List<Person> actual =  new ArrayList<Person>(StorageHandler.getListOfMembers(dbClient, "club"));
+    List<Person> actual = new ArrayList<Person>(StorageHandler.getListOfMembers(dbClient, "club"));
 
     assertEquals(1, actual.size());
     assertEquals(expected.get(0).getNickname(), actual.get(0).getNickname());
@@ -271,7 +271,7 @@ public class StorageHandlerTest {
 
     StorageHandlerTestHelper.insertPerson("member");
     StorageHandlerTestHelper.insertMembership("member", "club", MembershipConstants.MEMBER);
-    List<Person> actual =  new ArrayList<Person>(StorageHandler.getListOfMembers(dbClient, "club"));
+    List<Person> actual = new ArrayList<Person>(StorageHandler.getListOfMembers(dbClient, "club"));
 
     assertEquals(2, actual.size());
     assertEquals(expected.size(), actual.size());
@@ -303,8 +303,8 @@ public class StorageHandlerTest {
     StorageHandlerTestHelper.insertMembership("member", "clubs3", MembershipConstants.MEMBER);
     StorageHandlerTestHelper.insertBook("book");
     
-    List<Club> actual =  new ArrayList<Club>(StorageHandler.getListOfClubs(dbClient, "member",
-                                             MembershipConstants.MembershipStatus.MEMBER));
+    List<Club> actual = new ArrayList<Club>(StorageHandler.getListOfClubs(dbClient, "member",
+                                            MembershipConstants.MembershipStatus.MEMBER));
 
     assertEquals(3, actual.size());
     assertEquals(expected.size(), actual.size());
@@ -327,7 +327,7 @@ public class StorageHandlerTest {
     StorageHandlerTestHelper.insertMembership("owner", "club", MembershipConstants.OWNER);
     StorageHandlerTestHelper.insertBook("book");
     StorageHandlerTestHelper.insertMembership("member", "club", MembershipConstants.MEMBER);
-    List<Club> actual =  new ArrayList<Club>(StorageHandler.getListOfClubs(dbClient, "member",
+    List<Club> actual = new ArrayList<Club>(StorageHandler.getListOfClubs(dbClient, "member",
                                              MembershipConstants.MembershipStatus.MEMBER));
     assertEquals(1, actual.size());
     assertEquals(actual.get(0).getName(), expected.get(0).getName());
@@ -352,7 +352,7 @@ public class StorageHandlerTest {
     StorageHandlerTestHelper.insertClub("clubs2", /* owner_id= */ "owner");
     StorageHandlerTestHelper.insertClub("clubs3", /* owner_id= */ "owner");
     StorageHandlerTestHelper.insertBook("book");
-    List<Club> actual =  new ArrayList<Club>(StorageHandler.getListOfClubs(dbClient, "non-member",
+    List<Club> actual = new ArrayList<Club>(StorageHandler.getListOfClubs(dbClient, "non-member",
                                              MembershipConstants.MembershipStatus.NOT_MEMBER));
     assertEquals(3, actual.size());
     assertEquals(expected.size(), actual.size());
@@ -376,7 +376,7 @@ public class StorageHandlerTest {
     StorageHandlerTestHelper.insertMembership("member", "clubs1", MembershipConstants.MEMBER);
     StorageHandlerTestHelper.insertMembership("member", "clubs2", MembershipConstants.MEMBER);
     StorageHandlerTestHelper.insertMembership("member", "clubs3", MembershipConstants.MEMBER);
-    List<Club> actual =  new ArrayList<Club>(StorageHandler.getListOfClubs(dbClient, "member",
+    List<Club> actual = new ArrayList<Club>(StorageHandler.getListOfClubs(dbClient, "member",
                                              MembershipConstants.MembershipStatus.NOT_MEMBER));
     assertEquals(0, actual.size());
   }
@@ -389,7 +389,7 @@ public class StorageHandlerTest {
     StorageHandlerTestHelper.insertClub("clubs2", /* owner_id= */ "owner");
     StorageHandlerTestHelper.insertClub("clubs3", /* owner_id= */ "owner");
     StorageHandlerTestHelper.insertBook("book");
-    List<Club> actual =  new ArrayList<Club>(StorageHandler.getListOfClubs(dbClient, "member",
+    List<Club> actual = new ArrayList<Club>(StorageHandler.getListOfClubs(dbClient, "member",
                                              MembershipConstants.MembershipStatus.MEMBER));
     assertEquals(0, actual.size());
   }
