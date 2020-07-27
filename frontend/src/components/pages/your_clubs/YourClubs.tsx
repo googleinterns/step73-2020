@@ -86,7 +86,7 @@ export const YourClubs = () => {
    *       backend implementation.
    */
   const updateClubListAfterLeaving = async (clubId: string) => {
-    const success:boolean = await yourClubsHandlerService.leaveClub(
+    const success = await yourClubsHandlerService.leaveClub(
         clubId, loginStatusHandlerService.getUserToken());
     if (success) {
       updateClubList();
