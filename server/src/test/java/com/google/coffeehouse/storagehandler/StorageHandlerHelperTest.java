@@ -95,7 +95,7 @@ public class StorageHandlerHelperTest {
   }
 
   @Test
-  public void checkOwnership_personIsMemberButNotOwner() throws Exception {
+  public void checkOwnership_personIsMember() throws Exception {
     StorageHandlerTestHelper.insertPerson("person");
     StorageHandlerTestHelper.insertPerson("owner");
     StorageHandlerTestHelper.insertClubWithContentWarnings("club");

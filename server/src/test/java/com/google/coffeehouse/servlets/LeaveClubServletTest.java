@@ -78,7 +78,8 @@ public class LeaveClubServletTest {
 
   @Mock private HttpServletRequest request;
   @Mock private HttpServletResponse response;
-  @Mock private StorageHandlerApi failingHandler;
+  @Mock private StorageHandlerApi failingHandlerUserNotMember;
+  @Mock private StorageHandlerApi failingHandlerOwnerCanNotLeave;
   @Spy private StorageHandlerApi successfulHandlerSpy;
   @Mock private GoogleIdTokenVerifier correctVerifier;
   @Mock private GoogleIdTokenVerifier nullVerifier;
@@ -93,9 +94,13 @@ public class LeaveClubServletTest {
     successfulHandlerSpy = spy(StorageHandlerApi.class);
     doNothing().when(successfulHandlerSpy).deleteMembership(anyString(), anyString());
 
-    failingHandler = mock(StorageHandlerApi.class);
+    failingHandlerUserNotMember = mock(StorageHandlerApi.class);
     doThrow(new IllegalArgumentException(MembershipConstants.PERSON_NOT_IN_CLUB))
-                .when(failingHandler).deleteMembership(anyString(), anyString());
+                .when(failingHandlerUserNotMember).deleteMembership(anyString(), anyString());
+    
+    failingHandlerOwnerCanNotLeave = mock(StorageHandlerApi.class);
+    doThrow(new IllegalArgumentException(MembershipConstants.OWNER_CAN_NOT_LEAVE_CLUB))
+                .when(failingHandlerOwnerCanNotLeave).deleteMembership(anyString(), anyString());
 
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
@@ -159,12 +164,25 @@ public class LeaveClubServletTest {
   public void doPost_userNotInClub() throws IOException {
     when(request.getReader()).thenReturn(
           new BufferedReader(new StringReader(JSON)));
-    failingLeaveClubServlet = new LeaveClubServlet(correctVerifier, failingHandler);
+    failingLeaveClubServlet = new LeaveClubServlet(correctVerifier, failingHandlerUserNotMember);
     failingLeaveClubServlet.doPost(request, response);
 
     verify(response).sendError(
         HttpServletResponse.SC_CONFLICT,
         MembershipConstants.PERSON_NOT_IN_CLUB);
+  }
+
+  @Test
+  public void doPost_ownerCanNotLeaveClub() throws IOException {
+    when(request.getReader()).thenReturn(
+          new BufferedReader(new StringReader(JSON)));
+    failingLeaveClubServlet = new LeaveClubServlet(correctVerifier,
+                                                   failingHandlerOwnerCanNotLeave);
+    failingLeaveClubServlet.doPost(request, response);
+
+    verify(response).sendError(
+        HttpServletResponse.SC_CONFLICT,
+        MembershipConstants.OWNER_CAN_NOT_LEAVE_CLUB);
   }
 
   @Test

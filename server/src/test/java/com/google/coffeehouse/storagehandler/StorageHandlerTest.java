@@ -204,12 +204,22 @@ public class StorageHandlerTest {
   }
 
   @Test
-  public void getDeleteMembershipTransaction() throws Exception {
+  public void runDeleteMembershipTransaction_member() throws Exception {
     StorageHandlerTestHelper.insertPerson("person");
     StorageHandlerTestHelper.insertMembership("person", "club", MembershipConstants.MEMBER);
     StorageHandler.runDeleteMembershipTransaction(dbClient, "person", "club");
     ReadContext readContext = dbClient.singleUse();
     Boolean actual = StorageHandlerHelper.checkAnyMembership(readContext, "person", "club");
     assertFalse(actual);
+  }
+
+  @Test
+  public void runDeleteMembershipTransaction_ownerFailsToLeaveClub() throws Exception {
+    StorageHandlerTestHelper.insertPerson("person");
+    StorageHandlerTestHelper.insertMembership("person", "club", MembershipConstants.OWNER);
+    ReadContext readContext = dbClient.singleUse();
+    assertThrows(RuntimeException.class, () -> {
+      StorageHandler.runDeleteMembershipTransaction(dbClient, "person", "club");
+    });
   }
 }

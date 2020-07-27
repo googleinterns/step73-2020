@@ -195,7 +195,8 @@ public class StorageHandler {
   * @param  userId      the user ID string used to perform the transaction
   * @param  clubId      the club ID string used to perform the transaction
   */
-  public static void runDeleteMembershipTransaction(DatabaseClient dbClient, String userId, String clubId) {
+  public static void runDeleteMembershipTransaction(DatabaseClient dbClient, String userId,
+                                                                             String clubId) {
     dbClient
         .readWriteTransaction()
         .run(
@@ -203,8 +204,14 @@ public class StorageHandler {
             @Override
             public Void run(TransactionContext transaction) throws Exception {
               Boolean exists = StorageHandlerHelper.checkAnyMembership(transaction, userId, clubId);
+              Boolean owner = StorageHandlerHelper.checkOwnership(transaction, userId, clubId);
               if (exists) {
-                transaction.buffer(StorageHandlerCommonMutations.deleteMembershipMutation(userId, clubId));
+                if (!owner) {
+                  transaction.buffer(
+                    StorageHandlerCommonMutations.deleteMembershipMutation(userId, clubId));
+                } else {
+                  throw new IllegalArgumentException(MembershipConstants.OWNER_CAN_NOT_LEAVE_CLUB);
+                }
               } else {
                 throw new IllegalArgumentException(MembershipConstants.PERSON_NOT_IN_CLUB);
               }

@@ -128,12 +128,16 @@ public class LeaveClubServlet extends HttpServlet {
       }
       storageHandler.deleteMembership(userId, clubId);
     } catch (IllegalArgumentException e) {
-      System.out.println(LOG_INPUT_ERROR_MESSAGE + e.getMessage());
-      if (e.getMessage() == MembershipConstants.PERSON_NOT_IN_CLUB) {
+      String error = e.getMessage();
+      System.out.println(LOG_INPUT_ERROR_MESSAGE + error);
+      if (error == MembershipConstants.PERSON_NOT_IN_CLUB) {
         response.sendError(HttpServletResponse.SC_CONFLICT,
                            MembershipConstants.PERSON_NOT_IN_CLUB);
+      } else if (error == MembershipConstants.OWNER_CAN_NOT_LEAVE_CLUB) {
+        response.sendError(HttpServletResponse.SC_CONFLICT,
+                           MembershipConstants.OWNER_CAN_NOT_LEAVE_CLUB);
       } else {
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, error);
       }
       return;
     } catch (GeneralSecurityException e) {
