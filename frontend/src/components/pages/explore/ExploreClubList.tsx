@@ -16,7 +16,6 @@ import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import { Link } from "react-router-dom"
 import { makeStyles } from "@material-ui/core/styles";
 import PageviewIcon from "@material-ui/icons/Pageview";
-import { ServiceContext } from "../../contexts/contexts";
 import { Theme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -67,22 +66,18 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface ClubListProps {
+interface ExploreClubListProps {
   clubsToDisplay: ClubInterface[],
-  handleJoinClub(clubId: string, token:string): void,
-  userId: string,
+  handleJoinClub(clubId: string): void,
 }
 
 /**
  * Displays up to the number of clubs that the user has requested to
  * the page.
  */
-export function ClubList(props: ClubListProps) {
+export function ExploreClubList(props: ExploreClubListProps) {
   const classes = useStyles();
   const clubsToDisplay = props.clubsToDisplay;
-
-  const contextServices = React.useContext(ServiceContext);
-  const loginStatusHandlerService = contextServices.loginStatusHandlerService;
 
   const [joinClubAlertOpen, setJoinAlertOpen] = React.useState<boolean>(/* closed */ false);
   const [nameOfClubAlert, setNameofClubAlert] = React.useState<string|undefined>(undefined);
@@ -96,8 +91,8 @@ export function ClubList(props: ClubListProps) {
     setJoinAlertOpen(false);
   }
 
-  const handleJoinClub = (clubId: string, token: string) => {
-    props.handleJoinClub(clubId, token);
+  const handleJoinClub = (clubId: string) => {
+    props.handleJoinClub(clubId);
     setJoinAlertOpen(false);
   }
 
@@ -149,7 +144,6 @@ export function ClubList(props: ClubListProps) {
                 <JoinClubAlertWindow
                   clubName={item.name}
                   clubId={item.clubId}
-                  token={loginStatusHandlerService.getUserToken()}
                   nameOfClubJoining={nameOfClubAlert}
                   alertOpen={joinClubAlertOpen}
                   handleAlertWindowClose={closeAlertWindow}
@@ -168,12 +162,11 @@ export function ClubList(props: ClubListProps) {
 
 interface JoinClubAlertWindowProps {
   clubId: string,
-  token: string,
   clubName: string,
   nameOfClubJoining: string,
   alertOpen: boolean,
   handleAlertWindowClose(): void,
-  handleJoinClub(clubId: string, token: string): void,
+  handleJoinClub(clubId: string): void,
 }
 
 function JoinClubAlertWindow(props: JoinClubAlertWindowProps) {
@@ -192,7 +185,7 @@ function JoinClubAlertWindow(props: JoinClubAlertWindowProps) {
             Cancel
           </Button>
           <Button
-            onClick={() => (props.handleJoinClub(props.clubId, props.token))} color="primary"
+            onClick={() => (props.handleJoinClub(props.clubId))} color="primary"
           >
             Confirm
           </Button>

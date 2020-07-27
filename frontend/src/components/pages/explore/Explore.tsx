@@ -5,6 +5,7 @@ import { ClubInterface } from "../../../services/backend_service_interface/backe
 import { ContentWarnings } from "../club_display/ContentWarnings";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { DEFAULT_NUM_DISPLAYED } from "../club_display/club_display_consts";
+import { ExploreClubList} from "./ExploreClubList";
 import { NumClubsToDisplay } from "../club_display/NumClubsToDisplay";
 import { ServiceContext } from "../../contexts/contexts";
 
@@ -22,12 +23,6 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(0),
       marginTop: theme.spacing(1),
       maxHeight: '50px',
-    },
-    formControl: {
-      margin: theme.spacing(1),
-      marginBottom: theme.spacing(2),
-      marginRight: theme.spacing(8),
-      minWidth: 120,
     },
     topUtilitiesContainer: {
       display: 'flex',
@@ -67,6 +62,14 @@ export const Explore = () => {
     setNumClubsDisplayed(Number(event.target.value));
   }
 
+  const updateClubListAfterJoining = async (clubId: string) => {
+    const success:boolean = await yourClubsHandlerService.joinClub(
+        clubId, loginStatusHandlerService.getUserToken());
+    if (success) {
+      updateClubList();
+    }
+  }
+
   return (
     <div className={classes.root}>
       <div className={classes.topUtilitiesContainer}>
@@ -76,6 +79,10 @@ export const Explore = () => {
           showClubsMemberOf={false}
         />
       </div>
+      <ExploreClubList
+        clubsToDisplay={listedClubs}
+        handleJoinClub={updateClubListAfterJoining}
+      />
     </div>
   );
 }
