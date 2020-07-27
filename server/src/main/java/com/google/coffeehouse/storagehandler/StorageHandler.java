@@ -197,8 +197,11 @@ public class StorageHandler {
   * @param  userId      the user ID string used to perform the transaction
   * @param  clubId      the club ID string used to perform the transaction
   */
-  public static void runDeleteMembershipTransaction(DatabaseClient dbClient, String userId,
-                                                                             String clubId) {
+  public static void runDeleteMembershipTransaction(
+    DatabaseClient dbClient, 
+    String userId, 
+    String clubId
+  ) {
     dbClient
         .readWriteTransaction()
         .run(
