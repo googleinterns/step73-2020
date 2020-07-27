@@ -1,7 +1,7 @@
 import * as React from "react";
 import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button";
-import { ClubInterface } from "../../../services/backend_service_interface/backend_service_interface";
+import { ClubInterface, MembershipType } from "../../../services/backend_service_interface/backend_service_interface";
 import { ClubList } from "./ClubList";
 import { CreateNewClubWindow } from "./CreateNewClub";
 import { createStyles } from "@material-ui/core/styles";
@@ -73,7 +73,7 @@ export const YourClubs = () => {
   const updateClubList = async () => {
     const listedClubsPromise =
       await yourClubsHandlerService.listClubs(
-          loginStatusHandlerService.getUserToken(), "member");
+          loginStatusHandlerService.getUserToken(), MembershipType.Member);
     setListedClubs(listedClubsPromise);
   }
 
