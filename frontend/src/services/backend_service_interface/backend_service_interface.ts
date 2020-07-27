@@ -14,7 +14,7 @@ export interface BookInterface {
 
 export interface ClubInterface {
   name: string,
-  clubId: string,
+  clubId?: string,
   ownerId: string,
   contentWarnings: string[],
   description: string,

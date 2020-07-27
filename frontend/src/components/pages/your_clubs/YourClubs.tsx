@@ -86,7 +86,7 @@ export const YourClubs = () => {
    *       backend implementation.
    */
   const updateClubListAfterLeaving = async (clubId: string) => {
-    const success:boolean = await yourClubsHandlerService.leaveClub(
+    const success = await yourClubsHandlerService.leaveClub(
         clubId, loginStatusHandlerService.getUserToken());
     if (success) {
       updateClubList();
@@ -95,12 +95,6 @@ export const YourClubs = () => {
 
   const openCreateClubWindow = () => {
     setCreateNewClub(true);
-  }
-
-  const getUserId = () => {
-    const parsedToken = JSON.parse(atob(
-    loginStatusHandlerService.getUserToken().split(".")[1]));
-    return parsedToken.sub;
   }
 
   const closeCreateClubWindow = (successfulCreation: boolean) => {
@@ -146,7 +140,7 @@ export const YourClubs = () => {
       <ClubList
         clubsToDisplay={listedClubs}
         handleLeaveClub={updateClubListAfterLeaving}
-        userId={getUserId()}
+        userId={loginStatusHandlerService.getParsedToken().sub}
       />
       <CreateNewClubWindow
         closeWindow={closeCreateClubWindow}

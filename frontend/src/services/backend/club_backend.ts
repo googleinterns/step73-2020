@@ -27,7 +27,12 @@ export class ClubBackendService {
     return response.json();
   }
 
-  /** Removes a user from a club. */
+  /**
+   * Removes a user from a club.
+   * @param clubId the ID of the club the user is to be removed from
+   * @param token the ID token of the user leaving the club
+   * @return the status code of the response
+   */
   async leaveClub(clubId: string, token: string): Promise<number> {
     const bodyContents = {
       clubId,
@@ -40,7 +45,12 @@ export class ClubBackendService {
     return response.status;
   }
 
-  /** Joins a user to a club. */
+  /**
+   * Joins a user to a club.
+   * @param clubId the ID of the club the user is to be joined to
+   * @param token the ID token of the user join the club
+   * @return the status code of the response
+   */
   async joinClub(clubId: string, token: string): Promise<number> {
     const bodyContents = {
       clubId,

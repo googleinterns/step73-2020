@@ -44,7 +44,7 @@ export const Login = (props: LoginProps) => {
     try {
       await profileHandlerService.getPerson(loginStatusHandlerService.getUserToken());
     } catch (err) {
-      const parsedToken = JSON.parse(atob(token.split(".")[1]));
+      const parsedToken = loginStatusHandlerService.getParsedToken();
       const person: PersonInterface = {
         nickname: parsedToken.name,
         email: parsedToken.email,
