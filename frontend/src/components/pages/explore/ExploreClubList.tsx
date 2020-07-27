@@ -13,7 +13,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import InputIcon from "@material-ui/icons/Input";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import { Theme } from "@material-ui/core/styles";
@@ -79,7 +79,7 @@ export function ExploreClubList(props: ExploreClubListProps) {
   const classes = useStyles();
   const clubsToDisplay = props.clubsToDisplay;
 
-  const [joinClubAlertOpen, setJoinAlertOpen] = React.useState<boolean>(/* closed */ false);
+  const [joinClubAlertOpen, setJoinAlertOpen] = React.useState<boolean>(/* closed= */ false);
   const [nameOfClubAlert, setNameofClubAlert] = React.useState<string|undefined>(undefined);
 
   const openAlertWindow = (clubId: string) => {
@@ -108,8 +108,8 @@ export function ExploreClubList(props: ExploreClubListProps) {
                   <h2 className={classes.clubTitle}>{item.name}</h2>
                   <div className={classes.buttonContainer}>
                     <Link to={{
-                      pathname:'/Club/' + item.name,
-                      state: {club: item}
+                        pathname: '/Club/' + item.name,
+                        state: {club: item}
                       }}
                       className={classes.link}
                       key={item.name}

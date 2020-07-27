@@ -20,9 +20,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface NumClubsToDisplayProps {
   handleNumClubsChange(event: React.ChangeEvent<HTMLInputElement>): void;
-  numClubsDisplayed: number;
-  showClubsMemberOf: boolean;
-};
+  numClubsDisplayed: number,
+  showClubsMemberOf: boolean,
+}
 
 /** Displays the title and author of the club's current book. */
 export const NumClubsToDisplay = (props: NumClubsToDisplayProps) => {
