@@ -12,7 +12,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import InputIcon from "@material-ui/icons/Input";
 import { Link } from "react-router-dom"
 import { makeStyles } from "@material-ui/core/styles";
 import PageviewIcon from "@material-ui/icons/Pageview";
@@ -125,8 +125,8 @@ export function ExploreClubList(props: ExploreClubListProps) {
                     </Link>
                     <Button
                       className={classes.button}
-                      color="secondary"
-                      endIcon={<HighlightOffIcon />}
+                      color="primary"
+                      endIcon={<InputIcon />}
                       onClick={() => (openAlertWindow(item.name))}
                       variant="contained"
                     >
