@@ -73,6 +73,26 @@ public class StorageHandlerTestHelper {
     dbClient.write(mutations);
   }
 
+  public static void insertClub(String club_id, String owner_id) {
+    List<Mutation> mutations = new ArrayList<>();
+    mutations.add(
+      Mutation.newInsertOrUpdateBuilder("Clubs")
+        .set("clubId")
+        .to(club_id)
+        .set("bookId")
+        .to("book")
+        .set("description")
+        .to("description")
+        .set("name")
+        .to("club")
+        .set("ownerId")
+        .to(owner_id)
+        .set("timestamp")
+        .to(Value.COMMIT_TIMESTAMP)
+        .build());
+    dbClient.write(mutations);
+  }
+
   public static void insertClubWithNoContentWarnings(String club_id) {
     List<Mutation> mutations = new ArrayList<>();
     mutations.add(

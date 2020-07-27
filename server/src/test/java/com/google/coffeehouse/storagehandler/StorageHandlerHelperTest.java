@@ -58,7 +58,7 @@ public class StorageHandlerHelperTest {
   @Test
   public void checkAnyMembership_personInClub() throws Exception {
     StorageHandlerTestHelper.insertPerson("person");
-    StorageHandlerTestHelper.insertClub("club");
+    StorageHandlerTestHelper.insertClubWithContentWarnings("club");
     StorageHandlerTestHelper.insertMembership("person", "club", MembershipConstants.MEMBER);
     ReadContext readContext = dbClient.singleUse();
     Boolean actual = StorageHandlerHelper.checkAnyMembership(readContext, "person", "club");
@@ -95,7 +95,7 @@ public class StorageHandlerHelperTest {
   }
 
   @Test
-  public void checkOwnership_personIsMemberButNotOwner() throws Exception {
+  public void checkOwnership_personIsMember() throws Exception {
     StorageHandlerTestHelper.insertPerson("person");
     StorageHandlerTestHelper.insertPerson("owner");
     StorageHandlerTestHelper.insertClubWithContentWarnings("club");

@@ -162,8 +162,12 @@ public class StorageHandler {
   * @param  clubId               the club ID string used to perform the transaction
   * @param  membershipLevel      the integer representing membership level (member or owner)
   */
-  public static void runAddAnyMembershipTypeTransaction(DatabaseClient dbClient, String userId,
-                                                            String clubId, int membershipLevel) {
+  public static void runAddAnyMembershipTypeTransaction(
+    DatabaseClient dbClient,
+    String userId,
+    String clubId,
+    int membershipLevel
+  ) {
     dbClient
         .readWriteTransaction()
         .run(
@@ -186,16 +190,22 @@ public class StorageHandler {
 
   /**
   * Runs a transaction that deletes a membership (or ownership) from the database.
-  * This method checks if a person is already a member of a club by calling a helper function.
-  * If the person does exist, this method will buffer a single mutation that deletes the
-  * membership. Otherwise, it will throw an exception indicating that the person is
-  * already not a member of the club.
+  * This method checks if the person is already a member of a club by calling a helper function.
+  * This method also checks if the person is the owner of the club by calling a helper function.
+  * If the person is a member, and not the owner, this method will buffer a single mutation
+  * that deletes the membership. If the person is the owner of the club, it will throw an exception
+  * indicating that the owner can't leave their own club. If the person is not a member, it will
+  * throw an exception indicating that the person is already not a member of the club.
   *
   * @param  dbClient    the database client
   * @param  userId      the user ID string used to perform the transaction
   * @param  clubId      the club ID string used to perform the transaction
   */
-  public static void runDeleteMembershipTransaction(DatabaseClient dbClient, String userId, String clubId) {
+  public static void runDeleteMembershipTransaction(
+    DatabaseClient dbClient, 
+    String userId, 
+    String clubId
+  ) {
     dbClient
         .readWriteTransaction()
         .run(
@@ -203,8 +213,14 @@ public class StorageHandler {
             @Override
             public Void run(TransactionContext transaction) throws Exception {
               Boolean exists = StorageHandlerHelper.checkAnyMembership(transaction, userId, clubId);
+              Boolean owner = StorageHandlerHelper.checkOwnership(transaction, userId, clubId);
               if (exists) {
-                transaction.buffer(StorageHandlerCommonMutations.deleteMembershipMutation(userId, clubId));
+                if (!owner) {
+                  transaction.buffer(
+                    StorageHandlerCommonMutations.deleteMembershipMutation(userId, clubId));
+                } else {
+                  throw new IllegalArgumentException(MembershipConstants.OWNER_CAN_NOT_LEAVE_CLUB);
+                }
               } else {
                 throw new IllegalArgumentException(MembershipConstants.PERSON_NOT_IN_CLUB);
               }
@@ -216,8 +232,9 @@ public class StorageHandler {
 
   /**
   * Creates and returns a list of {@link Persons}s that are a member of a club.
-  * This method builds a {@link Person} for each person who is a member of the club
-  * specified by club ID. Each {@link Person} is added to a list that gets returned.
+  * This method builds a {@link Person} for each person who is a member of the club, as specified
+  * by club ID. Each {@link Person} is added to a list that gets returned. If there are no members,
+  * this method will throw an exception indicating that there are no members in the club.
   *
   * @param  dbClient    the database client
   * @param  clubId      the club ID string used to query
@@ -225,20 +242,20 @@ public class StorageHandler {
   */
   public static List<Person> getListOfMembers(DatabaseClient dbClient, String clubId) {
     List<Person> persons = new ArrayList<>();
-    ReadOnlyTransaction transaction = dbClient.readOnlyTransaction();
-    Long count = StorageHandlerHelper.getMemberCount(transaction, clubId);
-    if (count == 0) {
-      throw new IllegalArgumentException(MembershipConstants.NO_MEMBERS);
-    } else {
-      ResultSet resultSet = 
-          transaction
-              .read(
-                "Memberships",
-                KeySet.range(KeyRange.prefix(Key.of(clubId))),
-                Arrays.asList("userId"));
-      while (resultSet.next()) {
-        persons.add(getPerson(dbClient, resultSet.getString(/* userIdIndex= */0)));
-      }
+    Statement statement = 
+        Statement.newBuilder(
+                "SELECT userId "
+                  + "FROM Memberships "
+                  + "WHERE clubId = @clubId ")
+            .bind("clubId")
+            .to(clubId)
+            .build();
+    ResultSet resultSet = dbClient.singleUse().executeQuery(statement);
+    while (resultSet.next()) {
+      persons.add(getPerson(dbClient, resultSet.getString(/* userIdIndex= */0)));
+    }
+    if (persons.size() == 0) {
+      throw new IllegalStateException(MembershipConstants.NO_MEMBERS);
     }
     return persons;
   }
@@ -253,7 +270,11 @@ public class StorageHandler {
   * @param  membershipStatus  the enum specifying whether the user is a member or not
   * @return                   the list of Clubs objects
   */
-  public static List<Club> getListOfClubs(DatabaseClient dbClient, String userId, MembershipConstants.MembershipStatus membershipStatus) {
+  public static List<Club> getListOfClubs(
+    DatabaseClient dbClient,
+    String userId,
+    MembershipConstants.MembershipStatus membershipStatus
+  ) {
     ResultSet resultSet;
     List<Club> clubs = new ArrayList<>();
     ReadOnlyTransaction transaction = dbClient.readOnlyTransaction();

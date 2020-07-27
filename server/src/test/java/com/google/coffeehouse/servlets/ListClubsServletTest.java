@@ -27,6 +27,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.coffeehouse.common.Book;
 import com.google.coffeehouse.common.Club;
+import com.google.coffeehouse.common.MembershipConstants;
 import com.google.coffeehouse.storagehandler.StorageHandlerApi;
 import com.google.coffeehouse.storagehandler.StorageHandler;
 import com.google.coffeehouse.util.AuthenticationHelper;
@@ -93,6 +94,7 @@ public class ListClubsServletTest {
     notMemberHandler = mock(StorageHandlerApi.class);
     when(notMemberHandler.listClubsFromUserId(
         anyString(), eq(MembershipStatus.NOT_MEMBER))).thenReturn(Arrays.asList(testClub));
+
 
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
@@ -162,6 +164,38 @@ public class ListClubsServletTest {
     assertEquals(testContentWarnings, c.getContentWarnings());
     assertEquals(BOOK_TITLE, c.getCurrentBook().getTitle());
     assertEquals(BOOK_ID, c.getCurrentBook().getBookId());
+  }
+
+  @Test
+  public void doGet_noClubsToReturnWhenMemberOfAll() throws IOException {
+    listClubsServlet = new ListClubsServlet(verifier, memberHandler);
+    when(request.getParameter(eq(ListClubsServlet.ID_TOKEN_PARAMETER))).thenReturn(ID_TOKEN);
+    when(request.getParameter(eq(ListClubsServlet.MEMBERSHIP_STATUS_PARAMETER)))
+        .thenReturn(ListClubsServlet.NOT_MEMBER);
+
+    listClubsServlet.doGet(request, response);
+    String result = stringWriter.toString();
+  
+    Gson gson = new Gson();
+    Club[] clubs = gson.fromJson(result, Club[].class);
+
+    assertEquals(0, clubs.length);
+  }
+
+  @Test
+  public void doGet_noClubsToReturnWhenNotMemberOfAll() throws IOException {
+    listClubsServlet = new ListClubsServlet(verifier, notMemberHandler);
+    when(request.getParameter(eq(ListClubsServlet.ID_TOKEN_PARAMETER))).thenReturn(ID_TOKEN);
+    when(request.getParameter(eq(ListClubsServlet.MEMBERSHIP_STATUS_PARAMETER)))
+        .thenReturn(ListClubsServlet.MEMBER);
+
+    listClubsServlet.doGet(request, response);
+    String result = stringWriter.toString();
+  
+    Gson gson = new Gson();
+    Club[] clubs = gson.fromJson(result, Club[].class);
+
+    assertEquals(0, clubs.length);
   }
 
   @Test

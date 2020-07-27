@@ -104,8 +104,9 @@ public class LeaveClubServlet extends HttpServlet {
    * @param response the response from this method, will set the status to 200 (OK).
    *     If the request object has a valid JSON body without the required fields "idToken" and
    *     "clubId", the response will send a "400 Bad Request error". If the request object is
-   *     attempting to delete a membership which does not exist in the database, the response will
-   *     send a "409 Conflict" status. If the request object is unable to be parsed, the response
+   *     attempting to delete a membership which does not exist in the database, or if the request
+   *     object is attempting to delete the membership of an owner, the response will send a
+   *     "409 Conflict" status. If the request object is unable to be parsed, the response
    *     will send a "500 Internal Server error". If the request object does not have a valid ID
    *     token, the response object will send a "403 Forbidden error"
    * @throws IOException if an input or output error is detected when the servlet handles the request
@@ -128,12 +129,16 @@ public class LeaveClubServlet extends HttpServlet {
       }
       storageHandler.deleteMembership(userId, clubId);
     } catch (IllegalArgumentException e) {
-      System.out.println(LOG_INPUT_ERROR_MESSAGE + e.getMessage());
-      if (e.getMessage() == MembershipConstants.PERSON_NOT_IN_CLUB) {
+      String error = e.getMessage();
+      System.out.println(LOG_INPUT_ERROR_MESSAGE + error);
+      if (error == MembershipConstants.PERSON_NOT_IN_CLUB) {
         response.sendError(HttpServletResponse.SC_CONFLICT,
                            MembershipConstants.PERSON_NOT_IN_CLUB);
+      } else if (error == MembershipConstants.OWNER_CAN_NOT_LEAVE_CLUB) {
+        response.sendError(HttpServletResponse.SC_CONFLICT,
+                           MembershipConstants.OWNER_CAN_NOT_LEAVE_CLUB);
       } else {
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, error);
       }
       return;
     } catch (GeneralSecurityException e) {
