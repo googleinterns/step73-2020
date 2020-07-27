@@ -360,11 +360,7 @@ public class StorageHandlerTest {
   }
 
   @Test
-  public void getListOfClubs_notMemberThrowsException() throws Exception {
-    List<Club> expected = new ArrayList<Club>();
-    expected.add(StorageHandlerTestHelper.createTestClubObject("clubs1", /* contentWarning= */true));
-    expected.add(StorageHandlerTestHelper.createTestClubObject("clubs2", /* contentWarning= */true));
-    expected.add(StorageHandlerTestHelper.createTestClubObject("clubs3", /* contentWarning= */true));
+  public void getListOfClubs_notMemberWhenMemberOfAllExistingClubs() throws Exception {
     StorageHandlerTestHelper.insertPerson("member");
     StorageHandlerTestHelper.insertPerson("owner");    
     StorageHandlerTestHelper.insertClub("clubs1", /* owner_id= */"owner");
@@ -374,9 +370,21 @@ public class StorageHandlerTest {
     StorageHandlerTestHelper.insertMembership("member", "clubs1", MembershipConstants.MEMBER);
     StorageHandlerTestHelper.insertMembership("member", "clubs2", MembershipConstants.MEMBER);
     StorageHandlerTestHelper.insertMembership("member", "clubs3", MembershipConstants.MEMBER);
-    assertThrows(RuntimeException.class, () -> {
-      StorageHandler.getListOfClubs(
-        dbClient, "member", MembershipConstants.MembershipStatus.NOT_MEMBER);
-    });
+    List<Club> actual =  new ArrayList<Club>(StorageHandler.getListOfClubs(dbClient, "member",
+                                             MembershipConstants.MembershipStatus.NOT_MEMBER));
+    assertEquals(0, actual.size());
+  }
+
+  @Test
+  public void getListOfClubs_memberWhenNotMemberOfAllExistingClubs() throws Exception {
+    StorageHandlerTestHelper.insertPerson("member");
+    StorageHandlerTestHelper.insertPerson("owner");    
+    StorageHandlerTestHelper.insertClub("clubs1", /* owner_id= */"owner");
+    StorageHandlerTestHelper.insertClub("clubs2", /* owner_id= */"owner");
+    StorageHandlerTestHelper.insertClub("clubs3", /* owner_id= */"owner");
+    StorageHandlerTestHelper.insertBook("book");
+    List<Club> actual =  new ArrayList<Club>(StorageHandler.getListOfClubs(dbClient, "member",
+                                             MembershipConstants.MembershipStatus.MEMBER));
+    assertEquals(0, actual.size());
   }
 }
