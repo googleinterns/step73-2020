@@ -10,6 +10,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import { Link } from "react-router-dom"
 import { makeStyles } from "@material-ui/core/styles";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import { Theme } from "@material-ui/core/styles";
@@ -52,6 +53,10 @@ const useStyles = makeStyles((theme: Theme) =>
     clubTitle: {
       marginBottom: theme.spacing(0),
       maxWidth: '500px',
+    },
+    link: {
+      color: theme.palette.text.primary,
+      textDecoration: 'none'
     },
     listedClubsContainer: {
       alignItems: 'center',
@@ -120,14 +125,22 @@ export function ClubList(props: ClubListProps) {
                 <div className={classes.clubHeader}>
                   <h2 className={classes.clubTitle}>{item.name}</h2>
                   <div className={classes.buttonContainer}>
-                    <Button
-                      className={classes.button}
-                      color="primary"
-                      endIcon={<PageviewIcon />}
-                      variant="contained"
+                    <Link to={{
+                      pathname:'/Club/' + item.name,
+                      state: {club: item}
+                      }}
+                      className={classes.link}
+                      key={item.name}
                     >
-                      View Club
-                    </Button>
+                      <Button
+                        className={classes.button}
+                        color="primary"
+                        endIcon={<PageviewIcon />}
+                        variant="contained"
+                      >
+                        View Club
+                      </Button>
+                    </Link>
                     {item.ownerId !== props.userId ? (
                       <Button
                         className={classes.button}
