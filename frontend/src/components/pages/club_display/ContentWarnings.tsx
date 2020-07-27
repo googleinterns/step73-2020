@@ -28,14 +28,14 @@ export const ContentWarnings = (props: ContentWarningsProps) => {
 
   if (contentWarnings) {
     return (
-        <div>
+        <>
           <ul className={classes.warningsList}>
             <div className={classes.warningsHeader}>Content Warnings:</div>
             {contentWarnings.map((item, index) => (
               <li>{item}</li>
             ))}
           </ul>
-        </div>
+        </>
     );
   } else {
     return (

@@ -24,7 +24,7 @@ export const BookInfo = (props: BookInfoProps) => {
   const classes = useStyles();
 
   return (
-    <div>
+    <>
       <div className={classes.boldTextElement}>
         Current Book:
       </div>
@@ -32,6 +32,6 @@ export const BookInfo = (props: BookInfoProps) => {
         <div>{props.book.title}</div>
         <div>by {props.book.author}</div>
       </p>
-    </div>
+    </>
   );
 }
