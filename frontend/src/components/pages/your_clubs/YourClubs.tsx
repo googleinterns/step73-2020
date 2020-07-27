@@ -53,10 +53,10 @@ export const YourClubs = () => {
   const [listedClubs, setListedClubs] =
     React.useState<ClubInterface[]|undefined>(undefined);
   const [numClubsDisplayed, setNumClubsDisplayed] =
-    React.useState<number|undefined>(DEFAULT_NUM_DISPLAYED);
+    React.useState<number>(DEFAULT_NUM_DISPLAYED);
   const [createNewClub, setCreateNewClub] = React.useState<boolean>(false);
 
-  /* Re-renders Profile only when number of displayed clubs changes. */
+  /* Re-renders YourClubs only when number of displayed clubs changes. */
   React.useEffect(() => {
     (async() => {
       const numClubsToDisplay = numClubsDisplayed
@@ -64,7 +64,6 @@ export const YourClubs = () => {
         : setNumClubsDisplayed(DEFAULT_NUM_DISPLAYED)
       updateClubList();
     })();
-    console.log(numClubsDisplayed);
   }, [numClubsDisplayed]);
 
   const handleNumClubsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
