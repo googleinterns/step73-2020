@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface ClubDescriptionProps {
   description: string,
-};
+}
 
 /** Displays the club's description. */
 export const ClubDescription = (props: ClubDescriptionProps) => {

@@ -13,7 +13,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import { Theme } from "@material-ui/core/styles";
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     link: {
       color: theme.palette.text.primary,
-      textDecoration: 'none'
+      textDecoration: 'none',
     },
     listedClubsContainer: {
       alignItems: 'center',

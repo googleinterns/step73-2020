@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface BookInfoProps {
   book: BookInterface;
-};
+}
 
 /** Displays the title and author of the club's current book. */
 export const BookInfo = (props: BookInfoProps) => {
