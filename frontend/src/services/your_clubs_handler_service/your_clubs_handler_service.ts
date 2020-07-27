@@ -81,10 +81,7 @@ export class YourClubsHandlerService {
   async leaveClub(clubId: string, token: string): Promise<boolean> {
     try {
       const status = await this.backend.leaveClub(clubId, token);
-      if (status === 200) {
-        return true;
-      }
-      return false;
+      return status === 200;
     } catch (err) {
       return false;
     }
@@ -99,10 +96,7 @@ export class YourClubsHandlerService {
   async joinClub(clubId: string, token: string): Promise<boolean> {
     try {
       const status = await this.backend.joinClub(clubId, token);
-      if (status === 200) {
-        return true;
-      }
-      return false;
+      return status === 200;
     } catch (err) {
       return false;
     }
