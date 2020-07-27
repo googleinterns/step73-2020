@@ -190,7 +190,7 @@ public class StorageHandler {
   * This method also checks if the person is the owner of the club by calling a helper function.
   * If the person is a member, and not the owner, this method will buffer a single mutation
   * that deletes the membership. If the person is the owner of the club, it will throw an exception
-  * indicating that the owner can not leave their own club. If the person is not a member, it will
+  * indicating that the owner can't leave their own club. If the person is not a member, it will
   * throw an exception indicating that the person is already not a member of the club.
   *
   * @param  dbClient    the database client
