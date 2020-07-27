@@ -171,7 +171,7 @@ export function ClubList(props: ClubListProps) {
 
 interface ClubDescriptionProps {
   description: string,
-};
+}
 
 /** Displays the club's description. */
 function ClubDescription(props: ClubDescriptionProps) {
@@ -190,8 +190,8 @@ function ClubDescription(props: ClubDescriptionProps) {
 }
 
 interface BookInfoProps {
-  book: BookInterface;
-};
+  book: BookInterface,
+}
 
 /** Displays the title and author of the club's current book. */
 function BookInfo(props: BookInfoProps) {
