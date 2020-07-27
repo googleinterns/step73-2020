@@ -93,6 +93,9 @@ public class StorageHandlerHelper {
       while (resultSet.next()) {
         count = resultSet.getLong("count");
       }
+      if (count == 0) {
+        throw new IllegalArgumentException(MembershipConstants.NO_MEMBERS);
+      } 
     }
     return count;
   }

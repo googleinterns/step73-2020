@@ -120,7 +120,8 @@ public class StorageHandlerHelperTest {
   public void getMemberCount_noMember() throws Exception {
     StorageHandlerTestHelper.insertClubWithContentWarnings("club");
     ReadContext readContext = dbClient.singleUse();
-    long actual = StorageHandlerHelper.getMemberCount(readContext, "club");
-    assertEquals(0, actual);
+    assertThrows(RuntimeException.class, () -> {
+      StorageHandler.getListOfMembers(dbClient, "club");
+    });
   }
 }

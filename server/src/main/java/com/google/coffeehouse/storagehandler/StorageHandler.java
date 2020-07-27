@@ -232,20 +232,20 @@ public class StorageHandler {
   */
   public static List<Person> getListOfMembers(DatabaseClient dbClient, String clubId) {
     List<Person> persons = new ArrayList<>();
-    ReadOnlyTransaction transaction = dbClient.readOnlyTransaction();
-    Long count = StorageHandlerHelper.getMemberCount(transaction, clubId);
-    if (count == 0) {
+    Statement statement = 
+        Statement.newBuilder(
+                "SELECT userId "
+                  + "FROM Memberships "
+                  + "WHERE clubId = @clubId ")
+            .bind("clubId")
+            .to(clubId)
+            .build();
+    ResultSet resultSet = dbClient.singleUse().executeQuery(statement);
+    while (resultSet.next()) {
+      persons.add(getPerson(dbClient, resultSet.getString(/* userIdIndex= */0)));
+    }
+    if (persons.size() == 0) {
       throw new IllegalArgumentException(MembershipConstants.NO_MEMBERS);
-    } else {
-      ResultSet resultSet = 
-          transaction
-              .read(
-                "Memberships",
-                KeySet.range(KeyRange.prefix(Key.of(clubId))),
-                Arrays.asList("userId"));
-      while (resultSet.next()) {
-        persons.add(getPerson(dbClient, resultSet.getString(/* userIdIndex= */0)));
-      }
     }
     return persons;
   }
@@ -260,7 +260,8 @@ public class StorageHandler {
   * @param  membershipStatus  the enum specifying whether the user is a member or not
   * @return                   the list of Clubs objects
   */
-  public static List<Club> getListOfClubs(DatabaseClient dbClient, String userId, MembershipConstants.MembershipStatus membershipStatus) {
+  public static List<Club> getListOfClubs(DatabaseClient dbClient, String userId,
+                                          MembershipConstants.MembershipStatus membershipStatus) {
     ResultSet resultSet;
     List<Club> clubs = new ArrayList<>();
     ReadOnlyTransaction transaction = dbClient.readOnlyTransaction();
@@ -287,6 +288,9 @@ public class StorageHandler {
     }
     while (resultSet.next()) {
       clubs.add(getClub(dbClient, resultSet.getString(/* clubIdIndex= */0)));
+    }
+    if (clubs.size() == 0) {
+      throw new IllegalArgumentException(MembershipConstants.NO_MEMBERS);
     }
     return clubs;
   }
