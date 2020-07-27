@@ -66,7 +66,7 @@ public class StorageHandlerTest {
     StorageHandlerTestHelper.insertPersonWithPronouns("person");
     Person actual = StorageHandler.getPerson(dbClient, "person");
     Person expected = StorageHandlerTestHelper.createTestPersonObject(
-      "person", /* pronouns= */true);
+      "person", /* pronouns= */ true);
     assertEquals(actual.getNickname(), expected.getNickname());
     assertEquals(actual.getEmail(), expected.getEmail());
     assertEquals(actual.getUserId(), expected.getUserId());
@@ -78,7 +78,7 @@ public class StorageHandlerTest {
     StorageHandlerTestHelper.insertPersonWithNullPronouns("personWithNullPronouns");
     Person actual = StorageHandler.getPerson(dbClient, "personWithNullPronouns");
     Person expected = StorageHandlerTestHelper.createTestPersonObject(
-      "personWithNullPronouns", /* pronouns= */false);
+      "personWithNullPronouns", /* pronouns= */ false);
     assertEquals(actual.getNickname(), expected.getNickname());
     assertEquals(actual.getEmail(), expected.getEmail());
     assertEquals(actual.getUserId(), expected.getUserId());
@@ -98,8 +98,8 @@ public class StorageHandlerTest {
     Book actual = StorageHandler.getBook(dbClient, "book");
     Book expected = StorageHandlerTestHelper.createTestBookObject(
                                                 "book",
-                                                /* isbnExists= */true,
-                                                 /* authorExists= */true);
+                                                /* isbnExists= */ true,
+                                                 /* authorExists= */ true);
     assertEquals(actual.getTitle(), expected.getTitle());
     assertEquals(actual.getBookId(), expected.getBookId());
     assertEquals(actual.getAuthor(), expected.getAuthor());
@@ -112,8 +112,8 @@ public class StorageHandlerTest {
     Book actual = StorageHandler.getBook(dbClient, "bookNullIsbn");
     Book expected = StorageHandlerTestHelper.createTestBookObject(
                                                 "bookNullIsbn",
-                                                /* isbnExists= */false,
-                                                 /* authorExists= */true);
+                                                /* isbnExists= */ false,
+                                                 /* authorExists= */ true);
     assertEquals(actual.getTitle(), expected.getTitle());
     assertEquals(actual.getBookId(), expected.getBookId());
     assertEquals(actual.getAuthor(), expected.getAuthor());
@@ -126,8 +126,8 @@ public class StorageHandlerTest {
     Book actual = StorageHandler.getBook(dbClient, "bookNullAuthor");
     Book expected = StorageHandlerTestHelper.createTestBookObject(
                                                 "bookNullAuthor",
-                                                /* isbnExists= */true,
-                                                 /* authorExists= */false);
+                                                /* isbnExists= */ true,
+                                                 /* authorExists= */ false);
     assertEquals(actual.getTitle(), expected.getTitle());
     assertEquals(actual.getBookId(), expected.getBookId());
     assertEquals(actual.getIsbn(), expected.getIsbn());
@@ -140,8 +140,8 @@ public class StorageHandlerTest {
     Book actual = StorageHandler.getBook(dbClient, "bookNullAuthorNullIsbn");
     Book expected = StorageHandlerTestHelper.createTestBookObject(
                                                 "bookNullAuthorNullIsbn",
-                                                /* isbnExists= */false,
-                                                 /* authorExists= */false);
+                                                /* isbnExists= */ false,
+                                                 /* authorExists= */ false);
     assertEquals(actual.getTitle(), expected.getTitle());
     assertEquals(actual.getBookId(), expected.getBookId());
     assertFalse(actual.getAuthor().isPresent());
@@ -161,7 +161,7 @@ public class StorageHandlerTest {
     StorageHandlerTestHelper.insertClubWithContentWarnings("clubWithContentWarnings");
     Club actual = StorageHandler.getClub(dbClient, "clubWithContentWarnings");
     Club expected = StorageHandlerTestHelper.createTestClubObject(
-      "clubWithContentWarnings", /* contentWarnings= */true);
+      "clubWithContentWarnings", /* contentWarnings= */ true);
     assertEquals(actual.getName(), expected.getName());
     assertEquals(actual.getOwnerId(), expected.getOwnerId());
     assertEquals(actual.getClubId(), expected.getClubId());
@@ -177,7 +177,7 @@ public class StorageHandlerTest {
     StorageHandlerTestHelper.insertClubWithNoContentWarnings("clubWithNoContentWarnings");
     Club actual = StorageHandler.getClub(dbClient, "clubWithNoContentWarnings");
     Club expected = StorageHandlerTestHelper.createTestClubObject(
-      "clubWithNoContentWarnings", /* contentWarnings= */false);
+      "clubWithNoContentWarnings", /* contentWarnings= */ false);
     assertEquals(actual.getName(), expected.getName());
     assertEquals(actual.getOwnerId(), expected.getOwnerId());
     assertEquals(actual.getClubId(), expected.getClubId());
@@ -236,7 +236,7 @@ public class StorageHandlerTest {
 
   @Test
   public void getListOfMembers_none() throws Exception {
-    StorageHandlerTestHelper.insertClub("club", /* owner_id= */"owner");
+    StorageHandlerTestHelper.insertClub("club", /* owner_id= */ "owner");
     assertThrows(RuntimeException.class, () -> {
       StorageHandler.getListOfMembers(dbClient, "club");
     });
@@ -245,10 +245,10 @@ public class StorageHandlerTest {
   @Test
   public void getListOfMembers_oneOwner() throws Exception {
     List<Person> expected = new ArrayList<Person>();
-    expected.add(StorageHandlerTestHelper.createTestPersonObject("owner", /* pronouns= */true));
+    expected.add(StorageHandlerTestHelper.createTestPersonObject("owner", /* pronouns= */ true));
 
     StorageHandlerTestHelper.insertPerson("owner");
-    StorageHandlerTestHelper.insertClub("club", /* owner_id= */"owner");
+    StorageHandlerTestHelper.insertClub("club", /* owner_id= */ "owner");
     StorageHandlerTestHelper.insertMembership("owner", "club", MembershipConstants.OWNER);
     List<Person> actual =  new ArrayList<Person>(StorageHandler.getListOfMembers(dbClient, "club"));
 
@@ -262,11 +262,11 @@ public class StorageHandlerTest {
   @Test
   public void getListOfMembers_ownerAndMembers() throws Exception {
     List<Person> expected = new ArrayList<Person>();
-    expected.add(StorageHandlerTestHelper.createTestPersonObject("member", /* pronouns= */true));
-    expected.add(StorageHandlerTestHelper.createTestPersonObject("owner", /* pronouns= */true));
+    expected.add(StorageHandlerTestHelper.createTestPersonObject("member", /* pronouns= */ true));
+    expected.add(StorageHandlerTestHelper.createTestPersonObject("owner", /* pronouns= */ true));
 
     StorageHandlerTestHelper.insertPerson("owner");
-    StorageHandlerTestHelper.insertClub("club", /* owner_id= */"owner");
+    StorageHandlerTestHelper.insertClub("club", /* owner_id= */ "owner");
     StorageHandlerTestHelper.insertMembership("owner", "club", MembershipConstants.OWNER);
 
     StorageHandlerTestHelper.insertPerson("member");
@@ -287,14 +287,17 @@ public class StorageHandlerTest {
   @Test
   public void getListOfClubs_memberOfAll() throws Exception {
     List<Club> expected = new ArrayList<Club>();
-    expected.add(StorageHandlerTestHelper.createTestClubObject("clubs1", /* contentWarning= */true));
-    expected.add(StorageHandlerTestHelper.createTestClubObject("clubs2", /* contentWarning= */true));
-    expected.add(StorageHandlerTestHelper.createTestClubObject("clubs3", /* contentWarning= */true));
+    expected.add(StorageHandlerTestHelper.createTestClubObject(
+      "clubs1", /* contentWarning= */ true));
+    expected.add(StorageHandlerTestHelper.createTestClubObject(
+      "clubs2", /* contentWarning= */ true));
+    expected.add(StorageHandlerTestHelper.createTestClubObject(
+      "clubs3", /* contentWarning= */ true));
 
     StorageHandlerTestHelper.insertPerson("member");
-    StorageHandlerTestHelper.insertClub("clubs1", /* owner_id= */"owner");
-    StorageHandlerTestHelper.insertClub("clubs2", /* owner_id= */"owner");
-    StorageHandlerTestHelper.insertClub("clubs3", /* owner_id= */"owner");
+    StorageHandlerTestHelper.insertClub("clubs1", /* owner_id= */ "owner");
+    StorageHandlerTestHelper.insertClub("clubs2", /* owner_id= */ "owner");
+    StorageHandlerTestHelper.insertClub("clubs3", /* owner_id= */ "owner");
     StorageHandlerTestHelper.insertMembership("member", "clubs1", MembershipConstants.MEMBER);
     StorageHandlerTestHelper.insertMembership("member", "clubs2", MembershipConstants.MEMBER);
     StorageHandlerTestHelper.insertMembership("member", "clubs3", MembershipConstants.MEMBER);
@@ -317,10 +320,10 @@ public class StorageHandlerTest {
   @Test
   public void getListOfClubs_memberOfOne() throws Exception {
     List<Club> expected = new ArrayList<Club>();
-    expected.add(StorageHandlerTestHelper.createTestClubObject("club", /* contentWarning= */true));
+    expected.add(StorageHandlerTestHelper.createTestClubObject("club", /* contentWarning= */ true));
     StorageHandlerTestHelper.insertPerson("member");
     StorageHandlerTestHelper.insertPerson("owner");
-    StorageHandlerTestHelper.insertClub("club", /* owner_id= */"owner");
+    StorageHandlerTestHelper.insertClub("club", /* owner_id= */ "owner");
     StorageHandlerTestHelper.insertMembership("owner", "club", MembershipConstants.OWNER);
     StorageHandlerTestHelper.insertBook("book");
     StorageHandlerTestHelper.insertMembership("member", "club", MembershipConstants.MEMBER);
@@ -337,14 +340,17 @@ public class StorageHandlerTest {
   @Test
   public void getListOfClubs_memberOfNone() throws Exception {
     List<Club> expected = new ArrayList<Club>();
-    expected.add(StorageHandlerTestHelper.createTestClubObject("clubs1", /* contentWarning= */true));
-    expected.add(StorageHandlerTestHelper.createTestClubObject("clubs2", /* contentWarning= */true));
-    expected.add(StorageHandlerTestHelper.createTestClubObject("clubs3", /* contentWarning= */true));
+    expected.add(StorageHandlerTestHelper.createTestClubObject(
+      "clubs1", /* contentWarning= */ true));
+    expected.add(StorageHandlerTestHelper.createTestClubObject(
+      "clubs2", /* contentWarning= */ true));
+    expected.add(StorageHandlerTestHelper.createTestClubObject(
+      "clubs3", /* contentWarning= */ true));
     StorageHandlerTestHelper.insertPerson("non-member");
     StorageHandlerTestHelper.insertPerson("owner");    
-    StorageHandlerTestHelper.insertClub("clubs1", /* owner_id= */"owner");
-    StorageHandlerTestHelper.insertClub("clubs2", /* owner_id= */"owner");
-    StorageHandlerTestHelper.insertClub("clubs3", /* owner_id= */"owner");
+    StorageHandlerTestHelper.insertClub("clubs1", /* owner_id= */ "owner");
+    StorageHandlerTestHelper.insertClub("clubs2", /* owner_id= */ "owner");
+    StorageHandlerTestHelper.insertClub("clubs3", /* owner_id= */ "owner");
     StorageHandlerTestHelper.insertBook("book");
     List<Club> actual =  new ArrayList<Club>(StorageHandler.getListOfClubs(dbClient, "non-member",
                                              MembershipConstants.MembershipStatus.NOT_MEMBER));
@@ -363,9 +369,9 @@ public class StorageHandlerTest {
   public void getListOfClubs_notMemberWhenMemberOfAllExistingClubs() throws Exception {
     StorageHandlerTestHelper.insertPerson("member");
     StorageHandlerTestHelper.insertPerson("owner");    
-    StorageHandlerTestHelper.insertClub("clubs1", /* owner_id= */"owner");
-    StorageHandlerTestHelper.insertClub("clubs2", /* owner_id= */"owner");
-    StorageHandlerTestHelper.insertClub("clubs3", /* owner_id= */"owner");
+    StorageHandlerTestHelper.insertClub("clubs1", /* owner_id= */ "owner");
+    StorageHandlerTestHelper.insertClub("clubs2", /* owner_id= */ "owner");
+    StorageHandlerTestHelper.insertClub("clubs3", /* owner_id= */ "owner");
     StorageHandlerTestHelper.insertBook("book");
     StorageHandlerTestHelper.insertMembership("member", "clubs1", MembershipConstants.MEMBER);
     StorageHandlerTestHelper.insertMembership("member", "clubs2", MembershipConstants.MEMBER);
@@ -379,9 +385,9 @@ public class StorageHandlerTest {
   public void getListOfClubs_memberWhenNotMemberOfAllExistingClubs() throws Exception {
     StorageHandlerTestHelper.insertPerson("member");
     StorageHandlerTestHelper.insertPerson("owner");    
-    StorageHandlerTestHelper.insertClub("clubs1", /* owner_id= */"owner");
-    StorageHandlerTestHelper.insertClub("clubs2", /* owner_id= */"owner");
-    StorageHandlerTestHelper.insertClub("clubs3", /* owner_id= */"owner");
+    StorageHandlerTestHelper.insertClub("clubs1", /* owner_id= */ "owner");
+    StorageHandlerTestHelper.insertClub("clubs2", /* owner_id= */ "owner");
+    StorageHandlerTestHelper.insertClub("clubs3", /* owner_id= */ "owner");
     StorageHandlerTestHelper.insertBook("book");
     List<Club> actual =  new ArrayList<Club>(StorageHandler.getListOfClubs(dbClient, "member",
                                              MembershipConstants.MembershipStatus.MEMBER));
