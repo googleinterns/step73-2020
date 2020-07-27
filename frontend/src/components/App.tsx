@@ -3,6 +3,7 @@ import * as React from "react";
 import AppBar from "./appbar/AppBar";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import clsx from "clsx";
+import { Club } from "./pages/club/Club";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { defaultServices } from "./contexts/default_services";
 import Drawer from "./drawer/Drawer";
@@ -78,10 +79,11 @@ function UserLoggedIn(props: UserLoggedInProps) {
         />
         <main>
           <Switch>
+            <Route exact path={PageConstants.URL_YOUR_CLUBS} component={YourClubs} />
             <Route exact path={PageConstants.URL_EXPLORE} component={Explore} />
             <Route exact path={PageConstants.URL_PROFILE} component={Profile} />
-            <Route exact path={PageConstants.URL_YOUR_CLUBS} component={YourClubs} />
             <Redirect to={PageConstants.URL_YOUR_CLUBS} />
+            <Route path={PageConstants.URL_CLUB} component={Club} />
           </Switch>
         </main>
       </ServiceContext.Provider>
