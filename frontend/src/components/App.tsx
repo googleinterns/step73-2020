@@ -80,10 +80,10 @@ function UserLoggedIn(props: UserLoggedInProps) {
         <main>
           <Switch>
             <Route exact path={PageConstants.URL_YOUR_CLUBS} component={YourClubs} />
+            <Route path={PageConstants.URL_CLUB} component={Club} />
             <Route exact path={PageConstants.URL_EXPLORE} component={Explore} />
             <Route exact path={PageConstants.URL_PROFILE} component={Profile} />
             <Redirect to={PageConstants.URL_YOUR_CLUBS} />
-            <Route path={PageConstants.URL_CLUB} component={Club} />
           </Switch>
         </main>
       </ServiceContext.Provider>
