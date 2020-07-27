@@ -186,10 +186,12 @@ public class StorageHandler {
 
   /**
   * Runs a transaction that deletes a membership (or ownership) from the database.
-  * This method checks if a person is already a member of a club by calling a helper function.
-  * If the person does exist, this method will buffer a single mutation that deletes the
-  * membership. Otherwise, it will throw an exception indicating that the person is
-  * already not a member of the club.
+  * This method checks if the person is already a member of a club by calling a helper function.
+  * This method also checks if the person is the owner of the club by calling a helper function.
+  * If the person is a member, and not the owner, this method will buffer a single mutation
+  * that deletes the membership. If the person is the owner of the club, it will throw an exception
+  * indicating that the owner can not leave their own club. If the person is not a member, it will
+  * throw an exception indicating that the person is already not a member of the club.
   *
   * @param  dbClient    the database client
   * @param  userId      the user ID string used to perform the transaction
