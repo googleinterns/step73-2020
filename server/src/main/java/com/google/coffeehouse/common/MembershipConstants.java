@@ -22,6 +22,7 @@ public class MembershipConstants {
   public static final int OWNER = 2;
 
   public static final String PERSON_ALREADY_IN_CLUB = "Person is already a member of club.";
+  public static final String NO_CLUBS = "No clubs that the person is a \"%s\" of.";
   public static final String OWNER_CAN_NOT_LEAVE_CLUB = "Owner can't leave club they created.";
   public static final String PERSON_NOT_IN_CLUB = "Person is not a member of club.";
 

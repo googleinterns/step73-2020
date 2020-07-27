@@ -225,8 +225,9 @@ public class StorageHandler {
 
   /**
   * Creates and returns a list of {@link Persons}s that are a member of a club.
-  * This method builds a {@link Person} for each person who is a member of the club
-  * specified by club ID. Each {@link Person} is added to a list that gets returned.
+  * This method builds a {@link Person} for each person who is a member of the club, as specified
+  * by club ID. Each {@link Person} is added to a list that gets returned. If there are no members,
+  * this method will throw an exception indicating that there are no members in the club.
   *
   * @param  dbClient    the database client
   * @param  clubId      the club ID string used to query
@@ -255,7 +256,8 @@ public class StorageHandler {
   /**
   * Creates and returns a list of {@link Club}s depending on the user's membership status.
   * This method builds a {@link Club} for each club that a user is either a member of
-  * or not a member of. Each {@link Club} is added to a list that gets returned.
+  * or not a member of. Each {@link Club} is added to a list that gets returned. If there are no
+  * club, this method will throw an exception indicating that there are no members in the club.
   *
   * @param  dbClient          the database client
   * @param  userId            the user ID string used to query and get a list of clubs
@@ -292,7 +294,8 @@ public class StorageHandler {
       clubs.add(getClub(dbClient, resultSet.getString(/* clubIdIndex= */0)));
     }
     if (clubs.size() == 0) {
-      throw new IllegalArgumentException(MembershipConstants.NO_MEMBERS);
+      throw new IllegalArgumentException(
+        String.format(MembershipConstants.NO_CLUBS, membershipStatus));
     }
     return clubs;
   }

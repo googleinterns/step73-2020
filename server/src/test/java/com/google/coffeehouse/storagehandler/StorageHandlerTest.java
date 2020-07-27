@@ -291,16 +291,16 @@ public class StorageHandlerTest {
     expected.add(StorageHandlerTestHelper.createTestClubObject("clubs2", /* contentWarning= */true));
     expected.add(StorageHandlerTestHelper.createTestClubObject("clubs3", /* contentWarning= */true));
 
-    StorageHandlerTestHelper.insertPerson("non-member");
+    StorageHandlerTestHelper.insertPerson("member");
     StorageHandlerTestHelper.insertClub("clubs1", /* owner_id= */"owner");
     StorageHandlerTestHelper.insertClub("clubs2", /* owner_id= */"owner");
     StorageHandlerTestHelper.insertClub("clubs3", /* owner_id= */"owner");
-    StorageHandlerTestHelper.insertMembership("non-member", "clubs1", MembershipConstants.MEMBER);
-    StorageHandlerTestHelper.insertMembership("non-member", "clubs2", MembershipConstants.MEMBER);
-    StorageHandlerTestHelper.insertMembership("non-member", "clubs3", MembershipConstants.MEMBER);
+    StorageHandlerTestHelper.insertMembership("member", "clubs1", MembershipConstants.MEMBER);
+    StorageHandlerTestHelper.insertMembership("member", "clubs2", MembershipConstants.MEMBER);
+    StorageHandlerTestHelper.insertMembership("member", "clubs3", MembershipConstants.MEMBER);
     StorageHandlerTestHelper.insertBook("book");
     
-    List<Club> actual =  new ArrayList<Club>(StorageHandler.getListOfClubs(dbClient, "non-member",
+    List<Club> actual =  new ArrayList<Club>(StorageHandler.getListOfClubs(dbClient, "member",
                                              MembershipConstants.MembershipStatus.MEMBER));
 
     assertEquals(3, actual.size());
@@ -357,5 +357,26 @@ public class StorageHandlerTest {
       assertEquals(actual.get(i).getDescription(), expected.get(i).getDescription());
       assertEquals(actual.get(i).getCurrentBook().getTitle(), expected.get(i).getCurrentBook().getTitle());
     }
+  }
+
+  @Test
+  public void getListOfClubs_notMemberThrowsException() throws Exception {
+    List<Club> expected = new ArrayList<Club>();
+    expected.add(StorageHandlerTestHelper.createTestClubObject("clubs1", /* contentWarning= */true));
+    expected.add(StorageHandlerTestHelper.createTestClubObject("clubs2", /* contentWarning= */true));
+    expected.add(StorageHandlerTestHelper.createTestClubObject("clubs3", /* contentWarning= */true));
+    StorageHandlerTestHelper.insertPerson("member");
+    StorageHandlerTestHelper.insertPerson("owner");    
+    StorageHandlerTestHelper.insertClub("clubs1", /* owner_id= */"owner");
+    StorageHandlerTestHelper.insertClub("clubs2", /* owner_id= */"owner");
+    StorageHandlerTestHelper.insertClub("clubs3", /* owner_id= */"owner");
+    StorageHandlerTestHelper.insertBook("book");
+    StorageHandlerTestHelper.insertMembership("member", "clubs1", MembershipConstants.MEMBER);
+    StorageHandlerTestHelper.insertMembership("member", "clubs2", MembershipConstants.MEMBER);
+    StorageHandlerTestHelper.insertMembership("member", "clubs3", MembershipConstants.MEMBER);
+    assertThrows(RuntimeException.class, () -> {
+      StorageHandler.getListOfClubs(
+        dbClient, "member", MembershipConstants.MembershipStatus.NOT_MEMBER);
+    });
   }
 }
