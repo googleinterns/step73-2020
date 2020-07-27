@@ -156,7 +156,7 @@ export function ExploreClubList(props: ExploreClubListProps) {
       </div>
     );
   } else {
-    return (<div></div>);
+    return (<></>);
   }
 }
 
