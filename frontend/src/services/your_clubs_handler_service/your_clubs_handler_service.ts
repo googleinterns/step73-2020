@@ -57,8 +57,8 @@ export class YourClubsHandlerService {
 
   /**
    * Lists clubs that a user is in or not in.
-   * @param token the ID token of the user
    * @param membership the relationship of the user to the clubs returned
+   * @param token the ID token of the user
    * @return the list of clubs that the user is in or not in
    * @throws FailureToGetClubsError if an error was encountered listing the clubs
    */
