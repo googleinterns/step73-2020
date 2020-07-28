@@ -4,6 +4,7 @@ import {
   FailureToCreateClubError,
   YourClubsHandlerService,
 } from "./your_clubs_handler_service";
+import { MembershipType } from "../backend_service_interface/backend_service_interface";
 
 const testBook = {
   bookId: "BOOK_ID",
@@ -21,7 +22,7 @@ const testClub = {
   currentBook: testBook,
 }
 const TOKEN = "Token";
-const MEMBERSHIP = "member";
+const MEMBERSHIP = MembershipType.Member;
 
 const createClubSuccessful = jest.fn().mockReturnValue(
   new Promise((resolve, reject) => resolve(testClub));
@@ -78,8 +79,8 @@ it("calls the createClub function correctly", async () => {
 });
 
 it("calls the listClubs function correctly", async () => {
-  const response = await clubService.listClubs(TOKEN, MEMBERSHIP);
-  expect(listClubsSuccessful).toHaveBeenCalledWith(TOKEN, MEMBERSHIP);
+  const response = await clubService.listClubs(MEMBERSHIP, TOKEN);
+  expect(listClubsSuccessful).toHaveBeenCalledWith(MEMBERSHIP, TOKEN);
   expect(response).toStrictEqual([testClub]);
 });
 
@@ -108,7 +109,7 @@ it("throws FailureToGetClubsError when getClub fails", async () => {
 });
 
 it("throws FailureToGetClubsError when listClubs fails", async () => {
-  await expect(failingClubService.listClubs(TOKEN, MEMBERSHIP))
+  await expect(failingClubService.listClubs(MEMBERSHIP, TOKEN))
   .rejects
   .toThrow(FailureToGetClubsError);
 });
