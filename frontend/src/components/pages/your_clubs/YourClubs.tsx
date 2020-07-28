@@ -72,8 +72,8 @@ export const YourClubs = () => {
 
   const updateClubList = async () => {
     const listedClubsPromise =
-      await yourClubsHandlerService.listClubs(
-          loginStatusHandlerService.getUserToken(), MembershipType.Member);
+        await yourClubsHandlerService.listClubs(MembershipType.Member,
+            loginStatusHandlerService.getUserToken());
     setListedClubs(listedClubsPromise);
   }
 

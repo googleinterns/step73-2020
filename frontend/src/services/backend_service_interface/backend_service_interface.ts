@@ -35,9 +35,8 @@ export enum MembershipType {
 
 export interface BackendYourClubsServiceInterface {
   createClub(club: ClubInterface): Promise<ClubInterface>,
-  listClubs(
-    token: string,
-    membership: MembershipType): Promise<ClubInterface[]>,
+  listClubs(membership: MembershipType,
+            token: string): Promise<ClubInterface[]>,
   leaveClub(clubId: string, token: string): Promise<number>,
   joinClub(clubId: string, token: string): Promise<number>,
   getClub(clubId: string): Promise<ClubInterface>,

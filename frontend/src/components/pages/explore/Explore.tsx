@@ -53,8 +53,8 @@ export const Explore = () => {
 
   const updateClubList = async () => {
     const listedClubsPromise =
-      await yourClubsHandlerService.listClubs(
-          loginStatusHandlerService.getUserToken(), MembershipType.NonMember);
+        await yourClubsHandlerService.listClubs(MembershipType.NonMember,
+            loginStatusHandlerService.getUserToken());
     setListedClubs(listedClubsPromise);
   }
 

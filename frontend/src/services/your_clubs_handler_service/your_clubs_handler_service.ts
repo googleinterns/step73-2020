@@ -62,10 +62,10 @@ export class YourClubsHandlerService {
    * @return the list of clubs that the user is in or not in
    * @throws FailureToGetClubsError if an error was encountered listing the clubs
    */
-  async listClubs(token: string,
-                  membership: MembershipType): Promise<ClubInterface[]> {
+  async listClubs(membership: MembershipType,
+                  token: string): Promise<ClubInterface[]> {
     try {
-      return await this.backend.listClubs(token, membership);
+      return await this.backend.listClubs(membership, token);
     } catch (err) {
       throw new FailureToGetClubsError();
     }

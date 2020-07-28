@@ -14,8 +14,8 @@ export class ClubBackendService {
   }
 
   /** Retrieves a list of clubs with some relation to a user. */
-  async listClubs(token: string,
-                  membership: MembershipType): Promise<ClubInterface[]> {
+  async listClubs(membership: MembershipType,
+                  token: string): Promise<ClubInterface[]> {
     const listClubsUrl = "/api/list-clubs?" + new URLSearchParams({
       idToken: token,
       membershipStatus: membership,
