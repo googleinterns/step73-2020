@@ -81,11 +81,11 @@ export function ClubList(props: ClubListProps) {
   const clubsToDisplay = props.clubsToDisplay;
   const [leaveClubAlertOpen, setLeaveAlertOpen] =
     React.useState<boolean>(/* closed */ false);
-  const [nameOfClubAlert, setNameofClubAlert] =
+  const [idOfClubAlert, setIdOfClubAlert] =
     React.useState<string|undefined>(undefined);
 
   const openAlertWindow = (clubId: string) => {
-    setNameofClubAlert(clubId);
+    setIdOfClubAlert(clubId);
     setLeaveAlertOpen(true);
   }
 
@@ -130,7 +130,7 @@ export function ClubList(props: ClubListProps) {
                         className={classes.button}
                         color="secondary"
                         endIcon={<HighlightOffIcon />}
-                        onClick={() => (openAlertWindow(item.name))}
+                        onClick={() => (openAlertWindow(item.clubId))}
                         variant="contained"
                       >
                         Leave Club
@@ -150,7 +150,7 @@ export function ClubList(props: ClubListProps) {
                 <LeaveClubAlertWindow
                   clubName={item.name}
                   clubId={item.clubId}
-                  nameOfClubLeaving={nameOfClubAlert}
+                  idOfClubLeaving={idOfClubAlert}
                   alertOpen={leaveClubAlertOpen}
                   handleAlertWindowClose={closeAlertWindow}
                   handleLeaveClub={handleLeaveClub}
@@ -169,7 +169,7 @@ export function ClubList(props: ClubListProps) {
 interface LeaveClubAlertWindowProps {
   clubId: string,
   clubName: string,
-  nameOfClubLeaving: string,
+  idOfClubLeaving: string,
   alertOpen: boolean,
   handleAlertWindowClose(): void,
   handleLeaveClub(clubId: string): void,
@@ -177,7 +177,7 @@ interface LeaveClubAlertWindowProps {
 
 function LeaveClubAlertWindow(props: LeaveClubAlertWindowProps) {
   return (
-    <Dialog open={props.alertOpen && (props.clubName === props.nameOfClubLeaving)}>
+    <Dialog open={props.alertOpen && (props.clubId === props.idOfClubLeaving)}>
       <DialogTitle>Leave Club '{props.clubName}'?</DialogTitle>
       <DialogContent>
         <DialogContentText>
