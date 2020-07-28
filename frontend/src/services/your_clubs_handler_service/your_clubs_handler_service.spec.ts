@@ -1,5 +1,4 @@
 import {
-  FailureToGetClubError,
   FailureToGetClubsError,
   FailureToCreateClubError,
   YourClubsHandlerService,
@@ -25,19 +24,19 @@ const TOKEN = "Token";
 const MEMBERSHIP = MembershipType.Member;
 
 const createClubSuccessful = jest.fn().mockReturnValue(
-  new Promise((resolve, reject) => resolve(testClub));
+  new Promise((resolve, reject) => resolve(testClub))
 );
 const listClubsSuccessful = jest.fn().mockReturnValue(
-  new Promise((resolve, reject) => resolve([testClub]));
+  new Promise((resolve, reject) => resolve([testClub]))
 );
 const leaveClubSuccessful = jest.fn().mockReturnValue(
-  new Promise((resolve, reject) => resolve(200));
+  new Promise((resolve, reject) => resolve(200))
 );
 const joinClubSuccessful = jest.fn().mockReturnValue(
-  new Promise((resolve, reject) => resolve(200));
+  new Promise((resolve, reject) => resolve(200))
 );
 const getClubSuccessful = jest.fn().mockReturnValue(
-  new Promise((resolve, reject) => resolve(testClub));
+  new Promise((resolve, reject) => resolve(testClub))
 );
 
 const clubService = new YourClubsHandlerService({
@@ -58,10 +57,10 @@ const getClubFailure = jest.fn().mockImplementation(() => {
   throw new Error();
 });
 const leaveClubFailure = jest.fn().mockReturnValue(
-  new Promise((resolve, reject) => resolve(500));
+  new Promise((resolve, reject) => resolve(500))
 );
 const joinClubFailure = jest.fn().mockReturnValue(
-  new Promise((resolve, reject) => resolve(500));
+  new Promise((resolve, reject) => resolve(500))
 );
 
 const failingClubService = new YourClubsHandlerService({
