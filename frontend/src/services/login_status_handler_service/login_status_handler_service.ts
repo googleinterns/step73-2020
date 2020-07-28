@@ -35,6 +35,15 @@ export class LoginStatusHandlerService implements LoginStatusHandlerInterface {
     return this.token;
   }
 
+  /** Returns the parsed ID token. */
+  public getParsedToken() {
+    // TODO: Cache this result so we don't always recompute it.
+    if (this.token) {
+      return JSON.parse(atob(this.token.split(".")[1]));
+    }
+    return "";
+  }
+
   setUserLoginStatus(loginStatus: boolean): void {
     this.userLoggedIn = loginStatus;
     if (!loginStatus) {

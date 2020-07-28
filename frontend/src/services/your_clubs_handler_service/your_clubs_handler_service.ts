@@ -1,56 +1,120 @@
-import { BackendYourClubsServiceInterface } from "../backend_service_interface/backend_service_interface";
-import { ClubProps, MockYourClubsBackendService } from "../mock_backend/mock_your_clubs_backend";
+import { BackendYourClubsServiceInterface, ClubInterface, MembershipType } from "../backend_service_interface/backend_service_interface";
 
-/** Error that occurs when Id does not exist. */
-export class ErrorLoadingClubs extends Error {
-  constructor(readonly numClubs: number) {
-    super(`Error occurred while loading ${numClubs} clubs.`);
+
+/** Error that occurs when loading clubs fails. */
+export class FailureToLoadClubError extends Error {
+  constructor() {
+    super("Error occurred while loading clubs.");
+
+    // Explicitly set prototype to allow expect().toThrow() testing.
+    Object.setPrototypeOf(this, FailureToLoadClubError.prototype);
   }
 }
 
 /** Error that occurs when an attempt to create a club fails. */
-export class ErrorCreatingClub extends Error {
-  constructor(readonly club: ClubProps) {
+export class FailureToCreateClubError extends Error {
+  constructor(readonly club: ClubInterface) {
     super(`Error occurred while creating club '${club.name}'.`);
+
+    // Explicitly set prototype to allow expect().toThrow() testing.
+    Object.setPrototypeOf(this, FailureToCreateClubError.prototype);
+  }
+}
+
+/** Error that occurs when getting a club fails. */
+export class FailureToGetClubsError extends Error {
+  constructor() {
+    super("Error occurred while getting club.");
+
+    // Explicitly set prototype to allow expect().toThrow() testing.
+    Object.setPrototypeOf(this, FailureToGetClubsError.prototype);
   }
 }
 
 /**
- * Handling service that obtains the club that a user is in and
- * loads them to the user's Your Clubs page.
+ * Communicates with backend to create, join, leave, and retrieve clubs.
  */
 export class YourClubsHandlerService {
   /** Backend is responsible for holding all YourClubs information. */
   constructor(private readonly backend: BackendYourClubsServiceInterface) {};
 
-  /* TODO: In another PR, create interfaces for handler services, and have
-   *       have JSON functionality solely in backend for stronger typing.
+  /**
+   * Creates a club on the backend given a club object.
+   * @param club the club to be created
+   * @return the club object created by the backend
+   * @throws FailureToCreateClubError if the club was unable to be created
    */
-  async createClub(club: ClubProps) {
+  async createClub(club: ClubInterface): Promise<ClubInterface> {
     try {
       if (!club?.contentWarnings) {
         club.contentWarnings = [];
       }
-      const clubJson = JSON.stringify(club);
-      const success = await this.backend.createClub(clubJson);
-      return success;
+      return await this.backend.createClub(club);
     } catch(err) {
-      throw new ErrorCreatingClub(club);
+      throw new FailureToCreateClubError(club);
     }
   }
 
-  async listClubs(numClubs: number) {
+  /**
+   * Lists clubs that a user is in or not in.
+   * @param membership the relationship of the user to the clubs returned
+   * @param token the ID token of the user
+   * @return the list of clubs that the user is in or not in
+   * @throws FailureToGetClubsError if an error was encountered listing the clubs
+   */
+  async listClubs(membership: MembershipType,
+                  token: string): Promise<ClubInterface[]> {
     try {
-      const clubsJson = await this.backend.listClubs(numClubs);
-      const clubs: ClubProps[] = JSON.parse(clubsJson);
-      return clubs;
-    } catch(err) {
-      throw new ErrorLoadingClubs(numClubs);
+      return await this.backend.listClubs(membership, token);
+    } catch (err) {
+      throw new FailureToGetClubsError();
     }
   }
 
-  async leaveClub(clubId: string) {
-    const success = await this.backend.leaveClub(clubId);
-    return success;
+  /**
+   * Removes a user from a club.
+   * @param clubId the ID of the club to be left
+   * @param token the ID token of the user
+   * @return true if the user successfully left the club, false otherwise
+   */
+  async leaveClub(clubId: string, token: string): Promise<boolean> {
+    try {
+      const status = await this.backend.leaveClub(clubId, token);
+      return status === 200;
+    } catch (err) {
+      return false;
+    }
   }
+
+  /**
+   * Joins a user to a club.
+   * @param clubId the ID of the club to be joined
+   * @param token the ID token of the user
+   * @return true if the user successfully joined the club, false otherwise
+   */
+  async joinClub(clubId: string, token: string): Promise<boolean> {
+    try {
+      const status = await this.backend.joinClub(clubId, token);
+      return status === 200;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  /**
+   * Retrieves a club given its ID.
+   * @param clubId the ID of the club to retrieve
+   * @return the retrieved club
+   * @throws FailureToGetClubsError if an error was encountered getting the club
+   */
+  async getClub(clubId: string): Promise<ClubInterface> {
+    try {
+      return await this.backend.getClub(clubId);
+    } catch(err) {
+      throw new FailureToGetClubsError();
+    }
+  }
+
+  // TODO: We have an update-club servlet that is not being touched by our
+  //       frontend (this was cut in the rush for the MVP).
 }

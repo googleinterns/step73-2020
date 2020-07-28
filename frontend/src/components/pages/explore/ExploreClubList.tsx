@@ -12,7 +12,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import InputIcon from "@material-ui/icons/Input";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import PageviewIcon from "@material-ui/icons/Pageview";
@@ -66,36 +66,34 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface ClubListProps {
+interface ExploreClubListProps {
   clubsToDisplay: ClubInterface[],
-  handleLeaveClub(clubId: string): void,
-  userId: string,
+  handleJoinClub(clubId: string): void,
 }
 
 /**
  * Displays up to the number of clubs that the user has requested to
  * the page.
  */
-export function ClubList(props: ClubListProps) {
+export function ExploreClubList(props: ExploreClubListProps) {
   const classes = useStyles();
   const clubsToDisplay = props.clubsToDisplay;
-  const [leaveClubAlertOpen, setLeaveAlertOpen] =
-    React.useState<boolean>(/* closed= */ false);
-  const [idOfClubAlert, setIdOfClubAlert] =
-    React.useState<string|undefined>(undefined);
+
+  const [joinClubAlertOpen, setJoinAlertOpen] = React.useState<boolean>(/* closed= */ false);
+  const [nameOfClubAlert, setNameofClubAlert] = React.useState<string|undefined>(undefined);
 
   const openAlertWindow = (clubId: string) => {
-    setIdOfClubAlert(clubId);
-    setLeaveAlertOpen(true);
+    setNameofClubAlert(clubId);
+    setJoinAlertOpen(true);
   }
 
   const closeAlertWindow = () => {
-    setLeaveAlertOpen(false);
+    setJoinAlertOpen(false);
   }
 
-  const handleLeaveClub = (clubId: string) => {
-    props.handleLeaveClub(clubId);
-    setLeaveAlertOpen(false);
+  const handleJoinClub = (clubId: string) => {
+    props.handleJoinClub(clubId);
+    setJoinAlertOpen(false);
   }
 
   /* If clubs to display is not yet defined. */
@@ -110,8 +108,8 @@ export function ClubList(props: ClubListProps) {
                   <h2 className={classes.clubTitle}>{item.name}</h2>
                   <div className={classes.buttonContainer}>
                     <Link to={{
-                      pathname:'/Club/' + item.name,
-                      state: {club: item}
+                        pathname: '/Club/' + item.name,
+                        state: {club: item}
                       }}
                       className={classes.link}
                       key={item.name}
@@ -125,19 +123,15 @@ export function ClubList(props: ClubListProps) {
                         View Club
                       </Button>
                     </Link>
-                    {item.ownerId !== props.userId ? (
-                      <Button
-                        className={classes.button}
-                        color="secondary"
-                        endIcon={<HighlightOffIcon />}
-                        onClick={() => (openAlertWindow(item.clubId))}
-                        variant="contained"
-                      >
-                        Leave Club
-                      </Button>
-                    ) : (
-                      <></>
-                    )}
+                    <Button
+                      className={classes.button}
+                      color="primary"
+                      endIcon={<InputIcon />}
+                      onClick={() => (openAlertWindow(item.name))}
+                      variant="contained"
+                    >
+                      Join Club
+                    </Button>
                   </div>
                 </div>
                 <div className={classes.clubContent} >
@@ -147,13 +141,13 @@ export function ClubList(props: ClubListProps) {
                   <BookInfo book={item.currentBook} />
                   <ContentWarnings contentWarnings={item.contentWarnings} />
                 </div>
-                <LeaveClubAlertWindow
+                <JoinClubAlertWindow
                   clubName={item.name}
                   clubId={item.clubId}
-                  idOfClubLeaving={idOfClubAlert}
-                  alertOpen={leaveClubAlertOpen}
+                  nameOfClubJoining={nameOfClubAlert}
+                  alertOpen={joinClubAlertOpen}
                   handleAlertWindowClose={closeAlertWindow}
-                  handleLeaveClub={handleLeaveClub}
+                  handleJoinClub={handleJoinClub}
                 />
               </div>
             </Box>
@@ -162,35 +156,36 @@ export function ClubList(props: ClubListProps) {
       </div>
     );
   } else {
-    return (<div></div>);
+    return (<></>);
   }
 }
 
-interface LeaveClubAlertWindowProps {
+interface JoinClubAlertWindowProps {
   clubId: string,
   clubName: string,
-  idOfClubLeaving: string,
+  nameOfClubJoining: string,
   alertOpen: boolean,
   handleAlertWindowClose(): void,
-  handleLeaveClub(clubId: string): void,
+  handleJoinClub(clubId: string): void,
 }
 
-function LeaveClubAlertWindow(props: LeaveClubAlertWindowProps) {
+function JoinClubAlertWindow(props: JoinClubAlertWindowProps) {
   return (
-    <Dialog open={props.alertOpen && (props.clubId === props.idOfClubLeaving)}>
-      <DialogTitle>Leave Club '{props.clubName}'?</DialogTitle>
+    <Dialog open={props.alertOpen && (props.clubName === props.nameOfClubJoining)}>
+      <DialogTitle>Join Club '{props.clubName}'?</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          By pressing 'Confirm', you will no longer be a member of Club
-          '{props.clubName}'. This means that you will no longer have access
-          to its content, including discussion forums and material.
+          By pressing 'Confirm', you will become a member of Club
+          '{props.clubName}'. This means that you will have access
+          to its content, including discussion forums and mailing lists.
+          Additionally, your name and email will appear on the mailing list.
         </DialogContentText>
         <DialogActions>
           <Button onClick={props.handleAlertWindowClose} color="primary">
             Cancel
           </Button>
           <Button
-            onClick={() => (props.handleLeaveClub(props.clubId))} color="primary"
+            onClick={() => (props.handleJoinClub(props.clubId))} color="primary"
           >
             Confirm
           </Button>

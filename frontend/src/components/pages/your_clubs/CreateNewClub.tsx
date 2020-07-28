@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BookProps, ClubProps } from "../../../services/mock_backend/mock_your_clubs_backend";
+import { BookInterface, ClubInterface } from "../../../services/backend_service_interface/backend_service_interface";
 import Button from "@material-ui/core/Button";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { createStyles } from "@material-ui/core/styles";
@@ -33,14 +33,15 @@ interface CreateNewClubWindowProps {
 
 export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
   const classes = useStyles();
-  const [club, setClub] = React.useState<ClubProps|undefined>(undefined);
-  const [book, setBook] = React.useState<BookProps|undefined>(undefined);
+  const [club, setClub] = React.useState<ClubInterface|undefined>(undefined);
+  const [book, setBook] = React.useState<BookInterface|undefined>(undefined);
   const [missingField, setMissingField] = React.useState<boolean>(false);
   const [submitSuccess, setSubmitSuccess] = React.useState<boolean>(false);
   const [contentWarningsDisplay, setContentWarningsDisplay] =
     React.useState<string|undefined>(undefined);
 
   const contextServices = React.useContext(ServiceContext);
+  const loginStatusHandlerService = contextServices.loginStatusHandlerService;
   const yourClubsHandlerService = contextServices.yourClubsHandlerService;
 
   const handleClubNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,6 +92,8 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
       setSubmitSuccess(false);
     } else {
       setMissingField(false);
+      const parsedToken = loginStatusHandlerService.getParsedToken();
+      club.ownerId = parsedToken.sub;
       const success = await yourClubsHandlerService.createClub(club);
       if (success) {
         setSubmitSuccess(true);
@@ -201,7 +204,7 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
                                be discussing."}
                 label="Book ISBN"
                 onChange={handleBookIsbnChange}
-                value={book? book.isbn : ""}
+                value={book ? book.isbn : ""}
               />
             </div>
           </form>

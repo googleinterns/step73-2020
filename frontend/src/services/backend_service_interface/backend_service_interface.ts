@@ -1,13 +1,45 @@
+export interface PersonInterface {
+  userId?: string,
+  nickname: string,
+  email: string,
+  pronouns?: string,
+}
+
+export interface BookInterface {
+  bookId?: string,
+  title: string,
+  author: string,
+  isbn?: string,
+}
+
+export interface ClubInterface {
+  name: string,
+  clubId?: string,
+  ownerId: string,
+  contentWarnings: string[],
+  description: string,
+  currentBook: BookInterface,
+}
+
 export interface BackendProfileServiceInterface {
-  loadProfile(id: string): Promise<string>,
-  updateProfile(personJson: string): Promise<boolean>,
-  deleteProfile(id: string): Promise<boolean>,
+  createPerson(person: PersonInterface): Promise<PersonInterface>,
+  loadProfile(token: string): Promise<PersonInterface>,
+  updateProfile(
+      person: PersonInterface, token: string): Promise<PersonInterface>,
+}
+
+export enum MembershipType {
+  Member = "member",
+  NonMember = "not member",
 }
 
 export interface BackendYourClubsServiceInterface {
-  createClub(clubJson: string): Promise<boolean>,
-  listClubs(numClubs: number): Promise<string>,
-  leaveClub(clubId: string): Promise<boolean>,
+  createClub(club: ClubInterface): Promise<ClubInterface>,
+  listClubs(membership: MembershipType,
+            token: string): Promise<ClubInterface[]>,
+  leaveClub(clubId: string, token: string): Promise<number>,
+  joinClub(clubId: string, token: string): Promise<number>,
+  getClub(clubId: string): Promise<ClubInterface>,
 }
 
 export interface BackendAuthenticationInterface {

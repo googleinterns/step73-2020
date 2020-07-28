@@ -11,12 +11,12 @@ interface GoogleSignInButtonProps {
 
 const GoogleSignInButton = (props: GoogleSignInButtonProps) => {
   const contextServices = React.useContext(ServiceContext);
-  const authenticationHandlerService = 
+  const authenticationHandlerService =
       contextServices.authenticationHandlerService;
-  
+
   const wrappedSignIn = async () => {
     try {
-      let token = await authenticationHandlerService.signIn(props.scope);
+      const token = await authenticationHandlerService.signIn(props.scope);
       props.tokenConsumer(token);
     } catch (err) {
       props.onFailure();

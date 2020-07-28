@@ -10,13 +10,8 @@ import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import { makeStyles } from "@material-ui/core/styles";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
-import { PersonProps } from
-  "../../../services/mock_backend/mock_profile_backend";
-import { USER_ID } from "../../../utils/temporary_testing_consts";
-import { ProfileHandlerService } from
-  "../../../services/profile_handler_service/profile_handler_service";
-import { MockProfileBackendService } from
-  "../../../services/mock_backend/mock_profile_backend";
+import { PersonInterface } from
+    "../../../services/backend_service_interface/backend_service_interface";
 import { ServiceContext } from "../../contexts/contexts";
 import { Theme } from "@material-ui/core/styles";
 import TextField from '@material-ui/core/TextField';
@@ -55,17 +50,18 @@ export default function Profile() {
    */
   const contextServices = React.useContext(ServiceContext);
   const profileHandlerService = contextServices.profileHandlerService;
+  const loginStatusHandlerService = contextServices.loginStatusHandlerService;
 
-  const [person, setPerson] = React.useState<PersonProps|undefined>(undefined);
-  const [profileId, setProfileId] = React.useState<string>(undefined);
+  const [person, setPerson] = React.useState<PersonInterface | undefined>(undefined);
   const [submitSuccess, setSubmitSuccess] = React.useState<boolean|undefined>(undefined);
 
   React.useEffect(() => {
     (async() => {
-      const personPromise = await profileHandlerService.getPerson(USER_ID);
-      setPerson(personPromise);
+      const personResponse = await profileHandlerService.getPerson(
+          loginStatusHandlerService.getUserToken());
+      setPerson(personResponse);
     })();
-  }, [profileId]); /** Re-renders Profile only when the userId changes */
+  }, []);
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPerson({...person, email: event.target.value});
@@ -86,8 +82,13 @@ export default function Profile() {
         setSubmitSuccess(false);
         return;
       }
-      const success = await profileHandlerService.updatePerson(person);
-      setSubmitSuccess(success);
+      try {
+        await profileHandlerService.updatePerson(
+            person, loginStatusHandlerService.getUserToken());
+        setSubmitSuccess(true);
+      } catch (err) {
+        setSubmitSuccess(false);
+      }
     })();
   };
 
@@ -168,7 +169,7 @@ export default function Profile() {
 
 interface DisplaySubmitStatusProps {
   success: boolean;
-  personProps: PersonProps;
+  personProps: PersonInterface;
 }
 
 /**
@@ -190,7 +191,6 @@ function DisplaySubmitStatus(props: DisplaySubmitStatusProps) {
           <p style={{ color: 'green' }}>
             Profile successfully updated.
           </p>
-
         </div>
       );
     } else {
