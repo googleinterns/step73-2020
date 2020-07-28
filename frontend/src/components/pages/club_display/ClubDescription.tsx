@@ -23,13 +23,13 @@ export const ClubDescription = (props: ClubDescriptionProps) => {
   const classes = useStyles();
 
   return (
-    <>
+    <div>
       <div className={classes.boldTextElement}>
         Description:
       </div>
       <p className={classes.textElement}>
         {props.description}
       </p>
-    </>
+    </div>
   );
 }
