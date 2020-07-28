@@ -80,7 +80,7 @@ export function ClubList(props: ClubListProps) {
   const classes = useStyles();
   const clubsToDisplay = props.clubsToDisplay;
   const [leaveClubAlertOpen, setLeaveAlertOpen] =
-    React.useState<boolean>(/* closed */ false);
+    React.useState<boolean>(/* closed= */ false);
   const [idOfClubAlert, setIdOfClubAlert] =
     React.useState<string|undefined>(undefined);
 
