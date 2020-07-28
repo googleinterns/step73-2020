@@ -1,4 +1,4 @@
-import { BackendYourClubsServiceInterface, ClubInterface } from "../backend_service_interface/backend_service_interface";
+import { BackendYourClubsServiceInterface, ClubInterface, MembershipType } from "../backend_service_interface/backend_service_interface";
 
 
 /** Error that occurs when loading clubs fails. */
@@ -62,9 +62,8 @@ export class YourClubsHandlerService {
    * @return the list of clubs that the user is in or not in
    * @throws FailureToGetClubsError if an error was encountered listing the clubs
    */
-  async listClubs(
-      token: string,
-      membership: "member" | "not member"): Promise<ClubInterface[]> {
+  async listClubs(token: string,
+                  membership: MembershipType): Promise<ClubInterface[]> {
     try {
       return await this.backend.listClubs(token, membership);
     } catch (err) {

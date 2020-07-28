@@ -1,4 +1,4 @@
-import { ClubInterface } from "../backend_service_interface/backend_service_interface"
+import { ClubInterface, MembershipType } from "../backend_service_interface/backend_service_interface"
 
 /**
  * Directly connects with the servlet backend to perform club operations.
@@ -14,12 +14,11 @@ export class ClubBackendService {
   }
 
   /** Retrieves a list of clubs with some relation to a user. */
-  async listClubs(
-      token: string,
-      membership: "member" | "not member"): Promise<ClubInterface[]> {
+  async listClubs(token: string,
+                  membership: MembershipType): Promise<ClubInterface[]> {
     const listClubsUrl = "/api/list-clubs?" + new URLSearchParams({
       idToken: token,
-      "membershipStatus": membership,
+      membershipStatus: membership,
     }).toString();
     const response = await fetch(listClubsUrl, {
       method: "GET",

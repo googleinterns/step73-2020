@@ -28,11 +28,16 @@ export interface BackendProfileServiceInterface {
       person: PersonInterface, token: string): Promise<PersonInterface>,
 }
 
+export enum MembershipType {
+  Member = "member",
+  NonMember = "not member",
+}
+
 export interface BackendYourClubsServiceInterface {
   createClub(club: ClubInterface): Promise<ClubInterface>,
   listClubs(
     token: string,
-    membership: "member" | "not member"): Promise<ClubInterface[]>,
+    membership: MembershipType): Promise<ClubInterface[]>,
   leaveClub(clubId: string, token: string): Promise<number>,
   joinClub(clubId: string, token: string): Promise<number>,
   getClub(clubId: string): Promise<ClubInterface>,

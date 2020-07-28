@@ -1,7 +1,7 @@
 import * as React from "react";
 import { BookInfo } from "../club_display/BookInfo";
 import { ClubDescription } from "../club_display/ClubDescription";
-import { ClubInterface } from "../../../services/backend_service_interface/backend_service_interface";
+import { ClubInterface, MembershipType } from "../../../services/backend_service_interface/backend_service_interface";
 import { ContentWarnings } from "../club_display/ContentWarnings";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { DEFAULT_NUM_DISPLAYED } from "../club_display/club_display_consts";
@@ -54,7 +54,7 @@ export const Explore = () => {
   const updateClubList = async () => {
     const listedClubsPromise =
       await yourClubsHandlerService.listClubs(
-          loginStatusHandlerService.getUserToken(), "not member");
+          loginStatusHandlerService.getUserToken(), MembershipType.NonMember);
     setListedClubs(listedClubsPromise);
   }
 
