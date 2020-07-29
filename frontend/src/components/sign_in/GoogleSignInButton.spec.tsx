@@ -36,8 +36,8 @@ it("calls the correct function if successful", async () => {
     </div>
   );
   TestUtils.Simulate.click(div.querySelector("button"));
-  await expect(signInMockSuccessful)
-        .toHaveBeenCalledWith(EXPECTED_SCOPES, expectedConsumer);
+  await expect(signInMockSuccessful).toHaveBeenCalledWith(EXPECTED_SCOPES);
+  expect(expectedConsumer).toHaveBeenCalledWith(TOKEN);
 });
 
 it("calls the correct function if failed", async () => {
@@ -59,8 +59,7 @@ it("calls the correct function if failed", async () => {
     </div>
   );
   TestUtils.Simulate.click(div.querySelector("button"));
-  await expect(signInMockFailure)
-        .toHaveBeenCalledWith(EXPECTED_SCOPES, expectedConsumer);
+  await expect(signInMockFailure).toHaveBeenCalledWith(EXPECTED_SCOPES);
   expect(expectedFailure).toHaveBeenCalled();
 });
 

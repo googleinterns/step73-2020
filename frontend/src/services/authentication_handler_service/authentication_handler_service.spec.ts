@@ -3,7 +3,7 @@ import { AuthenticationHandlerService, FailureToSignInError } from "./authentica
 // load these objects to overwrite gapi calls.
 let authInstance = {
   isSignedIn: {
-    listen: jest.fn(),
+    listen: jest.fn().mockImplementation(func => func(true)),
   },
   signOut: jest.fn(),
 };
@@ -29,7 +29,7 @@ const successfulGrantOffileAccess = jest.fn().mockReturnValue({code: "123"});
 it("returns the correct string if sign in successful", async () => {
   authInstance.grantOfflineAccess = successfulGrantOffileAccess;
 
-  await authService.signIn(EXPECTED_SCOPES, tokenConsumer);
+  await authService.signIn(EXPECTED_SCOPES);
 
   expect(authInstance.isSignedIn.listen).toHaveBeenCalled();
 });
@@ -37,7 +37,7 @@ it("returns the correct string if sign in successful", async () => {
 it("throws error if grantOffileAccess returns undefined in sign in", async () => {
   authInstance.grantOfflineAccess = jest.fn().mockReturnValue(undefined);
 
-  await expect(authService.signIn(EXPECTED_SCOPES, tokenConsumer))
+  await expect(authService.signIn(EXPECTED_SCOPES))
   .rejects
   .toThrow(FailureToSignInError);
 });
@@ -47,7 +47,7 @@ it("throws error if grantOffileAccess throws error in sign in", async () => {
     throw new Error();
   });
 
-  await expect(authService.signIn(EXPECTED_SCOPES, tokenConsumer))
+  await expect(authService.signIn(EXPECTED_SCOPES))
   .rejects
   .toThrow(FailureToSignInError);
 });
@@ -55,13 +55,13 @@ it("throws error if grantOffileAccess throws error in sign in", async () => {
 it("throws error if backend API throws error in sign in", async () => {
   authInstance.grantOfflineAccess = successfulGrantOffileAccess;
 
-  await expect(failingAuthService.signIn(EXPECTED_SCOPES, tokenConsumer))
+  await expect(failingAuthService.signIn(EXPECTED_SCOPES))
   .rejects
   .toThrow(FailureToSignInError);
 });
 
 it("signs out the user if they're signed in", async () => {
-  await authService.signIn(EXPECTED_SCOPES, tokenConsumer);
+  await authService.signIn(EXPECTED_SCOPES);
   authInstance.isSignedIn.get = jest.fn().mockReturnValue(true);
 
   const success = await authService.signOut();
@@ -69,7 +69,7 @@ it("signs out the user if they're signed in", async () => {
 });
 
 it("returns false when signing out a signed out user", async () => {
-  await authService.signIn(EXPECTED_SCOPES, tokenConsumer);
+  await authService.signIn(EXPECTED_SCOPES);
   authInstance.isSignedIn.get = jest.fn().mockReturnValue(false);
 
   const success = await authService.signOut();

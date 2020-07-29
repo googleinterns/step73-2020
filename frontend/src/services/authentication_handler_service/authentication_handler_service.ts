@@ -57,12 +57,10 @@ export class AuthenticationHandlerService {
   /**
    * Signs the user in, calls a function on the token retrieved from backend.
    * @param scopes the scopes our app requests for oauth
-   * @param tokenConsumer a function that takes the token as input and is
-   *     called when the token is received from the backend
+   * @return the retrieved ID token
    * @throws FailureToSignInError if sign in fails
    */
-  async signIn(scopes: string,
-               tokenConsumer: (token: string) => void): Promise<void> {
+  async signIn(scopes: string): Promise<string> {
     const code: string | undefined = await this.getAuthCode({scope: scopes});
     if (code === undefined) {
       throw new FailureToSignInError();
@@ -70,8 +68,9 @@ export class AuthenticationHandlerService {
     try {
       const redirectUri = window.location.origin;
       const token = await this.backend.retrieveToken(code, redirectUri);
-      // Bind the token consumer to be called when Auth2 says user logged in.
-      this.oneTimeBindToSignIn(token, tokenConsumer);
+      return new Promise((resolve, reject) => {
+        this.oneTimeBindToSignIn(token, resolve)
+      });
     } catch (err) {
       throw new FailureToSignInError();
     }
