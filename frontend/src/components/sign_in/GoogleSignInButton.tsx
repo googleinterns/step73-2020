@@ -16,8 +16,8 @@ const GoogleSignInButton = (props: GoogleSignInButtonProps) => {
 
   const wrappedSignIn = async () => {
     try {
-      const token = await authenticationHandlerService.signIn(props.scope);
-      props.tokenConsumer(token);
+      await authenticationHandlerService.signIn(
+          props.scope, props.tokenConsumer);
     } catch (err) {
       props.onFailure();
     }
