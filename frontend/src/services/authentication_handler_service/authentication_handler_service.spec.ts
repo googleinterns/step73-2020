@@ -103,5 +103,5 @@ it("parses a token if one exists", async () => {
 it("returns an empty object if no parsed token exists", async () => {
   authService.getToken = jest.fn().mockReturnValue(undefined);
   const result = authService.getParsedToken();
-  expect(result).toStrictEqual({});
+  expect(result).toBe(undefined);
 });
