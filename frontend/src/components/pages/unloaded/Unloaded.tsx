@@ -5,7 +5,9 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     loadContainer: {
+      alignItems: "center",
       display: "flex",
+      height: "100%",
       justifyContent: "center",
     },
   }),
