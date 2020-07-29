@@ -36,10 +36,13 @@ export const Explore = () => {
 
   const contextServices = React.useContext(ServiceContext);
   const yourClubsHandlerService = contextServices.yourClubsHandlerService;
-  const loginStatusHandlerService = contextServices.loginStatusHandlerService;
+  const authenticationHandlerService =
+      contextServices.authenticationHandlerService;
 
-  const [listedClubs, setListedClubs] = React.useState<ClubInterface[]|undefined>(undefined);
-  const [numClubsDisplayed, setNumClubsDisplayed] = React.useState<number|undefined>(DEFAULT_NUM_DISPLAYED);
+  const [listedClubs, setListedClubs] =
+      React.useState<ClubInterface[] | undefined>(undefined);
+  const [numClubsDisplayed, setNumClubsDisplayed] =
+      React.useState<number | undefined>(DEFAULT_NUM_DISPLAYED);
 
   /* Re-renders Explore page only when number of displayed clubs changes. */
   React.useEffect(() => {
@@ -54,7 +57,7 @@ export const Explore = () => {
   const updateClubList = async () => {
     const listedClubsPromise =
         await yourClubsHandlerService.listClubs(MembershipType.NonMember,
-            loginStatusHandlerService.getUserToken());
+            authenticationHandlerService.getToken());
     setListedClubs(listedClubsPromise);
   }
 
@@ -63,8 +66,8 @@ export const Explore = () => {
   }
 
   const updateClubListAfterJoining = async (clubId: string) => {
-    const success:boolean = await yourClubsHandlerService.joinClub(
-        clubId, loginStatusHandlerService.getUserToken());
+    const success = await yourClubsHandlerService.joinClub(
+        clubId, authenticationHandlerService.getToken());
     if (success) {
       updateClubList();
     }

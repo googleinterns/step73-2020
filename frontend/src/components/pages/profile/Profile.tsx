@@ -50,15 +50,18 @@ export default function Profile() {
    */
   const contextServices = React.useContext(ServiceContext);
   const profileHandlerService = contextServices.profileHandlerService;
-  const loginStatusHandlerService = contextServices.loginStatusHandlerService;
+  const authenticationHandlerService =
+      contextServices.authenticationHandlerService;
 
-  const [person, setPerson] = React.useState<PersonInterface | undefined>(undefined);
-  const [submitSuccess, setSubmitSuccess] = React.useState<boolean|undefined>(undefined);
+  const [person, setPerson] =
+      React.useState<PersonInterface | undefined>(undefined);
+  const [submitSuccess, setSubmitSuccess] =
+      React.useState<boolean | undefined>(undefined);
 
   React.useEffect(() => {
     (async() => {
       const personResponse = await profileHandlerService.getPerson(
-          loginStatusHandlerService.getUserToken());
+          authenticationHandlerService.getToken());
       setPerson(personResponse);
     })();
   }, []);
@@ -84,7 +87,7 @@ export default function Profile() {
       }
       try {
         await profileHandlerService.updatePerson(
-            person, loginStatusHandlerService.getUserToken());
+            person, authenticationHandlerService.getToken());
         setSubmitSuccess(true);
       } catch (err) {
         setSubmitSuccess(false);

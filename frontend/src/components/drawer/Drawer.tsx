@@ -92,10 +92,8 @@ export default function DrawerComp(props: DrawerProps) {
   }
 
   const handleSignOut = async () => {
-    const authenticationHandlerService = contextServices.authenticationHandlerService;
-    const loginStatusHandlerService = contextServices.loginStatusHandlerService;
-
-    loginStatusHandlerService.setUserLoginStatus(false);
+    const authenticationHandlerService =
+        contextServices.authenticationHandlerService;
 
     const success = await authenticationHandlerService.signOut();
     if (success) {

@@ -48,10 +48,11 @@ export const YourClubs = () => {
    */
   const contextServices = React.useContext(ServiceContext);
   const yourClubsHandlerService = contextServices.yourClubsHandlerService;
-  const loginStatusHandlerService = contextServices.loginStatusHandlerService;
+  const authenticationHandlerService =
+      contextServices.authenticationHandlerService;
 
   const [listedClubs, setListedClubs] =
-    React.useState<ClubInterface[]|undefined>(undefined);
+    React.useState<ClubInterface[] | undefined>(undefined);
   const [numClubsDisplayed, setNumClubsDisplayed] =
     React.useState<number>(DEFAULT_NUM_DISPLAYED);
   const [createNewClub, setCreateNewClub] = React.useState<boolean>(false);
@@ -73,7 +74,7 @@ export const YourClubs = () => {
   const updateClubList = async () => {
     const listedClubsPromise =
         await yourClubsHandlerService.listClubs(MembershipType.Member,
-            loginStatusHandlerService.getUserToken());
+            authenticationHandlerService.getToken());
     setListedClubs(listedClubsPromise);
   }
 
@@ -83,7 +84,7 @@ export const YourClubs = () => {
    */
   const updateClubListAfterLeaving = async (clubId: string) => {
     const success = await yourClubsHandlerService.leaveClub(
-        clubId, loginStatusHandlerService.getUserToken());
+        clubId, authenticationHandlerService.getToken());
     if (success) {
       updateClubList();
     }
@@ -98,6 +99,14 @@ export const YourClubs = () => {
     if (successfulCreation) {
       updateClubList();
     }
+  }
+
+  const getUserId = () => {
+    const parsedToken = authenticationHandlerService.getParsedToken();
+    if (!parsedToken) {
+      return "";
+    }
+    return parsedToken.sub;
   }
 
   return (
@@ -121,7 +130,7 @@ export const YourClubs = () => {
       <ClubList
         clubsToDisplay={listedClubs}
         handleLeaveClub={updateClubListAfterLeaving}
-        userId={loginStatusHandlerService.getParsedToken().sub}
+        userId={getUserId()}
       />
       <CreateNewClubWindow
         closeWindow={closeCreateClubWindow}

@@ -1,7 +1,6 @@
 import { AuthenticationHandlerService } from "../../services/authentication_handler_service/authentication_handler_service";
 import { AuthenticationBackendService } from "../../services/backend/authentication_backend";
 import { ClubBackendService } from "../../services/backend/club_backend";
-import { LoginStatusHandlerService } from "../../services/login_status_handler_service/login_status_handler_service";
 import { ProfileBackendService } from "../../services/backend/profile_backend";
 import { ProfileHandlerService } from "../../services/profile_handler_service/profile_handler_service";
 import { YourClubsHandlerService } from "../../services/your_clubs_handler_service/your_clubs_handler_service";
@@ -14,6 +13,6 @@ export const authenticationBackendService = new AuthenticationBackendService();
 export const defaultServices = {
   profileHandlerService: new ProfileHandlerService(profileBackendService),
   yourClubsHandlerService: new YourClubsHandlerService(clubBackendService),
-  authenticationHandlerService: new AuthenticationHandlerService(authenticationBackendService),
-  loginStatusHandlerService: new LoginStatusHandlerService(),
+  authenticationHandlerService:
+      new AuthenticationHandlerService(authenticationBackendService),
 }

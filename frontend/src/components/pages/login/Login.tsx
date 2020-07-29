@@ -29,22 +29,23 @@ interface LoginProps {
 
 export const Login = (props: LoginProps) => {
   const contextServices = React.useContext(ServiceContext)
-  const loginStatusHandlerService = contextServices.loginStatusHandlerService;
+  const authenticationHandlerService =
+      contextServices.authenticationHandlerService;
   const profileHandlerService = contextServices.profileHandlerService;
 
   const classes = useStyles();
 
   // Fires upon login success.
   const tokenConsumer = async (token: string) => {
-    // Cache token in localStorage to keep user signed in after refresh.
-    localStorage.setItem('token', token);
-    loginStatusHandlerService.setUserToken(token);
-    loginStatusHandlerService.setUserLoginStatus(/*Successfully logged in*/ true);
     props.handleUserLogin();
     try {
-      await profileHandlerService.getPerson(loginStatusHandlerService.getUserToken());
+      await profileHandlerService.getPerson(
+          authenticationHandlerService.getToken());
     } catch (err) {
-      const parsedToken = loginStatusHandlerService.getParsedToken();
+      const parsedToken = authenticationHandlerService.getParsedToken();
+      if (!parsedToken) {
+        return;
+      }
       const person: PersonInterface = {
         nickname: parsedToken.name,
         email: parsedToken.email,

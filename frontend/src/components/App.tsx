@@ -17,9 +17,10 @@ import { YourClubs } from "./pages/your_clubs/YourClubs";
 
 function App() {
   // Construct dependencies to determine status of user login.
-  const userLoginStatusService = defaultServices.loginStatusHandlerService;
+  const authenticationHandlerService = defaultServices.authenticationHandlerService;
   const [navigationDrawerOpen, setNavigationDrawerOpen] = React.useState<boolean>(false);
-  const [userLoggedIn, setUserLoggedIn] = React.useState<boolean>(false);
+  const [userLoggedIn, setUserLoggedIn] = React.useState<boolean>(
+      authenticationHandlerService.getUserLoginStatus());
 
   const handleDrawerOpen = () => {
     setNavigationDrawerOpen(true);
@@ -36,10 +37,6 @@ function App() {
   const handleUserLogout = () => {
     setUserLoggedIn(false);
   };
-
-  React.useEffect(() => {
-    setUserLoggedIn(userLoginStatusService.getUserLoginStatus());
-  }, [userLoginStatusService.getUserLoginStatus()]);
 
   return (userLoggedIn
     ? <UserLoggedIn
