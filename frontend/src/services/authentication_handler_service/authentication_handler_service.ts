@@ -16,7 +16,7 @@ export class FailureToSignInError extends Error {
  */
 export class AuthenticationHandlerService {
   token: string | undefined = undefined;
-  authInstance = undefined;
+  authInstance: gapi.auth2.GoogleAuth | undefined = undefined;
 
   /** Backend is responsible for retrieving the ID token. */
   constructor(private readonly backend: BackendAuthenticationInterface) {}
@@ -26,7 +26,7 @@ export class AuthenticationHandlerService {
    * @return true if user is logged in, false otherwise
    */
   getUserLoginStatus(): boolean {
-    const auth = this.getAuthInstance()
+    const auth = this.getAuthInstance();
     return auth.isSignedIn.get() && this.getToken() !== undefined;
   }
 
@@ -46,8 +46,8 @@ export class AuthenticationHandlerService {
    * @return the token if it exists, otherwise undefined
    */
   getToken(): string | undefined {
-    const auth = this.getAuthInstance()
-    const response = auth.currentUser.get().getAuthResponse()
+    const auth = this.getAuthInstance();
+    const response = auth.currentUser.get().getAuthResponse();
     if (!response.id_token) {
       return;
     }
@@ -58,7 +58,7 @@ export class AuthenticationHandlerService {
    * Signs the user in, calls a function on the token retrieved from backend.
    * @param scopes the scopes our app requests for oauth
    * @param tokenConsumer a function that takes the token as input and is
-   *     called when the token is received from the backend.
+   *     called when the token is received from the backend
    * @throws FailureToSignInError if sign in fails
    */
   async signIn(scopes: string,
@@ -71,7 +71,7 @@ export class AuthenticationHandlerService {
       const redirectUri = window.location.origin;
       const token = await this.backend.retrieveToken(code, redirectUri);
       // Bind the token consumer to be called when Auth2 says user logged in.
-      this.oneTimeBindToSignIn(token, tokenConsumer)
+      this.oneTimeBindToSignIn(token, tokenConsumer);
     } catch (err) {
       throw new FailureToSignInError();
     }
@@ -82,7 +82,7 @@ export class AuthenticationHandlerService {
    * @return false if the user is already signed out, true if successful
    */
   async signOut(): Promise<boolean> {
-    const auth = this.getAuthInstance()
+    const auth = this.getAuthInstance();
     if (!auth.isSignedIn.get()) {
       return false;
     }
@@ -90,14 +90,14 @@ export class AuthenticationHandlerService {
     return true;
   }
 
-  // TypeScript 4.0 will introduce variadic generics, until then this works.
+  // TypeScript 4.0 will introduce variadic tuple types, until then this works.
   private oneTimeBindToSignIn<T>(arg: T, func: (a: T) => void) {
     // Infinite listeners are allowed, this make sure each listener runs once.
     let called = false;
     this.getAuthInstance().isSignedIn.listen((signIn: boolean) => {
       if (signIn && !called) {
         called = true;
-        func(arg)
+        func(arg);
       }
     });
   }
@@ -112,7 +112,7 @@ export class AuthenticationHandlerService {
 
   private async getAuthCode(
       opt?: gapi.auth2.OfflineAccessOptions): Promise<string | undefined> {
-    const auth = this.getAuthInstance()
+    const auth = this.getAuthInstance();
     try {
       const { code } = await auth.grantOfflineAccess(opt);
       return code;
