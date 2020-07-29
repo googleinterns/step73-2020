@@ -53,8 +53,10 @@ export default function Profile() {
   const authenticationHandlerService =
       contextServices.authenticationHandlerService;
 
-  const [person, setPerson] = React.useState<PersonInterface | undefined>(undefined);
-  const [submitSuccess, setSubmitSuccess] = React.useState<boolean|undefined>(undefined);
+  const [person, setPerson] =
+      React.useState<PersonInterface | undefined>(undefined);
+  const [submitSuccess, setSubmitSuccess] =
+      React.useState<boolean | undefined>(undefined);
 
   React.useEffect(() => {
     (async() => {

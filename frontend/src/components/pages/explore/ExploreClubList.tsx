@@ -79,8 +79,10 @@ export function ExploreClubList(props: ExploreClubListProps) {
   const classes = useStyles();
   const clubsToDisplay = props.clubsToDisplay;
 
-  const [joinClubAlertOpen, setJoinAlertOpen] = React.useState<boolean>(/* closed= */ false);
-  const [nameOfClubAlert, setNameofClubAlert] = React.useState<string|undefined>(undefined);
+  const [joinClubAlertOpen, setJoinAlertOpen] =
+      React.useState<boolean>(/* closed= */ false);
+  const [nameOfClubAlert, setNameofClubAlert] =
+      React.useState<string | undefined>(undefined);
 
   const openAlertWindow = (clubId: string) => {
     setNameofClubAlert(clubId);

@@ -82,7 +82,7 @@ export function ClubList(props: ClubListProps) {
   const [leaveClubAlertOpen, setLeaveAlertOpen] =
     React.useState<boolean>(/* closed= */ false);
   const [idOfClubAlert, setIdOfClubAlert] =
-    React.useState<string|undefined>(undefined);
+    React.useState<string | undefined>(undefined);
 
   const openAlertWindow = (clubId: string) => {
     setIdOfClubAlert(clubId);

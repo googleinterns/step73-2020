@@ -39,8 +39,10 @@ export const Explore = () => {
   const authenticationHandlerService =
       contextServices.authenticationHandlerService;
 
-  const [listedClubs, setListedClubs] = React.useState<ClubInterface[]|undefined>(undefined);
-  const [numClubsDisplayed, setNumClubsDisplayed] = React.useState<number|undefined>(DEFAULT_NUM_DISPLAYED);
+  const [listedClubs, setListedClubs] =
+      React.useState<ClubInterface[] | undefined>(undefined);
+  const [numClubsDisplayed, setNumClubsDisplayed] =
+      React.useState<number | undefined>(DEFAULT_NUM_DISPLAYED);
 
   /* Re-renders Explore page only when number of displayed clubs changes. */
   React.useEffect(() => {

@@ -52,7 +52,7 @@ export const YourClubs = () => {
       contextServices.authenticationHandlerService;
 
   const [listedClubs, setListedClubs] =
-    React.useState<ClubInterface[]|undefined>(undefined);
+    React.useState<ClubInterface[] | undefined>(undefined);
   const [numClubsDisplayed, setNumClubsDisplayed] =
     React.useState<number>(DEFAULT_NUM_DISPLAYED);
   const [createNewClub, setCreateNewClub] = React.useState<boolean>(false);

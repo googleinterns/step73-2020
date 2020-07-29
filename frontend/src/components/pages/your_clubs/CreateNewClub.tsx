@@ -33,12 +33,12 @@ interface CreateNewClubWindowProps {
 
 export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
   const classes = useStyles();
-  const [club, setClub] = React.useState<ClubInterface|undefined>(undefined);
-  const [book, setBook] = React.useState<BookInterface|undefined>(undefined);
+  const [club, setClub] = React.useState<ClubInterface | undefined>(undefined);
+  const [book, setBook] = React.useState<BookInterface | undefined>(undefined);
   const [missingField, setMissingField] = React.useState<boolean>(false);
   const [submitSuccess, setSubmitSuccess] = React.useState<boolean>(false);
   const [contentWarningsDisplay, setContentWarningsDisplay] =
-    React.useState<string|undefined>(undefined);
+    React.useState<string | undefined>(undefined);
 
   const contextServices = React.useContext(ServiceContext);
   const authenticationHandlerService =
