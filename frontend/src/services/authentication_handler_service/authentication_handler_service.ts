@@ -91,7 +91,7 @@ export class AuthenticationHandlerService {
   }
 
   private oneTimeBindToSignIn<T>(arg: T, func: (a: T) => void) {
-    // Infinite listeners are allowed, this make sure each listener runs once.
+    // Infinite listeners are allowed, this makes sure each listener runs once.
     let called = false;
     this.getAuthInstance().isSignedIn.listen((signIn: boolean) => {
       if (signIn && !called) {
