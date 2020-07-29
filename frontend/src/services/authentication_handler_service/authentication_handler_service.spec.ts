@@ -28,6 +28,7 @@ const successfulGrantOffileAccess = jest.fn().mockReturnValue({code: "123"});
 
 it("returns the correct string if sign in successful", async () => {
   authInstance.grantOfflineAccess = successfulGrantOffileAccess;
+  authService.getToken = jest.fn().mockReturnValue(undefined);
 
   await authService.signIn(EXPECTED_SCOPES);
 
@@ -70,6 +71,7 @@ it("signs out the user if they're signed in", async () => {
 
 it("returns false when signing out a signed out user", async () => {
   await authService.signIn(EXPECTED_SCOPES);
+  authService.getToken = jest.fn().mockReturnValue(undefined);
   authInstance.isSignedIn.get = jest.fn().mockReturnValue(false);
 
   const success = await authService.signOut();

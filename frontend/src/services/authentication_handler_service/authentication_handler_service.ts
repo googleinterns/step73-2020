@@ -55,25 +55,31 @@ export class AuthenticationHandlerService {
   }
 
   /**
-   * Signs the user in, calls a function on the token retrieved from backend.
+   * Signs the user in, returns the user's ID token.
    * @param scopes the scopes our app requests for oauth
    * @return the retrieved ID token
-   * @throws FailureToSignInError if sign in fails
+   * @throws FailureToSignInError if sign in fails (Promise reject)
    */
   async signIn(scopes: string): Promise<string> {
     const code: string | undefined = await this.getAuthCode({scope: scopes});
     if (code === undefined) {
       throw new FailureToSignInError();
     }
-    try {
-      const redirectUri = window.location.origin;
-      const token = await this.backend.retrieveToken(code, redirectUri);
-      return new Promise((resolve, reject) => {
-        this.oneTimeBindToSignIn(token, resolve)
-      });
-    } catch (err) {
-      throw new FailureToSignInError();
-    }
+    const redirectUri = window.location.origin;
+    return new Promise(async (resolve, reject) => {
+      try {
+        const token = await this.backend.retrieveToken(code, redirectUri);
+        const signedInToken = this.getToken();
+        this.oneTimeBindToSignIn(token, resolve);
+
+        // If already logged in, listener won't run so we resolve here.
+        if (signedInToken) {
+          resolve(signedInToken);
+        }
+      } catch (err) {
+        reject(new FailureToSignInError());
+      }
+    })
   }
 
   /**
