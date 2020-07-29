@@ -41,7 +41,8 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
     React.useState<string|undefined>(undefined);
 
   const contextServices = React.useContext(ServiceContext);
-  const loginStatusHandlerService = contextServices.loginStatusHandlerService;
+  const authenticationHandlerService =
+      contextServices.authenticationHandlerService;
   const yourClubsHandlerService = contextServices.yourClubsHandlerService;
 
   const handleClubNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,7 +93,7 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
       setSubmitSuccess(false);
     } else {
       setMissingField(false);
-      const parsedToken = loginStatusHandlerService.getParsedToken();
+      const parsedToken = authenticationHandlerService.getParsedToken();
       club.ownerId = parsedToken.sub;
       const success = await yourClubsHandlerService.createClub(club);
       if (success) {

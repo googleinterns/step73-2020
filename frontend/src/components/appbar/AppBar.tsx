@@ -115,11 +115,11 @@ export function UserAvatarImage() {
   const classes = useStyles();
 
   const contextServices = React.useContext(ServiceContext);
-  const loginStatusHandlerService = contextServices.loginStatusHandlerService;
+  const authenticationHandlerService =
+      contextServices.authenticationHandlerService;
 
-  const token = loginStatusHandlerService.getUserToken();
-  if (token) {
-    const parsedToken = JSON.parse(atob(token.split('.')[1]));
+  const parsedToken = authenticationHandlerService.getParsedToken();
+  if (parsedToken) {
     const profileImg = parsedToken.picture;
     return (profileImg
       ? <img src={profileImg} className={classes.avatarImg} />
