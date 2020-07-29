@@ -89,12 +89,12 @@ export class AuthenticationHandlerService {
       try {
         const token = await this.backend.retrieveToken(code, redirectUri);
         const signedInToken = this.getToken();
-        this.oneTimeBindToSignIn(token, resolve);
-
         // If already logged in, listener won't run so we resolve here.
         if (signedInToken) {
           resolve(signedInToken);
+          return;
         }
+        this.oneTimeBindToSignIn(token, resolve);
       } catch (err) {
         reject(new FailureToSignInError());
       }
