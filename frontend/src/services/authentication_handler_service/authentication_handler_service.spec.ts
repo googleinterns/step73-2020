@@ -35,7 +35,7 @@ it("returns the correct string if sign in successful", async () => {
   expect(authInstance.isSignedIn.listen).toHaveBeenCalled();
 });
 
-it("throws error if grantOffileAccess returns undefined in sign in", async () => {
+it("throws error if grantOfflineAccess returns undefined in sign in", async () => {
   authInstance.grantOfflineAccess = jest.fn().mockReturnValue(undefined);
 
   await expect(authService.signIn(EXPECTED_SCOPES))
@@ -43,7 +43,7 @@ it("throws error if grantOffileAccess returns undefined in sign in", async () =>
   .toThrow(FailureToSignInError);
 });
 
-it("throws error if grantOffileAccess throws error in sign in", async () => {
+it("throws error if grantOfflineAccess throws error in sign in", async () => {
   authInstance.grantOfflineAccess = jest.fn().mockImplementation(() => {
     throw new Error();
   });
