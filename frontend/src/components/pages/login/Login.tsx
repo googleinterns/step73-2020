@@ -43,6 +43,9 @@ export const Login = (props: LoginProps) => {
           authenticationHandlerService.getToken());
     } catch (err) {
       const parsedToken = authenticationHandlerService.getParsedToken();
+      if (!parsedToken) {
+        return;
+      }
       const person: PersonInterface = {
         nickname: parsedToken.name,
         email: parsedToken.email,

@@ -94,6 +94,9 @@ export function CreateNewClubWindow(props: CreateNewClubWindowProps) {
     } else {
       setMissingField(false);
       const parsedToken = authenticationHandlerService.getParsedToken();
+      if (!parsedToken) {
+        return;
+      }
       club.ownerId = parsedToken.sub;
       const success = await yourClubsHandlerService.createClub(club);
       if (success) {

@@ -10,6 +10,25 @@ export class FailureToSignInError extends Error {
   }
 }
 
+/** Fields available on a parsed ID token. */
+export interface TokenInterface {
+  at_hash: string,
+  aud: string,
+  azp: string,
+  email: string,
+  email_verified: boolean,
+  exp: number,
+  family_name: string,
+  given_name: string,
+  hd: string,
+  iat: number,
+  iss: string,
+  locale: string,
+  name: string,
+  picture: string,
+  sub: string,
+}
+
 /**
  * Communicates with gapi to manage a user's login status
  * and retrieve auth codes / tokens.
@@ -32,13 +51,13 @@ export class AuthenticationHandlerService {
 
   /**
    * Gets the parsed ID token of the user.
-   * @return the parsed token if it exists, otherwise the empty object
+   * @return the parsed token if it exists, otherwise undefined
    */
-  getParsedToken() {
+  getParsedToken(): TokenInterface | undefined {
     const token = this.getToken();
     return token
         ? JSON.parse(atob(token.split(".")[1]))
-        : {};
+        : undefined;
   }
 
   /**

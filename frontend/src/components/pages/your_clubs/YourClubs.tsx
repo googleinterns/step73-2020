@@ -101,6 +101,14 @@ export const YourClubs = () => {
     }
   }
 
+  const getUserId = () => {
+    const parsedToken = authenticationHandlerService.getParsedToken();
+    if (!parsedToken) {
+      return "";
+    }
+    return parsedToken.sub;
+  }
+
   return (
     <div className={classes.root}>
       <div className={classes.topUtilitiesContainer}>
@@ -122,7 +130,7 @@ export const YourClubs = () => {
       <ClubList
         clubsToDisplay={listedClubs}
         handleLeaveClub={updateClubListAfterLeaving}
-        userId={authenticationHandlerService.getParsedToken().sub}
+        userId={getUserId()}
       />
       <CreateNewClubWindow
         closeWindow={closeCreateClubWindow}
