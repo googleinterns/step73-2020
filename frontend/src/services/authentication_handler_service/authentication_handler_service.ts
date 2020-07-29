@@ -90,7 +90,6 @@ export class AuthenticationHandlerService {
     return true;
   }
 
-  // TypeScript 4.0 will introduce variadic tuple types, until then this works.
   private oneTimeBindToSignIn<T>(arg: T, func: (a: T) => void) {
     // Infinite listeners are allowed, this make sure each listener runs once.
     let called = false;
