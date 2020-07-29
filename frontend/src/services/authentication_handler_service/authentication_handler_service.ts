@@ -12,7 +12,7 @@ export class FailureToSignInError extends Error {
 
 /**
  * Communicates with gapi to manage a user's login status
- * and retrieve auth codes / tokens
+ * and retrieve auth codes / tokens.
  */
 export class AuthenticationHandlerService {
   token: string | undefined = undefined;
